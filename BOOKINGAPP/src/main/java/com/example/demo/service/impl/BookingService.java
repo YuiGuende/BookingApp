@@ -1,0 +1,114 @@
+package com.example.demo.service.impl;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.booking.Booking;
+import com.example.demo.model.booking.BookingStatus;
+import com.example.demo.model.room.Room;
+import com.example.demo.model.user.customer.Customer;
+import com.example.demo.repository.BookingRepository;
+import com.example.demo.repository.CustomerRepository;
+import com.example.demo.repository.RoomRepository;
+import com.example.demo.service.BookingServiceInterface;
+
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
+public class BookingService implements BookingServiceInterface {
+
+    private final BookingRepository bookingRepository;
+    private final CustomerRepository customerRepository;
+    private final RoomRepository roomRepository;
+
+    @Autowired
+    public BookingService(
+            BookingRepository bookingRepositoryy,
+            CustomerRepository customerRepository,
+            RoomRepository roomRepository) {
+        this.bookingRepository = bookingRepositoryy;
+        this.customerRepository = customerRepository;
+        this.roomRepository = roomRepository;
+    }
+
+    @Override
+    public List<Booking> getBookingList() {
+        return bookingRepository.findAll();
+    }
+
+    @Override
+    public void saveBooking(Booking booking) {
+        Room findRoom = roomRepository.findById(booking.getRoom().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Room with id " + booking.getRoom().getId() + " not found"));
+
+        booking.setRoom(findRoom);
+        //kiểm tra xem phòng này vào ngày giờ đó có người đặt chưa
+        if (!isRoomAvailable(findRoom, booking.getCheckInDate(), booking.getCheckOutDate())) {
+            throw new IllegalArgumentException("This room has been booked at this date!");
+        }
+
+        if (booking.getCustomer() == null) {//kiểm tra customer tồn tại chưa, nếu chưa thì tạo user mới
+            Optional<Customer> existingCustomer = customerRepository.findByEmailOrPhone(booking.getEmail(), booking.getPhone());
+
+            if (existingCustomer.isPresent()) {
+                booking.setCustomer(existingCustomer.get());
+            } else {
+                List<Booking> newBookingList = new ArrayList<>();
+                newBookingList.add(booking);
+                Customer customer = new Customer(newBookingList, booking.getEmail(), booking.getName(), booking.getPhone());
+                booking.setCustomer(customer);
+                customerRepository.save(customer);
+            }
+        }
+
+        bookingRepository.save(booking);
+    }
+
+    public boolean isRoomAvailable(Room room, LocalDate checkInDate, LocalDate checkOutDate) {
+        for (Booking booking : bookingRepository.findBookingByRoom(room)) {
+            if (checkInDate.compareTo(booking.getCheckInDate()) == 0 && checkOutDate.compareTo(checkOutDate) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void updateBookingStatus(Booking booking, BookingStatus status) {
+        booking.setStatus(status);
+        bookingRepository.save(booking);
+
+    }
+
+    @Override
+    public List<Booking> getBookingListByHotelId(Long id) {
+        List<Booking> bookings = new ArrayList<>();
+        for (Booking booking : getBookingList()) {
+            if (Objects.equals(booking.getRoom().getHotel().getId(), id)) {
+                bookings.add(booking);
+            }
+        }
+        return bookings;
+    }
+
+    @Override
+    public Booking validateBooking(Booking booking) {
+        Room findRoom = roomRepository.findById(booking.getRoom().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Room with id " + booking.getRoom().getId() + " not found"));
+        booking.setRoom(findRoom);
+        //kiểm tra xem phòng này vào ngày giờ đó có người đặt chưa
+        if (!isRoomAvailable(findRoom, booking.getCheckInDate(), booking.getCheckOutDate())) {
+            throw new IllegalArgumentException("This room has been booked at this date!");
+        }
+        return booking;
+    }
+
+}
