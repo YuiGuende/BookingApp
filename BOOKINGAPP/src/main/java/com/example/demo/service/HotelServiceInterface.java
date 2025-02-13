@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
-import com.example.demo.model.address.Address;
 import com.example.demo.model.hotel.Hotel;
 
 public interface HotelServiceInterface {
@@ -19,7 +18,7 @@ public interface HotelServiceInterface {
     boolean isAddressExist(Hotel hotel);
 
     List<HotelDistanceDTO> getHotelDistanceDTOByAddress(
-            Address address,
+            String fullAddress,
             int capacity,
             LocalDate checkinDate,
             LocalDate checkoutDate);

@@ -22,8 +22,10 @@ import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelSearchInforDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.model.address.Address;
+import com.example.demo.model.booking.Booking;
 import com.example.demo.model.hotel.Hotel;
 import com.example.demo.model.room.Room;
+import com.example.demo.service.BookingServiceInterface;
 import com.example.demo.service.HotelServiceInterface;
 import com.example.demo.service.RoomServiceInterface;
 import com.example.demo.utils.ApiResponse;
@@ -34,12 +36,17 @@ import com.example.demo.utils.ApiResponse;
 public class CustomerController {
 
     private final HotelServiceInterface hotelService;
+    private final BookingServiceInterface bookingService;
     private final RoomServiceInterface roomService;
 
     @Autowired
-    public CustomerController(HotelServiceInterface hotelService, RoomServiceInterface roomService) {
+    public CustomerController(
+            HotelServiceInterface hotelService,
+            RoomServiceInterface roomService,
+            BookingServiceInterface bookingService) {
         this.hotelService = hotelService;
         this.roomService = roomService;
+        this.bookingService = bookingService;
     }
 
     @PostMapping(path = "/hotel/search")
@@ -48,7 +55,7 @@ public class CustomerController {
     ) {
         // try {
         List<HotelDistanceDTO> hotels = hotelService.getHotelDistanceDTOByAddress(
-                requestData.getAddress(),
+                requestData.getFullAddress(),
                 requestData.getCapacity(),
                 requestData.getCheckInDate(),
                 requestData.getCheckOuDate());
@@ -142,9 +149,30 @@ public class CustomerController {
         }
     }
 
-
     //post step 2
-    
+    @PostMapping(path = "/booking/validate")
+    public ResponseEntity<ApiResponse<Void>> validateBooking(@RequestBody Booking booking) {
+        try {
+            bookingService.validateBooking(booking);
+            ApiResponse<Void> response = new ApiResponse<>("success", "This booking is valid!", null);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        } catch (Exception e) {
+            ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 
-    //GET step 3
+    //post step 3
+    @PostMapping(path = "/booking/add")
+    public ResponseEntity<ApiResponse<Void>> addBooking(@RequestBody Booking booking) {
+        try {
+            bookingService.saveBooking(booking);
+            ApiResponse<Void> response = new ApiResponse<>("success", "This room has been booked!", null);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        } catch (Exception e) {
+            ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
 }

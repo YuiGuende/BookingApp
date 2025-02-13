@@ -5,37 +5,33 @@ import useHotel from "./useHotel"
 import HotelDetails from "./HotelDetails"
 import "./index.css"
 import Header from "./Header"
-import Button from "./button"
+import Button from "./Button"
+import SearchBar from "./SearchBar"
 
 export default function Home() {
-  const [hotelId, setHotelId] = useState(1)
-  const { hotel, loading, error } = useHotel(hotelId)
+  const [searchParams, setSearchParams] = useState({
+    fullAddress: "",
+    checkInDate: null,
+    checkOutDate: null,
+    capacity: 1,
+  })
+  const { hotels, loading, error } = useHotel(searchParams)
 
-  const handleIdChange = (e) => {
-    setHotelId(Number(e.target.value))
+  const handleSearch = (params) => {
+    setSearchParams(params)
   }
 
   return (
     <div className="container">
-      <Header></Header>
-      <nav className="search-bar">
-        {/* <label htmlFor="hotelId" className="myLabel">
-          Enter Hotel ID:
-        </label> */}
-        <input
-          type="number"
-          id="hotelId"
-          value={hotelId}
-          onChange={handleIdChange}
-          placeholder="Enter Hotel ID"
-          className="input-field"
-        />
-        <Button></Button>
-      </nav>
-      {loading && <p>Loading...</p>}
-      {error && <p className="error-msg">{error}</p>}
-      {hotel && <HotelDetails hotel={hotel} />}
+      <Header />
+      <SearchBar onSearch={handleSearch} initialParams={searchParams} />
+      {loading && <p className="loading-msg">Loading...</p>}
+      {error && <p className="error-msg">Error: {error}</p>}
+      {hotels && hotels.length > 0 ? (
+        hotels.map((hotel) => <HotelDetails key={hotel.hotelId} hotel={hotel} />)
+      ) : (
+        <p>No hotels found. Try adjusting your search criteria.</p>
+      )}
     </div>
   )
 }
-

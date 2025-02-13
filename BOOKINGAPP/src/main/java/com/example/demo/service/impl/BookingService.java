@@ -69,6 +69,8 @@ public class BookingService implements BookingServiceInterface {
             }
         }
 
+        booking.setStatus(BookingStatus.PENDING);
+
         bookingRepository.save(booking);
     }
 
@@ -100,7 +102,7 @@ public class BookingService implements BookingServiceInterface {
     }
 
     @Override
-    public Booking validateBooking(Booking booking) {
+    public void validateBooking(Booking booking) {
         Room findRoom = roomRepository.findById(booking.getRoom().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Room with id " + booking.getRoom().getId() + " not found"));
         booking.setRoom(findRoom);
@@ -108,7 +110,7 @@ public class BookingService implements BookingServiceInterface {
         if (!isRoomAvailable(findRoom, booking.getCheckInDate(), booking.getCheckOutDate())) {
             throw new IllegalArgumentException("This room has been booked at this date!");
         }
-        return booking;
+
     }
 
 }

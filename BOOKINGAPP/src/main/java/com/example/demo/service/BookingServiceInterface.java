@@ -15,7 +15,7 @@ public interface BookingServiceInterface {
     
     void updateBookingStatus(Booking booking, BookingStatus status);
 
-    Booking validateBooking(Booking booking);
+    void validateBooking(Booking booking);
 
 
 }

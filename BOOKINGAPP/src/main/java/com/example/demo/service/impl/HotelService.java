@@ -89,10 +89,10 @@ public class HotelService implements HotelServiceInterface {
     }
 
     @Override
-    public List<HotelDistanceDTO> getHotelDistanceDTOByAddress(Address address, int capacity, LocalDate checkinDate,
+    public List<HotelDistanceDTO> getHotelDistanceDTOByAddress(String fullAddress, int capacity, LocalDate checkinDate,
             LocalDate checkoutDate) {
         List<HotelDistanceDTO> dtos = new ArrayList<>();
-        address = geoUtils.loadAddress(address, address.getFullAddress());
+       Address address = geoUtils.loadAddress( fullAddress);
         List<HotelWithRoomsDTO> filteredHotels = getFilterHotels(address, capacity, checkinDate, checkoutDate);
         System.out.println(address);
         if (filteredHotels.isEmpty()) {

@@ -259,9 +259,9 @@ public class GeoUtils {
         return state.trim();
     }
 
-    public Address loadAddress(Address address, String location) {
+    public Address loadAddress( String location) {
         Map<String, String> addressComponents = getAddressComponents(location);
-
+        Address address = new Address();
         address.setCountry(preprocessCountryName(addressComponents.getOrDefault("country", null)));
         address.setState(preprocessStateName(addressComponents.getOrDefault("state", null)));
         address.setCity(preprocessCityName(addressComponents.getOrDefault("city", null)));
