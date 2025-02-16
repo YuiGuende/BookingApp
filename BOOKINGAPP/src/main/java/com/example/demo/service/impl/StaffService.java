@@ -51,9 +51,9 @@ public class StaffService implements StaffServiceInterface {
 
     @Override
     public void checkOut(Payment payment) {
-        if (payment.getBooking().getRoom().getIsAvailable()) {
-            throw new IllegalArgumentException("This room is not being use!");
-        }
+        // if (payment.getBooking().getRoom().getIsAvailable()) {
+        //     throw new IllegalArgumentException("This room is not being use!");
+        // }
         paymentSerivce.savePayment(payment);
 
     }
@@ -79,7 +79,7 @@ public class StaffService implements StaffServiceInterface {
         if (!booking.getStatus().equals(BookingStatus.CONFIRMED)) {
             bookingService.updateBookingStatus(booking, BookingStatus.CONFIRMED);
         }
-        booking.getRoom().setIsAvailable(false);
+        //booking.getRoom().setIsAvailable(false);
     }
 
     @Override

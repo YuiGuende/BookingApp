@@ -1,5 +1,10 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
+import com.example.demo.model.room.Amenity;
+import com.example.demo.model.room.SubRoomType;
+
 public class RoomDTO {
 
     private Long id;
@@ -7,18 +12,43 @@ public class RoomDTO {
     private String type;
     private String description;
     private double price;
-    private int capacity;
-
+    private int maxAdults;
+    private int maxChildrens;
+    List<String> images;
+    private List<Amenity> amenity;
+    private List<SubRoomType> subRoomTypes;
+    
     public RoomDTO() {
     }
 
-    public RoomDTO(Long id, String name, String type, String description, double price, int capacity) {
+    public RoomDTO(Long id, String name, String type, String description, double price, int maxAdults, int maxChildrens,
+            List<String> images, List<Amenity> amenity, List<SubRoomType> subRoomTypes) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.description = description;
         this.price = price;
-        this.capacity = capacity;
+        this.maxAdults = maxAdults;
+        this.maxChildrens = maxChildrens;
+        this.images = images;
+        this.amenity = amenity;
+        this.subRoomTypes = subRoomTypes;
+    }
+
+public int getMaxAdults() {
+        return maxAdults;
+}
+
+    public void setMaxAdults(int maxAdults) {
+        this.maxAdults = maxAdults;
+    }
+
+    public int getMaxChildrens() {
+        return maxChildrens;
+    }
+
+    public void setMaxChildrens(int maxChildrens) {
+        this.maxChildrens = maxChildrens;
     }
 
     public Long getId() {
@@ -61,12 +91,32 @@ public class RoomDTO {
         this.price = price;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public List<String> getImages() {
+        return images;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public List<Amenity> getAmenity() {
+        return amenity;
+    }
+
+    public void setAmenity(List<Amenity> amenity) {
+        this.amenity = amenity;
+    }
+
+
+
+    public List<SubRoomType> getSubRoomTypes() {
+        return subRoomTypes;
+    }
+
+
+
+    public void setSubRoomTypes(List<SubRoomType> subRoomTypes) {
+        this.subRoomTypes = subRoomTypes;
     }
 
 }

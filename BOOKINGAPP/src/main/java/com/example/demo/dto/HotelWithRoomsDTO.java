@@ -9,7 +9,7 @@ public class HotelWithRoomsDTO {
     private List<RoomDTO> rooms;
     private Long hotelId;
     private String hotelName;
-    private String imageUrl;
+    private List<String> images;
     private AddressDTO address;
     private String description;
     private Rate rate;
@@ -20,26 +20,21 @@ public class HotelWithRoomsDTO {
         this.rate = new Rate();
     }
 
-    public HotelWithRoomsDTO(List<RoomDTO> rooms, String hotelName, String imageUrl, AddressDTO address,
-            String description, Rate rate, double price, int stars) {
-        this.rate = new Rate();
-        this.rooms = rooms;
-        this.hotelName = hotelName;
-        this.imageUrl = imageUrl;
+   
+
+    public HotelWithRoomsDTO(AddressDTO address, String description, Long hotelId, String hotelName, List<String> images, double price, Rate rate, List<RoomDTO> rooms, int stars) {
         this.address = address;
         this.description = description;
-        this.rate = rate;
+        this.hotelId = hotelId;
+        this.hotelName = hotelName;
+        this.images = images;
         this.price = price;
+        this.rate = rate;
+        this.rooms = rooms;
         this.stars = stars;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+   
 
     public String getDescription() {
         return description;
@@ -103,6 +98,18 @@ public class HotelWithRoomsDTO {
 
     public void setAddress(AddressDTO address) {
         this.address = address;
+    }
+
+
+
+    public List<String> getImages() {
+        return images;
+    }
+
+
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
 }

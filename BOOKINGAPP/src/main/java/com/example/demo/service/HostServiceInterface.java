@@ -17,4 +17,5 @@ public interface HostServiceInterface {
 
     List<Hotel> getHotelByHostId(Long id);
 
+    
 }

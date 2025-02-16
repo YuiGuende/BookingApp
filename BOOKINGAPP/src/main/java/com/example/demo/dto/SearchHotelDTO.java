@@ -1,12 +1,15 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
 import com.example.demo.model.hotel.Rate;
 
 public class SearchHotelDTO {
 
+    private List<RoomDTO> rooms;
     private Long hotelId;
     private String hotelName;
-    private String imageUrl;
+    private String image;
     private AddressDTO address;
     private String description;
     private Rate rate;
@@ -17,16 +20,41 @@ public class SearchHotelDTO {
         this.rate = new Rate();
     }
 
-    public SearchHotelDTO(String hotelName, String imageUrl, AddressDTO address, String description, double rate,
-            double price, int stars) {
-        this.rate = new Rate();
+    public SearchHotelDTO(List<RoomDTO> rooms, Long hotelId, String hotelName, String image, AddressDTO address,
+            String description, Rate rate, double price, int stars) {
+        this.rooms = rooms;
+        this.hotelId = hotelId;
         this.hotelName = hotelName;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.address = address;
         this.description = description;
-        this.rate.addRate(rate);//dung ko ay nhi
+        this.rate = rate;
         this.price = price;
         this.stars = stars;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Rate getRate() {
+        return rate;
+    }
+
+    public void setRate(Rate rate) {
+        this.rate = rate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public Long getHotelId() {
@@ -45,36 +73,12 @@ public class SearchHotelDTO {
         this.hotelName = hotelName;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<RoomDTO> getRooms() {
+        return rooms;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public AddressDTO getAddress() {
-        return address;
-    }
-
-    public void setAddress(AddressDTO address) {
-        this.address = address;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public void setRooms(List<RoomDTO> rooms) {
+        this.rooms = rooms;
     }
 
     public int getStars() {
@@ -85,12 +89,20 @@ public class SearchHotelDTO {
         this.stars = stars;
     }
 
-    public Rate getRate() {
-        return this.rate;
+    public AddressDTO getAddress() {
+        return address;
     }
 
-    public void setRate(Rate rate) {
-        this.rate = rate;
+    public void setAddress(AddressDTO address) {
+        this.address = address;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }

@@ -47,8 +47,8 @@ public class Payment {
         this.transactionId = transactionId;
     }
 
-    public Host getHost(){
-        return getBooking().getRoom().getHotel().getHost();
+    public Host getHost(){//kiểm tra lại
+        return getBooking().getBookingRooms().get(0).getRoom().getHotel().getHost();
     }
 
     public Long getId() {

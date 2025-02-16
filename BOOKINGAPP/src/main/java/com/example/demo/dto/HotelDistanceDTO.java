@@ -2,22 +2,22 @@ package com.example.demo.dto;
 
 public class HotelDistanceDTO implements Comparable<HotelDistanceDTO> {
 
-    private HotelWithRoomsDTO hotelWithRoomsDTO;
+    private SearchHotelDTO hotelWithRoomsDTO;//object
     private double distance;
 
     public HotelDistanceDTO() {
     }
 
-    public HotelDistanceDTO(HotelWithRoomsDTO hotelWithRoomsDTO, double distance) {
+    public HotelDistanceDTO(SearchHotelDTO hotelWithRoomsDTO, double distance) {
         this.hotelWithRoomsDTO = hotelWithRoomsDTO;
         this.distance = distance;
     }
 
-    public HotelWithRoomsDTO getHotelWithRoomsDTO() {
+    public SearchHotelDTO getHotelWithRoomsDTO() {
         return hotelWithRoomsDTO;
     }
 
-    public void setHotelWithRoomsDTO(HotelWithRoomsDTO hotelWithRoomsDTO) {
+    public void setHotelWithRoomsDTO(SearchHotelDTO hotelWithRoomsDTO) {
         this.hotelWithRoomsDTO = hotelWithRoomsDTO;
     }
 

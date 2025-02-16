@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.dto.AccountDTO;
 import com.example.demo.model.hotel.Hotel;
 import com.example.demo.model.payment.Payment;
 import com.example.demo.model.room.Room;
@@ -42,12 +43,11 @@ public class HostController {
         this.paymentService = paymentService;
     }
 
-    @PostMapping(path = "/hostLogin")
-    public ResponseEntity<Object> getCurrentHost(@RequestBody AccountDTO accountDTO) {
-        return ResponseEntity.ok(hostService.getCurrentHost(accountDTO.getUsername(), accountDTO.getPassword()));
-    }
-
-    @GetMapping(path = "/getHotels")
+    // @PostMapping(path = "/hostLogin")
+    // public ResponseEntity<Object> getCurrentHost(@RequestBody AccountDTO accountDTO) {
+    //     return ResponseEntity.ok(hostService.getCurrentHost(accountDTO.getUsername(), accountDTO.getPassword()));
+    // }
+    @GetMapping(path = "/hotels")
     public ResponseEntity<ApiResponse<List<Hotel>>> getHotels(HttpSession session) {//host id
         try {
             Long hostId = (Long) session.getAttribute("userId");
@@ -64,7 +64,33 @@ public class HostController {
         }
     }
 
-    @PostMapping(path = "/addHotel")
+    @PutMapping(path = "/hotel/update")
+    public ResponseEntity<ApiResponse<Void>> updateHotel(
+            HttpSession session,
+            @RequestBody Hotel hotel
+    ) {
+        try {
+            Long hostId = (Long) session.getAttribute("userId");
+            if (hostId == null) {
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(new ApiResponse<>("error", "User not authenticated", null));
+            }
+            if (!Objects.equals(hotel.getHost().getId(), hostId)) {
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(new ApiResponse<>("error", "User doesn't have permisssion for this hotel", null));
+            }
+            hotelService.updateHotelDetails(hotel);
+            ApiResponse<Void> response = new ApiResponse<>("success", "Hotel updated", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            ApiResponse<Void> eResponse = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(eResponse);
+        }
+    }
+
+    @PostMapping(path = "/hotel/add")
     public ResponseEntity<ApiResponse<Void>> addHotel(@RequestBody Hotel hotel) {
         try {
             hotelService.addHotel(hotel);
@@ -77,7 +103,7 @@ public class HostController {
 
     }
 
-    @PostMapping(path = "/addRoom")
+    @PostMapping(path = "/room/add")
     public ResponseEntity<ApiResponse<Void>> addNewRoom(@RequestBody Room room) {
         try {
             roomService.addNewRoom(room);

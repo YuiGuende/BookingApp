@@ -7,6 +7,7 @@ import com.example.demo.model.room.Room;
 import com.example.demo.model.user.host.Host;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -43,6 +44,7 @@ public class Hotel {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_address_id", referencedColumnName = "id")
     private Address address; // Address liên kết với Hotel
+    @Column(length = 2000)
     private String description;
 
     @Embedded
@@ -51,7 +53,6 @@ public class Hotel {
     @ElementCollection
     private List<String> images;//images url của khách sạn, image đầu tiên sẽ là avatar
 
-    private String city; // Thành phố
     private int stars; // Số sao của khách sạn (ví dụ: 3 sao, 4 sao, 5 sao)
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -64,7 +65,7 @@ public class Hotel {
         this.name = name;
         this.host = host;
         this.address = address;
-        this.city = city;
+ 
         this.stars = stars;
         this.rooms = rooms;
     }
@@ -77,7 +78,6 @@ public class Hotel {
         this.description = description;
         this.rate = rate;
         this.images = images;
-        this.city = city;
         this.stars = stars;
         this.rooms = rooms;
     }
@@ -115,13 +115,7 @@ public class Hotel {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
+ 
 
     public int getStars() {
         return stars;
@@ -155,11 +149,7 @@ public class Hotel {
         this.host = host;
     }
 
-    @Override
-    public String toString() {
-        return "Hotel [id=" + id + ", name=" + name + ", city=" + city
-                + ", stars=" + stars + "]";
-    }
+    
 
     public List<String> getImages() {
         return images;

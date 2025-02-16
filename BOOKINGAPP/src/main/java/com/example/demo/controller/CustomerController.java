@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.example.demo.dto.AddressDTO;
 import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelSearchInforDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
+import com.example.demo.dto.RoomDTO;
 import com.example.demo.model.address.Address;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.hotel.Hotel;
@@ -53,59 +55,45 @@ public class CustomerController {
     public ResponseEntity<ApiResponse<List<HotelDistanceDTO>>> searchHotel(
             @RequestBody HotelSearchInforDTO requestData
     ) {
-        // try {
-        List<HotelDistanceDTO> hotels = hotelService.getHotelDistanceDTOByAddress(
-                requestData.getFullAddress(),
-                requestData.getCapacity(),
-                requestData.getCheckInDate(),
-                requestData.getCheckOuDate());
-        ApiResponse<List<HotelDistanceDTO>> response = new ApiResponse<>("success", "Hotels found", hotels);
-        return ResponseEntity.ok(response);
-        // } catch (Exception e) {
-        //     ApiResponse<List<HotelDistanceDTO>> response = new ApiResponse<>("error", e.getMessage(), null);
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        // }
-    }
-    // @GetMapping(path = "/hotel/search")
-    // public ResponseEntity<ApiResponse<List<HotelDistanceDTO>>> searchHotel(
-    //         @RequestParam Address address,
-    //         @RequestParam int capacity,
-    //         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-    //         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate
-    // ) {
-    //     try {
-    //         List<HotelDistanceDTO> hotels = hotelService.getHotelDistanceDTOByAddress(
-    //                 address,
-    //                 capacity,
-    //                 checkInDate,
-    //                 checkOutDate);
-    //         ApiResponse<List<HotelDistanceDTO>> response = new ApiResponse<>("success", "Hotels found", hotels);
-    //         return ResponseEntity.ok(response);
-    //     } catch (Exception e) {
-    //         ApiResponse<List<HotelDistanceDTO>> response = new ApiResponse<>("error", e.getMessage(), null);
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    //     }
-    // }
-
-    @GetMapping(path = "/hotels/{id}/available-rooms")
-    public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> searchHotelWithAvailableRoom(
-            @PathVariable Long id,
-            @RequestParam int capacity,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
         try {
-            HotelWithRoomsDTO hotel = hotelService.getHotelWithAvailableRoomsDTO(id, capacity, checkInDate, checkOutDate);
-            ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", "Available rooms found", hotel);
+            Validation.validateHotelSearchInforDTO(requestData);
+            List<HotelDistanceDTO> hotels = hotelService.getHotelDistanceDTOByAddress(
+                    requestData.getRoomQuantity(),
+                    requestData.getFullAddress(),
+                    requestData.getAdultQuantity(),
+                    requestData.getChildrenQuantity(),
+                    requestData.getCheckInDate(),
+                    requestData.getCheckOuDate());
+            ApiResponse<List<HotelDistanceDTO>> response = new ApiResponse<>("success", "Hotels found", hotels);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("error", e.getMessage(), null);
+            ApiResponse<List<HotelDistanceDTO>> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @GetMapping(path = "/hotels/{id}/available-rooms")//ma no chu
+    public ResponseEntity<ApiResponse<List<RoomDTO>>> searchHotelWithAvailableRoom(
+            @PathVariable Long hotelId,
+            @RequestBody HotelSearchInforDTO requestData) {
+        try {
+            List<RoomDTO> rooms = hotelService.getAvailableRoomsDTO(
+                    requestData.getRoomQuantity(),
+                    hotelId,
+                    requestData.getAdultQuantity(),
+                    requestData.getChildrenQuantity(),
+                    requestData.getCheckInDate(),
+                    requestData.getCheckOuDate());
+            ApiResponse<List<RoomDTO>> response = new ApiResponse<>("success", "Available rooms found", rooms);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<List<RoomDTO>> response = new ApiResponse<>("error", e.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @GetMapping(path = "/getHotel/{id}")//get step 1
     public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(@PathVariable Long id) {
-        System.out.println("lmsdasdas id:  " + id);
         try {
             Hotel hotel = hotelService.getHotelByHotelId(id);
             HotelWithRoomsDTO dto = new HotelWithRoomsDTO();
@@ -123,7 +111,7 @@ public class CustomerController {
             );
             dto.setHotelId(hotel.getId());
             dto.setHotelName(hotel.getName());
-            dto.setImageUrl(hotel.getImages().isEmpty() ? null : hotel.getImages().get(0));
+            dto.setImages(hotel.getImages());
             dto.setDescription(hotel.getDescription());
             dto.setRooms(new ArrayList<>());
             dto.setAddress(addressDTO);

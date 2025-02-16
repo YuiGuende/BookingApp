@@ -16,9 +16,11 @@ export default function useHotel(searchParams) {
         const requestBody = {
           fullAddress: searchParams.fullAddress,
           capacity: searchParams.capacity,
-          checkInDate: searchParams.checkInDate ? searchParams.checkInDate.toISOString() : null,
-          checkOuDate: searchParams.checkOutDate ? searchParams.checkOutDate.toISOString() : null,
+          checkInDate: searchParams.checkInDate ? searchParams.checkInDate : null,
+          checkOuDate: searchParams.checkOutDate ? searchParams.checkOutDate : null,
         }
+
+        console.log(requestBody)
 
         const response = await fetch("http://localhost:8080/api/customer/hotel/search", {
           method: "POST",
@@ -27,11 +29,11 @@ export default function useHotel(searchParams) {
           },
           body: JSON.stringify(requestBody),
         })
-
+        
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
-
+        
         const data = await response.json()
 
         if (data.status === "success") {

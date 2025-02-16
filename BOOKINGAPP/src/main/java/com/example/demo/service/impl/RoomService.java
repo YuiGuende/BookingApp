@@ -69,7 +69,7 @@ public class RoomService implements RoomServiceInterface {
         findRoom.setType(room.getType());
         findRoom.setDescription(room.getDescription());
         findRoom.setPrice(room.getPrice());  
-        findRoom.setCapacity(room.getCapacity());          
+        findRoom.setOccupancy(room.getOccupancy());       
         findRoom.setImages(room.getImages());
     
         roomRrepository.save(findRoom);

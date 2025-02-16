@@ -1,10 +1,12 @@
 package com.example.demo.model.booking;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.example.demo.model.room.Room;
 import com.example.demo.model.user.customer.Customer;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
@@ -42,15 +45,19 @@ public class Booking {
     private LocalDate checkOutDate; // Ngày trả phòng
     private double totalPrice; // Tổng tiền cho kỳ nghỉ
 
-    @ManyToOne
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private Room room; // Phòng được đặt
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookingRoom> bookingRooms = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status; // Trạng thái đặt phòng (Pending, Confirmed, Canceled)
 
+    public Booking() {
+        this.bookingRooms = new ArrayList<>();
+    }
+
     public Booking(Customer customer, String name, String email, String phone, LocalDate checkInDate,
-            LocalDate checkOutDate, double totalPrice, Room room, BookingStatus status) {
+            LocalDate checkOutDate, double totalPrice, List<BookingRoom> bookingRooms, BookingStatus status) {
+        this.bookingRooms = new ArrayList<>();
         this.customer = customer;
         this.name = name;
         this.email = email;
@@ -58,7 +65,7 @@ public class Booking {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.totalPrice = totalPrice;
-        this.room = room;
+        this.bookingRooms = bookingRooms;
         this.status = status;
     }
 
@@ -110,14 +117,6 @@ public class Booking {
         this.totalPrice = totalPrice;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public Long getId() {
         return id;
     }
@@ -142,5 +141,12 @@ public class Booking {
         this.status = status;
     }
 
-    // Getters và Setters
+    public List<BookingRoom> getBookingRooms() {
+        return bookingRooms;
+    }
+
+    public void setBookingRooms(List<BookingRoom> bookingRooms) {
+        this.bookingRooms = bookingRooms;
+    }
+
 }

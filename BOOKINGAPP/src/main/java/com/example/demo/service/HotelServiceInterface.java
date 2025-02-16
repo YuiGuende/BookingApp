@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.dto.HotelDistanceDTO;
-import com.example.demo.dto.HotelWithRoomsDTO;
+import com.example.demo.dto.RoomDTO;
 import com.example.demo.model.hotel.Hotel;
 
 public interface HotelServiceInterface {
@@ -18,17 +18,22 @@ public interface HotelServiceInterface {
     boolean isAddressExist(Hotel hotel);
 
     List<HotelDistanceDTO> getHotelDistanceDTOByAddress(
+            int roomQuantity,
             String fullAddress,
-            int capacity,
+            int adultQuantity,
+            int childrenQuantity,
             LocalDate checkinDate,
             LocalDate checkoutDate);
 
-    public HotelWithRoomsDTO getHotelWithAvailableRoomsDTO(
-        Long id, 
-        int capacity, 
-        LocalDate checkinDate,
-        LocalDate checkoutDate);
+    public List<RoomDTO> getAvailableRoomsDTO(
+            int roomQuantity,
+            Long hotelId,
+            int adultQuantity,
+            int childrenQuantity,
+            LocalDate checkinDate,
+            LocalDate checkoutDate);
 
     void sort(List<HotelDistanceDTO> dtos);
 
+    void updateHotelDetails(Hotel hotel);
 }
