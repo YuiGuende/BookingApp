@@ -16,6 +16,7 @@
     "@mui/material": "^6.4.4",
     "@mui/x-date-pickers-pro": "^7.26.0",
     "dayjs": "^1.11.13",
+    "lucide-react": "^0.475.0",
     "my-react-app": "file:",
     "react": "^18.3.1",
     "react-datepicker": "^8.0.0",

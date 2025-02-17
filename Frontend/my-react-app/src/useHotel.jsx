@@ -15,9 +15,11 @@ export default function useHotel(searchParams) {
       try {
         const requestBody = {
           fullAddress: searchParams.fullAddress,
-          capacity: searchParams.capacity,
           checkInDate: searchParams.checkInDate ? searchParams.checkInDate : null,
           checkOuDate: searchParams.checkOutDate ? searchParams.checkOutDate : null,
+          maxAdults: searchParams.maxAdults,
+          maxChildren: searchParams.maxChildren,
+          rooms: searchParams.rooms,
         }
 
         console.log(requestBody)
@@ -55,4 +57,3 @@ export default function useHotel(searchParams) {
 
   return { hotels, loading, error }
 }
-

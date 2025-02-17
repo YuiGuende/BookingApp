@@ -1,13 +1,11 @@
-"use client"
+// "use client"
 
-import { useState } from "react"
-import useHotel from "./useHotel"
-import HotelDetails from "./HotelDetails"
-import "./index.css"
-import Header from "./Header"
-import Button from "./Button"
-import SearchBar from "./SearchBar"
-
+// import { useState } from "react"
+// import useHotel from "./useHotel"
+// import HotelDetails from "./HotelDetails"
+// import "./index.css"
+// import Header from "./Header"
+// import SearchBar from "./SearchBar"
 // export default function Home() {
 //   const [searchParams, setSearchParams] = useState({
 //     fullAddress: "",
@@ -36,31 +34,34 @@ import SearchBar from "./SearchBar"
 //   )
 // }
 
+"use client"
+
+import { useState } from "react"
+import useHotel from "./useHotel"
+import HotelDetails from "./HotelDetails"
+import "./index.css"
+import Header from "./Header"
+import SearchBar from "./SearchBar"
+
 export default function Home() {
   const [searchParams, setSearchParams] = useState({
-        fullAddress: "",
-        checkInDate: null,
-        checkOutDate: null,
-        capacity: 1,
-      })
-      const { hotels, loading, error } = useHotel(searchParams)
-    
-      const handleSearch = (params) => {
-        setSearchParams(params)
-      }
+    fullAddress: "",
+    checkInDate: null,
+    checkOutDate: null,
+    maxAdults: 1,
+    maxChildren: 0,
+    rooms: 1,
+  })
+  const { hotels, loading, error } = useHotel(searchParams)
+
+  const handleSearch = (params) => {
+    setSearchParams(params)
+  }
 
   return (
     <div className="container">
       <Header />
-      <SearchBar
-        onSearch={handleSearch}
-        initialParams={{
-          fullAddress: "",
-          checkInDate: null,
-          checkOutDate: null,
-          capacity: 1,
-        }}
-      />
+      <SearchBar onSearch={handleSearch} initialParams={searchParams} />
       {loading && <p className="loading-msg">Loading...</p>}
       {error && <p className="error-msg">Error: {error}</p>}
       {hotels && hotels.length > 0 ? (
@@ -71,4 +72,3 @@ export default function Home() {
     </div>
   )
 }
-
