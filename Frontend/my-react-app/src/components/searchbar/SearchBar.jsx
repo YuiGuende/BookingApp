@@ -15,12 +15,12 @@ LicenseInfo.setLicenseKey('e0d9bb8070ce0054c9d9ecb6e82cb58fTz0wLEU9MzI0NzIxNDQwM
 
 function SearchBar({ onSearch, initialParams }) {
   const [searchParams, setSearchParams] = useState({
+     roomQuantity: 1,
     fullAddress: "",
     checkInDate: null,
     checkOutDate: null,
-    maxAdults: 1,
-    maxChildren: 0,
-    rooms: 1,
+    adultQuantity: 1,
+    childrenQuantity: 0,
     ...initialParams,
   })
   const handleChange = (name, value) => {
@@ -85,9 +85,9 @@ function SearchBar({ onSearch, initialParams }) {
         </LocalizationProvider>
       </div>
       <Capacity
-          maxAdults={searchParams.maxAdults}
-          maxChildren={searchParams.maxChildren}
-          rooms={searchParams.rooms}
+          adultQuantity={searchParams.adultQuantity}
+          childrenQuantity={searchParams.childrenQuantity}
+          roomQuantity={searchParams.roomQuantity}
           onChange={handleCapacityChange}
         />      {/* </div> */}
       <Button type="submit" iconOnly={true} aria-label="Search" />

@@ -7,19 +7,19 @@ public class HotelSearchInforDTO {
     private int roomQuantity;
     private String fullAddress;
     private LocalDate checkInDate;
-    private LocalDate checkOuDate;
+    private LocalDate checkOutDate;
     private int adultQuantity;
     private int childrenQuantity;
 
     public HotelSearchInforDTO() {
     }
 
-    public HotelSearchInforDTO(int roomQuantity, String fullAddress, LocalDate checkInDate, LocalDate checkOuDate,
+    public HotelSearchInforDTO(int roomQuantity, String fullAddress, LocalDate checkInDate, LocalDate checkOutDate,
             int adultQuantity, int childrenQuantity) {
         this.roomQuantity = roomQuantity;
         this.fullAddress = fullAddress;
         this.checkInDate = checkInDate;
-        this.checkOuDate = checkOuDate;
+        this.checkOutDate = checkOutDate;
         this.adultQuantity = adultQuantity;
         this.childrenQuantity = childrenQuantity;
     }
@@ -48,12 +48,12 @@ public class HotelSearchInforDTO {
         this.checkInDate = checkInDate;
     }
 
-    public LocalDate getCheckOuDate() {
-        return checkOuDate;
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
     }
 
     public void setCheckOuDate(LocalDate checkOuDate) {
-        this.checkOuDate = checkOuDate;
+        this.checkOutDate = checkOuDate;
     }
 
     public String getFullAddress() {

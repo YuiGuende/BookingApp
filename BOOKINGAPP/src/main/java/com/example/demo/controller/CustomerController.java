@@ -63,7 +63,7 @@ public class CustomerController {
                     requestData.getAdultQuantity(),
                     requestData.getChildrenQuantity(),
                     requestData.getCheckInDate(),
-                    requestData.getCheckOuDate());
+                    requestData.getCheckOutDate());
             ApiResponse<List<HotelDistanceDTO>> response = new ApiResponse<>("success", "Hotels found", hotels);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class CustomerController {
                     requestData.getAdultQuantity(),
                     requestData.getChildrenQuantity(),
                     requestData.getCheckInDate(),
-                    requestData.getCheckOuDate());
+                    requestData.getCheckOutDate());
             ApiResponse<List<RoomDTO>> response = new ApiResponse<>("success", "Available rooms found", rooms);
             return ResponseEntity.ok(response);
         } catch (Exception e) {

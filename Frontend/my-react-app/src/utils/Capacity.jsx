@@ -2,20 +2,20 @@
 
 import { useState } from "react"
 
-function Capacity({ maxAdults, maxChildren, rooms, onChange }) {
+function Capacity({ adultQuantity, childrenQuantity, roomQuantity, onChange }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleChange = (type, change) => {
     let newValue
     switch (type) {
-      case "maxAdults":
-        newValue = Math.max(1, maxAdults + change)
+      case "adultQuantity":
+        newValue = Math.max(1, adultQuantity + change)
         break
-      case "maxChildren":
-        newValue = Math.max(0, maxChildren + change)
+      case "childrenQuantity":
+        newValue = Math.max(0, childrenQuantity + change)
         break
       case "rooms":
-        newValue = Math.max(1, rooms + change)
+        newValue = Math.max(1, roomQuantity + change)
         break
       default:
         return
@@ -23,7 +23,7 @@ function Capacity({ maxAdults, maxChildren, rooms, onChange }) {
     onChange(type, newValue)
   }
 
-  const buttonText = `${maxAdults} adults · ${maxChildren} children · ${rooms} room`
+  const buttonText = `${adultQuantity} adults · ${childrenQuantity} children · ${roomQuantity} room`
 
   return (
     <div className="capacity-dropdown">
@@ -40,14 +40,14 @@ function Capacity({ maxAdults, maxChildren, rooms, onChange }) {
             <div className="counter-controls">
               <button
                 type="button"
-                onClick={() => handleChange("maxAdults", -1)}
+                onClick={() => handleChange("adultQuantity", -1)}
                 className="counter-button"
-                disabled={maxAdults <= 1}
+                disabled={adultQuantity <= 1}
               >
                 −
               </button>
-              <span className="counter-value">{maxAdults}</span>
-              <button type="button" onClick={() => handleChange("maxAdults", 1)} className="counter-button">
+              <span className="counter-value">{adultQuantity}</span>
+              <button type="button" onClick={() => handleChange("adultQuantity", 1)} className="counter-button">
                 +
               </button>
             </div>
@@ -58,14 +58,14 @@ function Capacity({ maxAdults, maxChildren, rooms, onChange }) {
             <div className="counter-controls">
               <button
                 type="button"
-                onClick={() => handleChange("maxChildren", -1)}
+                onClick={() => handleChange("childrenQuantity", -1)}
                 className="counter-button"
-                disabled={maxChildren <= 0}
+                disabled={childrenQuantity <= 0}
               >
                 −
               </button>
-              <span className="counter-value">{maxChildren}</span>
-              <button type="button" onClick={() => handleChange("maxChildren", 1)} className="counter-button">
+              <span className="counter-value">{childrenQuantity}</span>
+              <button type="button" onClick={() => handleChange("childrenQuantity", 1)} className="counter-button">
                 +
               </button>
             </div>
@@ -76,14 +76,14 @@ function Capacity({ maxAdults, maxChildren, rooms, onChange }) {
             <div className="counter-controls">
               <button
                 type="button"
-                onClick={() => handleChange("rooms", -1)}
+                onClick={() => handleChange("roomQuantity", -1)}
                 className="counter-button"
-                disabled={rooms <= 1}
+                disabled={roomQuantity <= 1}
               >
                 −
               </button>
-              <span className="counter-value">{rooms}</span>
-              <button type="button" onClick={() => handleChange("rooms", 1)} className="counter-button">
+              <span className="counter-value">{roomQuantity}</span>
+              <button type="button" onClick={() => handleChange("roomQuantity", 1)} className="counter-button">
                 +
               </button>
             </div>
