@@ -37,11 +37,11 @@
 "use client"
 
 import { useState } from "react"
-import useHotel from "./useHotel"
+import useHotel from "../hooks/useHotel"
 import HotelDetails from "./HotelDetails"
-import "./index.css"
-import Header from "./Header"
-import SearchBar from "./SearchBar"
+import "../assets/index.css";
+import Header from "../components/header/Header"
+import SearchBar from "../components/searchbar/SearchBar"
 
 export default function Home() {
   const [searchParams, setSearchParams] = useState({
@@ -61,6 +61,10 @@ export default function Home() {
   return (
     <div className="container">
       <Header />
+      <div className="welcome-sentence">
+        <h1>Find your next place to stay</h1>
+        <h3>Find hotel deals, home stays and more...</h3>
+      </div>
       <SearchBar onSearch={handleSearch} initialParams={searchParams} />
       {loading && <p className="loading-msg">Loading...</p>}
       {error && <p className="error-msg">Error: {error}</p>}

@@ -1,0 +1,35 @@
+header{
+    height: 10%;
+    display: flex;
+    justify-content: space-between;
+    padding: 2%;
+  }
+  .return-home{
+    width: 20%;
+    height: 100%;
+    color: white;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .startBtn{
+    display: flex;
+    justify-content: space-around;
+    width: 25%;
+  }
+  #loginBtn, #signupBtn{
+    width: 35%;
+    height: 100%;
+    padding: 3% 5%;
+    background: none;
+    color: white;
+    border: 2px solid white;
+    font-size: 1.2em;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  #loginBtn:hover, #signupBtn:hover{
+    background-color: rgba(255, 255, 255, 0.2);
+  }

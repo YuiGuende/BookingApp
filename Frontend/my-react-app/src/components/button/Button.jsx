@@ -8,6 +8,7 @@
 //   }
 import React from 'react';
 import { Search } from 'lucide-react';
+import './ButtonStyles.css';
 
 export default function Button({ children, type = "button", iconOnly = false, ...props }) {
   return (

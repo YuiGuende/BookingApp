@@ -1,78 +1,3 @@
-// "use client"
-
-// import { useState } from "react"
-// import Button from "./Button"
-// // import DatePicker from "react-datepicker"
-// // import "react-datepicker/dist/react-datepicker.css"
-// import CustomerDatePicker from "./CustomerDatePicker"
-// function SearchBar({ onSearch, initialParams }) {
-//   const [searchParams, setSearchParams] = useState({
-//     fullAddress: "",
-//     checkInDate: null,
-//     checkOutDate: null,
-//     capacity: 1,
-//     ...initialParams,
-//   })
-
-//   const handleChange = (name, value) => {
-//     setSearchParams((prev) => ({ ...prev, [name]: value }))
-//   }
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault()
-//     onSearch(searchParams)
-//   }
-
-//   return (
-//     <form className="search-bar" onSubmit={handleSubmit}>
-//       <input
-//         type="text"
-//         value={searchParams.fullAddress}
-//         onChange={(e) => handleChange("fullAddress", e.target.value)}
-//         placeholder="Enter full address"
-//         className="input-field"
-//       />
-//       {/* <div className="date-input">
-//         <DatePicker
-//           selected={searchParams.checkInDate}
-//           onChange={(date) => handleChange("checkInDate", date)}
-//           placeholderText="Check-in Date"
-//           className="input-field"
-//         />
-//         <DatePicker
-//           selected={searchParams.checkOutDate}
-//           onChange={(date) => handleChange("checkOutDate", date)}
-//           placeholderText="Check-out Date"
-//           className="input-field"
-//         />
-//       </div> */}
-//       <CustomerDatePicker onDateChange={handleDateChange} />
-//       <div className="capacity-input">
-//           <label htmlFor="capacity">Capacity:</label>
-//           <div className="capacity-controls">
-//             <button type="button" onClick={() => handleCapacityChange(-1)} className="capacity-button">
-//               -
-//             </button>
-//             <input
-//               type="number"
-//               id="capacity"
-//               value={searchParams.capacity}
-//               onChange={(e) => handleChange("capacity", Number.parseInt(e.target.value) || 1)}
-//               className="capacity-value"
-//               min="1"
-//             />
-//             <button type="button" onClick={() => handleCapacityChange(1)} className="capacity-button">
-//               +
-//             </button>
-//           </div>
-//         </div>
-//       <Button type="submit">Search</Button>
-//     </form>
-//   )
-// }
-
-// export default SearchBar
-
 "use client"
 
 import { useState } from "react"
@@ -81,9 +6,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs"
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker"
 // import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
 import dayjs from "dayjs"
-import Button from "./Button"
-import Capacity from "./Capacity"
+import Button from "../button/Button"
+import Capacity from "../../utils/Capacity"
 import { LicenseInfo } from '@mui/x-license';
+import "./SearchbarStyles.css";
 
 LicenseInfo.setLicenseKey('e0d9bb8070ce0054c9d9ecb6e82cb58fTz0wLEU9MzI0NzIxNDQwMDAwMDAsUz1wcmVtaXVtLExNPXBlcnBldHVhbCxLVj0y');
 
