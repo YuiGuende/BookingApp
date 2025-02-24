@@ -1,12 +1,78 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./Home";
-import HotelResult from "./HotelResult";
+// "use client"
 
-export default function Page() {
+// import { useState } from "react"
+// import useHotel from "./useHotel"
+// import HotelDetails from "./HotelDetails"
+// import "./index.css"
+// import Header from "./Header"
+// import SearchBar from "./SearchBar"
+// export default function Home() {
+//   const [searchParams, setSearchParams] = useState({
+//     fullAddress: "",
+//     checkInDate: null,
+//     checkOutDate: null,
+//     capacity: 1,
+//   })
+//   const { hotels, loading, error } = useHotel(searchParams)
+
+//   const handleSearch = (params) => {
+//     setSearchParams(params)
+//   }
+
+//   return (
+//     <div className="container">
+//       <Header />
+//       <SearchBar onSearch={handleSearch} initialParams={searchParams} />
+//       {loading && <p className="loading-msg">Loading...</p>}
+//       {error && <p className="error-msg">Error: {error}</p>}
+//       {hotels && hotels.length > 0 ? (
+//         hotels.map((hotel) => <HotelDetails key={hotel.hotelId} hotel={hotel} />)
+//       ) : (
+//         <p>No hotels found. Try adjusting your search criteria.</p>
+//       )}
+//     </div>
+//   )
+// }
+
+"use client"
+
+import { useState } from "react"
+import useHotel from "../hooks/useHotel"
+import HotelDetails from "./HotelDetails"
+import "../assets/index.css";
+import Header from "../components/header/Header"
+import SearchBar from "../components/searchbar/SearchBar"
+
+export default function Home() {
+  const [searchParams, setSearchParams] = useState({
+    fullAddress: "",
+    checkInDate: null,
+    checkOutDate: null,
+    maxAdults: 1,
+    maxChildren: 0,
+    rooms: 1,
+  })
+  const { hotels, loading, error } = useHotel(searchParams)
+
+  const handleSearch = (params) => {
+    setSearchParams(params)
+  }
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/HotelResult" element={<HotelResult />} />
-    </Routes>
-  );
+    <div className="container">
+      <Header />
+      <div className="welcome-sentence">
+        <h1>Find your next place to stay</h1>
+        <h3>Find hotel deals, home stays and more...</h3>
+      </div>
+      <SearchBar onSearch={handleSearch} initialParams={searchParams} />
+      {loading && <p className="loading-msg">Loading...</p>}
+      {error && <p className="error-msg">Error: {error}</p>}
+      {hotels && hotels.length > 0 ? (
+        hotels.map((hotel) => <HotelDetails key={hotel.hotelId} hotel={hotel} />)
+      ) : (
+        <p>No hotels found. Try adjusting your search criteria.</p>
+      )}
+    </div>
+  )
 }

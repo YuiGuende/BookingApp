@@ -12,6 +12,19 @@
       "name": "bookingdata",
       "database": "bookingdata",
       "username": "root"
+    },
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "mysql",
+      "database": "bookingdata",
+      "username": "root"
     }
   ],
   "C_Cpp_Runner.cCompilerPath": "gcc",
