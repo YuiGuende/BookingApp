@@ -18,10 +18,11 @@ public class SearchHotelDTO {
 
     public SearchHotelDTO() {
         this.rate = new Rate();
+        this.price = Double.MAX_VALUE;
     }
 
     public SearchHotelDTO(List<RoomDTO> rooms, Long hotelId, String hotelName, String image, AddressDTO address,
-            String description, Rate rate, double price, int stars) {
+            String description, Rate rate, int stars) {
         this.rooms = rooms;
         this.hotelId = hotelId;
         this.hotelName = hotelName;
@@ -29,7 +30,7 @@ public class SearchHotelDTO {
         this.address = address;
         this.description = description;
         this.rate = rate;
-        this.price = price;
+        this.price = Double.MAX_VALUE;
         this.stars = stars;
     }
 

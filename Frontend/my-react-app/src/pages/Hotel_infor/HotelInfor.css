@@ -1,0 +1,170 @@
+/* Tổng quan trang */
+.hotel-container-infor {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+/* Tiêu đề khách sạn */
+.hotel-header-infor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.hotel-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.hotel-rating {
+    font-size: 16px;
+    background-color: #003580;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Hình ảnh chính của khách sạn */
+.hotel-images img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Thư viện ảnh khách sạn */
+.hotel-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.hotel-thumbnail {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.hotel-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+/* Mô tả khách sạn */
+.hotel-description {
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Danh sách phòng */
+.room-list {
+    margin-top: 30px;
+}
+
+.room-card {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background: #fff;
+    transition: box-shadow 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.room-card:hover {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.room-image {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.room-details {
+    flex: 1;
+}
+
+.room-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.room-description {
+    font-size: 14px;
+    color: #555;
+}
+
+.room-price {
+    font-size: 18px;
+    color: #d9534f;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Popup chi tiết phòng */
+.room-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    width: 70%;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.room-modal-images {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.room-modal-images img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.room-amenities {
+    list-style: none;
+    padding: 0;
+}
+
+.room-amenities li {
+    font-size: 14px;
+    color: #333;
+    margin: 5px 0;
+}

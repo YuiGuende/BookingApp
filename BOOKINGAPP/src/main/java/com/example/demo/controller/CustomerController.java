@@ -23,6 +23,7 @@ import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelSearchInforDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
+import com.example.demo.dto.SearchHotelDTO;
 import com.example.demo.model.address.Address;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.hotel.Hotel;
@@ -95,28 +96,7 @@ public class CustomerController {
     @GetMapping(path = "/getHotel/{id}")//get step 1
     public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(@PathVariable Long id) {
         try {
-            Hotel hotel = hotelService.getHotelByHotelId(id);
-            HotelWithRoomsDTO dto = new HotelWithRoomsDTO();
-            Address address1 = hotel.getAddress();
-            AddressDTO addressDTO = new AddressDTO(
-                    address1.getId(),
-                    address1.getFullAddress(),
-                    address1.getPositioning(),
-                    address1.getNumber(),
-                    address1.getStreet(),
-                    address1.getCity(),
-                    address1.getState(),
-                    address1.getCountry(),
-                    address1.getZipCode()
-            );
-            dto.setHotelId(hotel.getId());
-            dto.setHotelName(hotel.getName());
-            dto.setImages(hotel.getImages());
-            dto.setDescription(hotel.getDescription());
-            dto.setRooms(new ArrayList<>());
-            dto.setAddress(addressDTO);
-            dto.setStars(hotel.getStars());
-            dto.setRate(hotel.getRate());
+            HotelWithRoomsDTO dto = hotelService.getHotelDTOById(id);
             ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", "hotel details", dto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {

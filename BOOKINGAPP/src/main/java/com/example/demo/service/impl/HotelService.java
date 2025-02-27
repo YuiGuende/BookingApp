@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,11 +15,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.AddressDTO;
 import com.example.demo.dto.HotelDistanceDTO;
+import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
 import com.example.demo.dto.SearchHotelDTO;
 import com.example.demo.exception.AddressExistedException;
@@ -27,7 +28,6 @@ import com.example.demo.model.address.Address;
 import com.example.demo.model.hotel.Hotel;
 import com.example.demo.model.room.Amenity;
 import com.example.demo.model.room.Room;
-import com.example.demo.model.room.RoomAmenity;
 import com.example.demo.model.room.SubRoomType;
 import com.example.demo.repository.AddressRepository;
 import com.example.demo.repository.HotelRepository;
@@ -115,11 +115,8 @@ public class HotelService implements HotelServiceInterface {
         List<HotelDistanceDTO> dtos = new ArrayList<>();
         Address address = geoUtils.loadAddress(fullAddress);
         address.setFullAddress(fullAddress);
-        List<SearchHotelDTO> filteredHotels = getFilterHotels(roomQuantity,address, adultQuantity, childrenQuantity, checkinDate, checkoutDate);
+        List<SearchHotelDTO> filteredHotels = getFilterHotels(roomQuantity, address, adultQuantity, childrenQuantity, checkinDate, checkoutDate);
         System.out.println(address);
-        if (filteredHotels.isEmpty()) {
-            throw new ResourceNotFoundException("No hotels found matching the criteria");
-        }
 
         double[] pos1;
         if (address.getPositioning() != null) {
@@ -157,13 +154,10 @@ public class HotelService implements HotelServiceInterface {
             int childrenQuantity,
             LocalDate checkinDate,
             LocalDate checkoutDate) {
-
+        int daysBetween = (int) ChronoUnit.DAYS.between(checkinDate, checkoutDate);
         String normalizedCity = normalizeString(address.getCity());
         String normalizedState = normalizeString(address.getState());
         String normalizedCountry = normalizeString(address.getCountry());
-
-        // Debug log
-        System.out.println("Searching with normalized city: " + normalizedCity);
 
         List<Object[]> results = roomRepository.findHotelsWithRoomsByAddressAndAvailability(
                 normalizedCountry,
@@ -175,16 +169,18 @@ public class HotelService implements HotelServiceInterface {
                 checkinDate,
                 checkoutDate
         );
-        if(results.isEmpty()){
-            System.out.println("result is null");
+        if (results.isEmpty()) {
+            throw new ResourceNotFoundException("No hotels found matching the criteria");
         }
 
         Map<Long, SearchHotelDTO> hotelsMap = new HashMap<>();
-
+        double minPrice = 0;
         for (Object[] result : results) {
             Hotel hotel = (Hotel) result[0];
             Room room = (Room) result[1];
-
+            if (minPrice < room.getPrice()) {
+                minPrice = room.getPrice();
+            }
             SearchHotelDTO hotelDTO = hotelsMap.computeIfAbsent(hotel.getId(), id -> {
                 SearchHotelDTO dto = new SearchHotelDTO();
                 Address address1 = hotel.getAddress();
@@ -224,7 +220,12 @@ public class HotelService implements HotelServiceInterface {
                     roomAmenities.isEmpty() ? new ArrayList<>() : roomAmenities,
                     subRoomTypes.isEmpty() ? new ArrayList<>() : subRoomTypes
             );
+
             hotelDTO.getRooms().add(roomDTO);
+            if (hotelDTO.getPrice() > roomDTO.getPrice() * daysBetween) {
+                hotelDTO.setPrice(roomDTO.getPrice() * daysBetween);
+            }
+
         }
 
         for (Map.Entry<Long, SearchHotelDTO> infor : hotelsMap.entrySet()) {
@@ -246,7 +247,7 @@ public class HotelService implements HotelServiceInterface {
             LocalDate checkoutDate) {
 
         List<Room> rooms = roomRepository.findAvailableRoomsByHotelAndCriteria(hotelId, adultQuantity, childrenQuantity, checkinDate, checkoutDate);
-        if(rooms.size()< roomQuantity){
+        if (rooms.size() < roomQuantity) {
             throw new ResourceNotFoundException("There is not enough room!");
         }
         return rooms
@@ -283,5 +284,54 @@ public class HotelService implements HotelServiceInterface {
     @Override
     public void updateHotelDetails(Hotel hotel) {
         hotelRepository.save(hotel);
+    }
+
+    @Override
+    public HotelWithRoomsDTO getHotelDTOById(Long id) {
+        Hotel hotel = getHotelByHotelId(id);
+        HotelWithRoomsDTO dto = new HotelWithRoomsDTO();
+        Address address1 = hotel.getAddress();
+        AddressDTO addressDTO = new AddressDTO(
+                address1.getId(),
+                address1.getFullAddress(),
+                address1.getPositioning(),
+                address1.getNumber(),
+                address1.getStreet(),
+                address1.getCity(),
+                address1.getState(),
+                address1.getCountry(),
+                address1.getZipCode()
+        );
+        dto.setHotelId(hotel.getId());
+        dto.setHotelName(hotel.getName());
+        dto.setImages(hotel.getImages().isEmpty() ? null : hotel.getImages());
+        dto.setDescription(hotel.getDescription());
+        List<RoomDTO> roomDTOs = new ArrayList<>();
+        for (Room room : hotel.getRooms()) {
+            roomDTOs.add(mapToRoomDTO(room));
+        }
+        dto.setRooms(roomDTOs);
+        dto.setAddress(addressDTO);
+        dto.setStars(hotel.getStars());
+        dto.setRate(hotel.getRate());
+        return dto;
+    }
+
+    public RoomDTO mapToRoomDTO(Room room) {
+        List<Amenity> roomAmenities = roomAmentityRepository.findAmenitiesByRoom(room);
+        List<SubRoomType> subRoomTypes = subRoomRepository.findSubRoomTypesByRoom(room);
+        return new RoomDTO(
+                room.getId(),
+                room.getName(),
+                room.getType(),
+                room.getDescription(),
+                room.getPrice(),
+                room.getOccupancy().getMaxAdults(),
+                room.getOccupancy().getMaxChildrens(),
+                room.getImages(),
+                roomAmenities.isEmpty() ? new ArrayList<>() : roomAmenities,
+                subRoomTypes.isEmpty() ? new ArrayList<>() : subRoomTypes
+        );
+
     }
 }

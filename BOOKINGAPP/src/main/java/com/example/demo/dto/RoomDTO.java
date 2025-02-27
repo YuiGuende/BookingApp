@@ -14,10 +14,10 @@ public class RoomDTO {
     private double price;
     private int maxAdults;
     private int maxChildrens;
-    List<String> images;
+    private List<String> images;
     private List<Amenity> amenity;
     private List<SubRoomType> subRoomTypes;
-    
+
     public RoomDTO() {
     }
 
@@ -35,9 +35,11 @@ public class RoomDTO {
         this.subRoomTypes = subRoomTypes;
     }
 
-public int getMaxAdults() {
+    
+
+    public int getMaxAdults() {
         return maxAdults;
-}
+    }
 
     public void setMaxAdults(int maxAdults) {
         this.maxAdults = maxAdults;
@@ -107,13 +109,9 @@ public int getMaxAdults() {
         this.amenity = amenity;
     }
 
-
-
     public List<SubRoomType> getSubRoomTypes() {
         return subRoomTypes;
     }
-
-
 
     public void setSubRoomTypes(List<SubRoomType> subRoomTypes) {
         this.subRoomTypes = subRoomTypes;

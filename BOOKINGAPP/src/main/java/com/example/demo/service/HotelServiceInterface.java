@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.dto.HotelDistanceDTO;
+import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
 import com.example.demo.model.hotel.Hotel;
 
@@ -12,6 +13,8 @@ public interface HotelServiceInterface {
     List<Hotel> getHotels();
 
     Hotel getHotelByHotelId(Long id);
+
+    HotelWithRoomsDTO getHotelDTOById(Long id);
 
     void addHotel(Hotel hotel);
 

@@ -1,34 +1,54 @@
 
 "use client";
-import { useEffect } from "react";
+
 import { useSelector } from "react-redux";
 import HotelDetails from "./HotelDetails";
-import { useLocation } from "react-router-dom";
-
+import "./HotelResult.css";
+import SearchBar from "../../components/searchbar/SearchBar";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchHotels } from "../../store/hotelSlice";
+import Header from "../../components/header/Header";
+import AmenityDetails from "./AmentityDetails";
 
 export default function HotelResult() {
-  console.log("Hotel result is running");
   const { hotels, loading, error } = useSelector((state) => state.hotel);
-  const searchData = useSelector((state) => state.hotel);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useState({
+    fullAddress: "",
+    checkInDate: null,
+    checkOutDate: null,
+    maxAdults: 1,
+    maxChildren: 0,
+    rooms: 1,
+  });
 
-  console.log("Search Data:", searchData);
+  const handleSearch = async (params) => {
+    setSearchParams(params);
+    // Gọi fetchHotels để fetch dữ liệu 1 lần
+    await dispatch(fetchHotels(params));
+    navigate("/HotelResult");
+  };
+  // {loading && <p className="loading-msg">Loading...</p>}
+  // {error && <p className="error-msg">Error: {error}</p>}
 
-  const location = useLocation();
-
-  useEffect(() => {
-    console.log("URL changed:", location.pathname);
-  }, [location]);
   return (
-    <div className="container">
-      <h1>Hotel Results</h1>
-      {loading && <p className="loading-msg">Loading...</p>}
-      {error && <p className="error-msg">Error: {error}</p>}
-      {hotels && hotels.length > 0 ? (
-        hotels.map((hotel) => <HotelDetails key={hotel.hotelId} hotel={hotel} />)
-      ) : (
-        <p>No hotels found. Try adjusting your search criteria.</p>
-      )}
-    </div>
+    <>
+      <Header />
+      <SearchBar onSearch={handleSearch} initialParams={searchParams} />
+      <div className="hotel-container">
+        <AmenityDetails />
+        <div className="hotel-list">
+          {hotels && hotels.length > 0 ? (
+            hotels.map((hotel) => <HotelDetails key={hotel.hotelId} hotel={hotel} />)
+          ) : (
+            <p>No hotels found. Try adjusting your search criteria.</p>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
 
