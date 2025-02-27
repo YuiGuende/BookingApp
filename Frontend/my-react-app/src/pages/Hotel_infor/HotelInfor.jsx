@@ -1,60 +1,4 @@
 
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import axios from "axios";
-// import "./HotelInfor.css";
-
-// const HotelInfor = () => {
-//     const { id } = useParams();
-//     const [hotel, setHotel] = useState(null);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState(null);
-
-//     useEffect(() => {
-//         axios.get(`http://localhost:8080/api/customer/getHotel/${id}`)
-//             .then(response => {
-//                 setHotel(response.data.data);
-//                 setLoading(false);
-//             })
-//             .catch(error => {
-//                 setError(error.message);
-//                 setLoading(false);
-//             });
-//     }, [id]);
-
-//     if (loading) return <p>Loading...</p>;
-//     if (error) return <p>Error: {error}</p>;
-//     if (!hotel) return <p>No hotel data available</p>;
-
-//     return (
-//         <div className="hotel-container">
-//             <h1 className="hotel-name">{hotel.hotelName}</h1>
-//             <p className="hotel-description">{hotel.description}</p>
-//             <p className="hotel-rating">⭐ {hotel.rate.rate} ({hotel.rate.rateQuantity} đánh giá)</p>
-//             <div className="hotel-gallery">
-//                 <img src={hotel.image} alt={hotel.hotelName} className="hotel-main-image" />
-//             </div>
-//             <h2>Phòng có sẵn</h2>
-//             <div className="room-list">
-//                 {hotel.rooms.map(room => (
-//                     <div key={room.id} className="room-item">
-//                         <img src={room.images[0]} alt={room.name} className="room-image" />
-//                         <div className="room-info">
-//                             <h3>{room.name}</h3>
-//                             <p>{room.description}</p>
-//                             <p>Loại: {room.type}</p>
-//                             <p>Sức chứa: {room.maxAdults} người lớn, {room.maxChildrens} trẻ em</p>
-//                             <p>Giá: {room.price.toLocaleString()} VND</p>
-//                             <button className="book-button">Đặt ngay</button>
-//                         </div>
-//                     </div>
-//                 ))}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default HotelInfor;
 
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
@@ -130,7 +74,7 @@ const HotelInfor = ({ hotelId }) => {
                             ))}
                         </div>
                         <p><strong>Mô tả:</strong> {selectedRoom.description}</p>
-                        <p><strong>Giá:</strong> ${selectedRoom.price} / đêm</p>
+                        <p><strong>Giá:</strong> VND {selectedRoom.price} / đêm</p>
                         <p><strong>Sức chứa:</strong> {selectedRoom.maxAdults} người lớn, {selectedRoom.maxChildrens} trẻ em</p>
                         <h3>Tiện nghi:</h3>
                         <ul className="room-amenities">

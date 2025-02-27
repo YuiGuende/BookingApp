@@ -14,6 +14,8 @@ import "./SearchbarStyles.css";
 LicenseInfo.setLicenseKey('e0d9bb8070ce0054c9d9ecb6e82cb58fTz0wLEU9MzI0NzIxNDQwMDAwMDAsUz1wcmVtaXVtLExNPXBlcnBldHVhbCxLVj0y');
 
 function SearchBar({ onSearch, initialParams }) {
+  
+
   const [searchParams, setSearchParams] = useState({
      roomQuantity: 1,
     fullAddress: "",
