@@ -27,7 +27,7 @@ function Capacity({ adultQuantity, childrenQuantity, roomQuantity, onChange }) {
   const buttonText = `${adultQuantity} adults · ${childrenQuantity} children · ${roomQuantity} room`
 
   return (
-    <div className="capacity-dropdown">
+    <div className="capacity-dropdown-button">
       <button type="button" className="capacity-button" onClick={() => setIsOpen(!isOpen)}>
         <div className="capacity-button-content">
           <span>{buttonText}</span><i className="arrow down"></i>

@@ -52,7 +52,6 @@ public class BookingService implements BookingServiceInterface {
     @Override
     public void saveBooking(Booking booking) {
         validateBooking(booking);
-
         if (booking.getCustomer() == null) {//kiểm tra customer tồn tại chưa, nếu chưa thì tạo user mới
             Optional<Customer> existingCustomer = customerRepository.findByEmailOrPhone(booking.getEmail(), booking.getPhone());
 

@@ -61,8 +61,6 @@
   width: 100%;
   margin: auto;
   padding: 2%;
-  display: grid;
-  grid-template-columns: 1.5fr 3fr;
 }
 /* Hotel List */
 .hotel-list {

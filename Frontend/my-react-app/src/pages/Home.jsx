@@ -25,6 +25,7 @@ export default function Home() {
   // Hàm xử lý khi người dùng nhấn “Tìm kiếm”
   const handleSearch = async (params) => {
     setSearchParams(params);
+    
     // Gọi fetchHotels để fetch dữ liệu 1 lần
     await dispatch(fetchHotels(params));
     // Sau khi fetch xong, chuyển hướng sang HotelResult

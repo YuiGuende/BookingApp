@@ -1,0 +1,33 @@
+.confirm-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .booking-details {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .booking-details h2 {
+    margin-top: 0;
+  }
+  
+  .booking-details p {
+    margin-bottom: 10px;
+  }
+  
+  .booking-details ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .booking-details li {
+    margin-bottom: 5px;
+  }
+  
+
+  

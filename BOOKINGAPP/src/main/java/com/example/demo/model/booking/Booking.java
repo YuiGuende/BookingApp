@@ -49,7 +49,7 @@ public class Booking {
     private List<BookingRoom> bookingRooms = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus status; // Trạng thái đặt phòng (Pending, Confirmed, Canceled)
+    private BookingStatus status; // Trạng thái đặt phòng (PENDING, CONFIRMED,  CANCELED)
 
     public Booking() {
         this.bookingRooms = new ArrayList<>();
