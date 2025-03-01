@@ -306,11 +306,10 @@ public class HotelService implements HotelServiceInterface {
         dto.setHotelName(hotel.getName());
         dto.setImages(hotel.getImages().isEmpty() ? null : hotel.getImages());
         dto.setDescription(hotel.getDescription());
-        List<RoomDTO> roomDTOs = new ArrayList<>();
+
         for (Room room : hotel.getRooms()) {
-            roomDTOs.add(mapToRoomDTO(room));
+           dto.addOrUpdateRoom(mapToRoomDTO(room), 1); 
         }
-        dto.setRooms(roomDTOs);
         dto.setAddress(addressDTO);
         dto.setStars(hotel.getStars());
         dto.setRate(hotel.getRate());

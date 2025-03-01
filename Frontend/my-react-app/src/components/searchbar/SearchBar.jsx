@@ -7,7 +7,7 @@ import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker"
 // import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
 import dayjs from "dayjs"
 import Button from "../button/Button"
-import Capacity from "../../utils/Capacity"
+import Capacity from "../../utils/capacity/Capacity"
 import { LicenseInfo } from '@mui/x-license';
 import "./SearchbarStyles.css";
 
@@ -58,6 +58,7 @@ function SearchBar({ onSearch, initialParams }) {
           onChange={(e) => handleChange("fullAddress", e.target.value)}
           placeholder="Enter location"
           autoComplete="off" action="/action_page.php"
+          className="input-location"
         />
       </div>
 

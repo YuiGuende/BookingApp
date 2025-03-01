@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useSelector } from "react-redux";
@@ -31,8 +30,8 @@ export default function HotelResult() {
     await dispatch(fetchHotels(params));
     navigate("/HotelResult");
   };
-  // {loading && <p className="loading-msg">Loading...</p>}
-  // {error && <p className="error-msg">Error: {error}</p>}
+  {loading && <p className="loading-msg">Loading...</p>}
+  {error && <p className="error-msg">Error: {error}</p>}
   const filters = [
     {
       id: 'popular-filters',
@@ -56,9 +55,15 @@ export default function HotelResult() {
     },
     {
       id: 'property-rating',
-      type: 'radio',
+      type: 'checkbox',
       name: 'Property Rating',
-      options: [1, 2, 3, 4, 5],
+      options: [
+        { id: 1, name: '1 star' },
+        { id: 2, name: '2 starts' },
+        { id: 3, name: '3 starts' },
+        { id: 4, name: '4 starts' },
+        { id: 5, name: '5 starts' },
+      ],
     },
   ];
 
@@ -75,16 +80,19 @@ export default function HotelResult() {
        
       <SearchBar onSearch={handleSearch} initialParams={searchParams}/>
       </div>
-      <div className="hotel-container">
+      <div className="result">
         <AmenityDetails filters={filters} onFilterChange={handleFilterChange} />
-        <div className="hotel-list">
-          {hotels && hotels.length > 0 ? (
-            hotels.map((hotel) => <HotelDetails key={hotel.hotelId} hotel={hotel} />)
-          ) : (
-            <p>No hotels found. Try adjusting your search criteria.</p>
-          )}
+        <div className="hotel-container">
+          <div className="hotel-list">
+            {hotels && hotels.length > 0 ? (
+              hotels.map((hotel) => <HotelDetails key={hotel.hotelId} hotel={hotel} />)
+            ) : (
+              <p>No hotels found. Try adjusting your search criteria.</p>
+            )}
+          </div>
         </div>
       </div>
+      
     </>
   );
 }

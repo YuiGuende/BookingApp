@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import "./CapacityStyles.css"
 
 function Capacity({ adultQuantity, childrenQuantity, roomQuantity, onChange }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -95,4 +96,3 @@ function Capacity({ adultQuantity, childrenQuantity, roomQuantity, onChange }) {
 }
 
 export default Capacity
-

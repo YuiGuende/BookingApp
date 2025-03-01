@@ -1,0 +1,17 @@
+.selection-container{
+    color: #003b95;
+    width: 5vw;
+    height: 7vh;
+    padding: 1% 2%;
+    text-align: center;
+    align-items: center;
+    margin: 2%;
+}
+label{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+#room-select{
+    font-size: 1.2em;
+    width: 5vw;
+}

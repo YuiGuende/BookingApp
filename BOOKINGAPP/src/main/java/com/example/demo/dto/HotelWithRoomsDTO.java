@@ -1,12 +1,18 @@
 package com.example.demo.dto;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.demo.model.hotel.Rate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class HotelWithRoomsDTO {
 
-    private List<RoomDTO> rooms;
+    @JsonIgnore
+    private Map<RoomDTO, Integer> roomsMap;
     private Long hotelId;
     private String hotelName;
     private List<String> images;
@@ -18,23 +24,59 @@ public class HotelWithRoomsDTO {
 
     public HotelWithRoomsDTO() {
         this.rate = new Rate();
+        this.roomsMap = new HashMap<>();
     }
 
-   
-
-    public HotelWithRoomsDTO(AddressDTO address, String description, Long hotelId, String hotelName, List<String> images, double price, Rate rate, List<RoomDTO> rooms, int stars) {
-        this.address = address;
-        this.description = description;
-        this.hotelId = hotelId;
+    public HotelWithRoomsDTO(Map<RoomDTO, Integer> roomsMap, String hotelName, List<String> images, AddressDTO address,
+            String description, Rate rate, double price, int stars) {
+        this.roomsMap = roomsMap;
         this.hotelName = hotelName;
         this.images = images;
-        this.price = price;
+        this.address = address;
+        this.description = description;
         this.rate = rate;
-        this.rooms = rooms;
+        this.price = price;
         this.stars = stars;
+        this.roomsMap = new HashMap<>();
     }
 
-   
+    @JsonIgnore
+    public Map<RoomDTO, Integer> getRoomsMap() {
+        return roomsMap;
+    }
+
+    public void setRoomsMap(Map<RoomDTO, Integer> roomsMap) {
+        this.roomsMap = roomsMap;
+    }
+
+    // Phương thức để thêm hoặc cập nhật số lượng phòng
+    public void addOrUpdateRoom(RoomDTO room, int quantity) {
+        roomsMap.merge(room, quantity, Integer::sum);
+    }
+
+    // Phương thức để lấy danh sách phòng cho JSON
+    @JsonProperty("rooms")
+    public List<Map<String, Object>> getRoomsForJson() {
+        List<Map<String, Object>> roomsList = new ArrayList<>();
+        for (Map.Entry<RoomDTO, Integer> entry : roomsMap.entrySet()) {
+            Map<String, Object> roomMap = new HashMap<>();
+            roomMap.put("room", entry.getKey());
+            roomMap.put("quantity", entry.getValue());
+            roomsList.add(roomMap);
+        }
+        return roomsList;
+    }
+
+    // Phương thức để đặt danh sách phòng từ JSON
+    @JsonProperty("rooms")
+    public void setRoomsFromJson(List<Map<String, Object>> roomsList) {
+        roomsMap.clear();
+        for (Map<String, Object> roomMap : roomsList) {
+            RoomDTO room = (RoomDTO) roomMap.get("room");
+            Integer quantity = (Integer) roomMap.get("quantity");
+            roomsMap.put(room, quantity);
+        }
+    }
 
     public String getDescription() {
         return description;
@@ -76,14 +118,6 @@ public class HotelWithRoomsDTO {
         this.hotelName = hotelName;
     }
 
-    public List<RoomDTO> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(List<RoomDTO> rooms) {
-        this.rooms = rooms;
-    }
-
     public int getStars() {
         return stars;
     }
@@ -100,13 +134,9 @@ public class HotelWithRoomsDTO {
         this.address = address;
     }
 
-
-
     public List<String> getImages() {
         return images;
     }
-
-
 
     public void setImages(List<String> images) {
         this.images = images;

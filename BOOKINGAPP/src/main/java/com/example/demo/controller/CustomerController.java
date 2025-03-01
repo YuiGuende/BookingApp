@@ -1,12 +1,8 @@
 package com.example.demo.controller;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,18 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.AddressDTO;
 import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelSearchInforDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
-import com.example.demo.dto.SearchHotelDTO;
-import com.example.demo.model.address.Address;
 import com.example.demo.model.booking.Booking;
-import com.example.demo.model.hotel.Hotel;
 import com.example.demo.model.room.Room;
 import com.example.demo.service.BookingServiceInterface;
 import com.example.demo.service.HotelServiceInterface;
@@ -95,14 +86,14 @@ public class CustomerController {
 
     @GetMapping(path = "/getHotel/{id}")//get step 1
     public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(@PathVariable Long id) {
-        try {
+        // try {
             HotelWithRoomsDTO dto = hotelService.getHotelDTOById(id);
             ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", "hotel details", dto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception e) {
-            ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        // } catch (Exception e) {
+        //     ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", e.getMessage(), null);
+        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        // }
     }
 
     @GetMapping(path = "/getRoom/{id}")//get step 2
@@ -112,7 +103,7 @@ public class CustomerController {
             ApiResponse<Room> response = new ApiResponse<>("success", "Room details", room);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            ApiResponse<Room> response = new ApiResponse<>("success", e.getMessage(), null);
+            ApiResponse<Room> response = new ApiResponse<>("error", e.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

@@ -1,12 +1,17 @@
 package com.example.demo.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.example.demo.model.room.Amenity;
 import com.example.demo.model.room.SubRoomType;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RoomDTO {
 
+    @JsonProperty("id")
     private Long id;
     private String name;
     private String type;
@@ -34,8 +39,6 @@ public class RoomDTO {
         this.amenity = amenity;
         this.subRoomTypes = subRoomTypes;
     }
-
-    
 
     public int getMaxAdults() {
         return maxAdults;
@@ -116,5 +119,40 @@ public class RoomDTO {
     public void setSubRoomTypes(List<SubRoomType> subRoomTypes) {
         this.subRoomTypes = subRoomTypes;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        RoomDTO roomDTO = (RoomDTO) obj;
+        return Objects.equals(id, roomDTO.id);
+    }
+
+    // Override hashCode để sử dụng id làm giá trị băm
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+
+
+    @Override
+    public String toString() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(this).replaceAll("\\\\", "");
+            System.out.println(json);
+            return json;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    
 
 }
