@@ -181,8 +181,7 @@ const Booking = () => {
                 },
                 rooms: bookingData.rooms.map((room) => ({
                     id: room.id
-                })),
-                
+                })),    
             }
             console.log(bookingToValidate)
 

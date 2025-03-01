@@ -112,15 +112,15 @@ public class CustomerController {
     //post step 2
     @PostMapping(path = "/booking/validate")
     public ResponseEntity<ApiResponse<Void>> validateBooking(@RequestBody BookingRequiredmentDTO bookingToValidate) {
-        // try {
+        try {
             System.out.println(bookingToValidate);
             bookingService.validateBooking(bookingToValidate);
             ApiResponse<Void> response = new ApiResponse<>("success", "This booking is valid!", null);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
-        // } catch (Exception e) {
-        //     ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        // }
+        } catch (Exception e) {
+            ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     //post step 3
