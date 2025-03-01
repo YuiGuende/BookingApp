@@ -1,8 +1,6 @@
 package com.example.demo.model.booking;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.example.demo.model.user.customer.Customer;
 
@@ -15,7 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
@@ -33,7 +30,7 @@ public class Booking {
     )
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
@@ -45,19 +42,22 @@ public class Booking {
     private LocalDate checkOutDate; // Ngày trả phòng
     private double totalPrice; // Tổng tiền cho kỳ nghỉ
 
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookingRoom> bookingRooms = new ArrayList<>();
+    //không lưu BookingRoom để tránh bị lặp
+    // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<BookingRoom> bookingRooms = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status; // Trạng thái đặt phòng (PENDING, CONFIRMED,  CANCELED)
 
     public Booking() {
-        this.bookingRooms = new ArrayList<>();
+        // this.bookingRooms = new ArrayList<>();
     }
 
     public Booking(Customer customer, String name, String email, String phone, LocalDate checkInDate,
-            LocalDate checkOutDate, double totalPrice, List<BookingRoom> bookingRooms, BookingStatus status) {
-        this.bookingRooms = new ArrayList<>();
+            LocalDate checkOutDate, double totalPrice, 
+            // List<BookingRoom> bookingRooms, 
+            BookingStatus status) {
+        // this.bookingRooms = new ArrayList<>();
         this.customer = customer;
         this.name = name;
         this.email = email;
@@ -65,7 +65,7 @@ public class Booking {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.totalPrice = totalPrice;
-        this.bookingRooms = bookingRooms;
+        // this.bookingRooms = bookingRooms;
         this.status = status;
     }
 
@@ -141,12 +141,12 @@ public class Booking {
         this.status = status;
     }
 
-    public List<BookingRoom> getBookingRooms() {
-        return bookingRooms;
-    }
+    // public List<BookingRoom> getBookingRooms() {
+    //     return bookingRooms;
+    // }
 
-    public void setBookingRooms(List<BookingRoom> bookingRooms) {
-        this.bookingRooms = bookingRooms;
-    }
+    // public void setBookingRooms(List<BookingRoom> bookingRooms) {
+    //     this.bookingRooms = bookingRooms;
+    // }
 
 }

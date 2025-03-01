@@ -135,10 +135,8 @@ public class RoomDTO {
     // Override hashCode để sử dụng id làm giá trị băm
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(type);
     }
-
-
 
     @Override
     public String toString() {

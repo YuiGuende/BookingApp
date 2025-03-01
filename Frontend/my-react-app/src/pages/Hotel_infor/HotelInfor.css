@@ -72,7 +72,10 @@
 .room-list {
     margin-top: 30px;
 }
-
+.room-image{
+    width: 20%;
+    border-radius: 15px;
+}
 .room-card {
     display: flex;
     gap: 15px;
@@ -88,12 +91,26 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
 } */
+.room-images img{
+    width: 30vw;
+    height: 53vh;
+    object-fit: cover;
+    border-radius: 8px;
+}
 
-.room-image {
-    width: 150px;
-    height: 100px;
+.room-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+.room-thumbnail {
+    width: 20%;
+    height: 10%;
     object-fit: cover;
     border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
 }
 
 .room-details {
@@ -139,12 +156,28 @@
     justify-content: center;
 }
 
-.modal-content {
+.modal-container {
     background: white;
     width: 70%;
+    height: 80%;
     padding: 20px;
     border-radius: 10px;
     position: relative;
+}
+.modal-header h2{
+    width: 50%;
+    height: 10%;
+    margin: 0;
+    margin-left: 2%;
+}
+.modal-content {
+    background: white;
+    width: 95%;
+    height: 80%;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    grid-column: 2;
 }
 
 .close-btn {
@@ -154,18 +187,16 @@
     font-size: 24px;
     cursor: pointer;
 }
-
-.room-modal-images {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    margin-top: 10px;
+.room-descript{
+    width: 50%;
+    padding-left: 2%;
+    font-size: 1.4rem;
 }
 
-.room-modal-images img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+.room-modal-images {
+    width: 70%;
+    height: 30%;
+    padding: 0;
     border-radius: 5px;
     cursor: pointer;
 }

@@ -43,28 +43,28 @@ const Confirm = () => {
       <div className="booking-details">
         <h2>Booking Details</h2>
         <p>
-          <strong>Name:</strong> {bookingData.customer.name}
+          <strong>Name:</strong> {bookingData.booking.customer.name}
         </p>
         <p>
-          <strong>Email:</strong> {bookingData.customer.email}
+          <strong>Email:</strong> {bookingData.booking.customer.email}
         </p>
         <p>
-          <strong>Phone:</strong> {bookingData.customer.phone}
+          <strong>Phone:</strong> {bookingData.booking.customer.phone}
         </p>
         <p>
-          <strong>Check-in Date:</strong> {bookingData.checkInDate}
+          <strong>Check-in Date:</strong> {bookingData.booking.checkInDate}
         </p>
         <p>
-          <strong>Check-out Date:</strong> {bookingData.checkOutDate}
+          <strong>Check-out Date:</strong> {bookingData.booking.checkOutDate}
         </p>
         <p>
-          <strong>Total Price:</strong> ${bookingData.totalPrice}
+          <strong>Total Price:</strong> ${bookingData.booking.totalPrice}
         </p>
         <h3>Rooms:</h3>
         <ul>
-          {bookingData.bookingRooms.map((bookingRoom, index) => (
+          {bookingData.rooms.map((bookingRoom, index) => (
             <li key={index}>
-              Room ID: {bookingRoom.room.id}, Quantity: {bookingRoom.quantity}
+              Room ID: {bookingRoom.id}, Quantity: {bookingRoom.quantity}
             </li>
           ))}
         </ul>

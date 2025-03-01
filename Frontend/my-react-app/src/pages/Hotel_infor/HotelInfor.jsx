@@ -323,31 +323,47 @@ const HotelInfor = () => {
         {/* Cửa sổ chi tiết phòng */}
         {selectedRoom && (
           <div className="room-modal">
-            <div className="modal-content">
-              <span className="close-btn" onClick={() => setSelectedRoom(null)}>
-                &times;
-              </span>
-              <h2>{selectedRoom.name}</h2>
-              <div className="room-modal-images">
-                {selectedRoom.images.map((img, index) => (
-                  <img key={index} src={img || "/placeholder.svg"} alt={`Room ${index}`} />
-                ))}
+            <div className="modal-container">
+              <div className="modal-header">
+                <span className="close-btn" onClick={() => setSelectedRoom(null)}>
+                  &times;
+                </span>
+                <h2>{selectedRoom.name}</h2>
               </div>
-              <p>
-                <strong>Mô tả:</strong> {selectedRoom.description}
-              </p>
-              <p>
-                <strong>Giá:</strong> VND {selectedRoom.price} / đêm
-              </p>
-              <p>
-                <strong>Sức chứa:</strong> {selectedRoom.maxAdults} người lớn, {selectedRoom.maxChildrens} trẻ em
-              </p>
-              <h3>Tiện nghi:</h3>
-              <ul className="room-amenities">
-                {selectedRoom.amenity.map((a, index) => (
-                  <li key={index}>✔ {a.name}</li>
-                ))}
-              </ul>
+              <div className="modal-content">
+                <div className="room-modal-images">
+                    {/* Ảnh chính */}
+                    <div className="room-images">
+                        <img src={selectedRoom.images[0] || "/placeholder.svg"} alt={selectedRoom.roomName} className="main-image" />
+                    </div>
+                    {/* Danh sách ảnh nhỏ */}
+                    <div className="room-gallery">
+                        {selectedRoom.images.map((img, index) => (
+                        <img key={index} src={img || "/placeholder.svg"} alt={`Room ${index}`} className="room-thumbnail" />
+                        ))}
+                    </div>
+                    {/* {selectedRoom.images.map((img, index) => (
+                        <img key={index} src={img || "/placeholder.svg"} alt={`Room ${index}`} />
+                    ))} */}
+                </div>
+                <div className="room-descript">
+                  <p>
+                    <strong>Mô tả:</strong> {selectedRoom.description}
+                  </p>
+                  <p>
+                    <strong>Giá:</strong> VND {selectedRoom.price} / đêm
+                  </p>
+                  <p>
+                    <strong>Sức chứa:</strong> {selectedRoom.maxAdults} người lớn, {selectedRoom.maxChildrens} trẻ em
+                  </p>
+                  <h3>Tiện nghi:</h3>
+                    <ul className="room-amenities">
+                        {selectedRoom.amenity.map((a, index) => (
+                            <li key={index}>✔ {a.name}</li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
             </div>
           </div>
         )}

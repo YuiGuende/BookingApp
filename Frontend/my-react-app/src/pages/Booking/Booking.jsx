@@ -138,7 +138,7 @@ const Booking = () => {
     const navigate = useNavigate()
     const [bookingData, setBookingData] = useState(null)
     const [searchInfo, setSearchInfo] = useState(null)
-    const [customer, setCustomer] = useState({
+    const [customer, setCustomer] = useState({//fix lại chỗ này, nếu customer trong session đã có thì lấy nó lưu vào đ
         name: "",
         email: "",
         phone: "",
@@ -172,15 +172,19 @@ const Booking = () => {
         e.preventDefault()
         try {
             const bookingToValidate = {
-                customer: customer,
-                checkInDate: searchInfo?.checkInDate,
-                checkOutDate: searchInfo?.checkOutDate,
-                totalPrice: bookingData.totalPrice,
-                bookingRooms: bookingData.rooms.map((room) => ({
-                    room: { id: room.id },
+                booking: {
+                    customer: customer,
+                    checkInDate: searchInfo?.checkInDate,
+                    checkOutDate: searchInfo?.checkOutDate,
+                    totalPrice: bookingData.totalPrice,
+                    status: "PENDING"
+                },
+                rooms: bookingData.rooms.map((room) => ({
+                    id: room.id
                 })),
-                status: "PENDING"
+                
             }
+            console.log(bookingToValidate)
 
             const response = await axios.post("http://localhost:8080/api/customer/booking/validate", bookingToValidate)
 

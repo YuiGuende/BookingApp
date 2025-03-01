@@ -3,7 +3,6 @@ package com.example.demo.model.payment;
 import java.time.LocalDate;
 
 import com.example.demo.model.booking.Booking;
-import com.example.demo.model.user.host.Host;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -47,9 +46,9 @@ public class Payment {
         this.transactionId = transactionId;
     }
 
-    public Host getHost(){//kiểm tra lại
-        return getBooking().getBookingRooms().get(0).getRoom().getHotel().getHost();
-    }
+    // public Host getHost(){//kiểm tra lại
+    //     return getBooking().getBookingRooms().get(0).getRoom().getHotel().getHost();
+    // }
 
     public Long getId() {
         return id;

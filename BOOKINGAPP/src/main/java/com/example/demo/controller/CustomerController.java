@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.BookingRequiredmentDTO;
 import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelSearchInforDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
@@ -110,20 +111,21 @@ public class CustomerController {
 
     //post step 2
     @PostMapping(path = "/booking/validate")
-    public ResponseEntity<ApiResponse<Void>> validateBooking(@RequestBody Booking booking) {
-        try {
-            bookingService.validateBooking(booking);
+    public ResponseEntity<ApiResponse<Void>> validateBooking(@RequestBody BookingRequiredmentDTO bookingToValidate) {
+        // try {
+            System.out.println(bookingToValidate);
+            bookingService.validateBooking(bookingToValidate);
             ApiResponse<Void> response = new ApiResponse<>("success", "This booking is valid!", null);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
-        } catch (Exception e) {
-            ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        // } catch (Exception e) {
+        //     ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
+        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        // }
     }
 
     //post step 3
     @PostMapping(path = "/booking/add")
-    public ResponseEntity<ApiResponse<Void>> addBooking(@RequestBody Booking booking) {
+    public ResponseEntity<ApiResponse<Void>> addBooking(@RequestBody BookingRequiredmentDTO booking) {
         try {
             bookingService.saveBooking(booking);
             ApiResponse<Void> response = new ApiResponse<>("success", "This room has been booked!", null);

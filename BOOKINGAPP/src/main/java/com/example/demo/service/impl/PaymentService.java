@@ -2,12 +2,10 @@ package com.example.demo.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.payment.Payment;
 import com.example.demo.model.user.host.Host;
 import com.example.demo.repository.HostRepository;
@@ -27,20 +25,20 @@ public class PaymentService implements PaymentServiceInterface {
     }
 
     @Override
-    public List<Payment> getPayment(Host host) {
+    public List<Payment> getPayment(Host host) {//chưa fix ^^
         List<Payment> payments = new ArrayList<>();
-        Optional<Host> hostOptional = hostRepository.findById(host.getId());
-        if (!hostOptional.isPresent()) {
-            throw new ResourceNotFoundException("Host not exist!");
-        }
-        for (Payment payment : paymentRepository.findAll()) {
-            if (payment.getHost() == host) {
-                payments.add(payment);
-            }
-        }
-        if(payments.isEmpty()){
-            throw new ResourceNotFoundException("You dont have any payment yet");
-        }
+        // Optional<Host> hostOptional = hostRepository.findById(host.getId());
+        // if (!hostOptional.isPresent()) {
+        //     throw new ResourceNotFoundException("Host not exist!");
+        // }
+        // for (Payment payment : paymentRepository.findAll()) {
+        //     if (payment.getHost() == host) {
+        //         payments.add(payment);
+        //     }
+        // }
+        // if(payments.isEmpty()){
+        //     throw new ResourceNotFoundException("You dont have any payment yet");
+        // }
         return payments;
     }
 
