@@ -208,23 +208,38 @@ const HotelInfor = () => {
   }, [id])
 
   const handleQuantityChange = (roomId, quantity) => {
-    setSelectedRooms((prev) => ({
-      ...prev,
-      [roomId]: quantity,
-    }))
+    console.log(roomId)
+    console.log(quantity)
+    setSelectedRooms((prev) => {
+      if (quantity === 0) {
+        const newSelected = { ...prev }
+        delete newSelected[roomId]
+        return newSelected
+      }
+      return { ...prev, [roomId]: quantity }
+    })
   }
 
   const handleBooking = () => {
+    console.log("Selected Rooms:", selectedRooms) // Debugging line
+
     const roomsToBook = Object.entries(selectedRooms)
       .filter(([_, quantity]) => quantity > 0)
       .map(([roomId, quantity]) => {
         const roomData = hotel.rooms.find((r) => r.room.id === Number.parseInt(roomId))
+        if (!roomData) {
+          console.error(`Room with id ${roomId} not found`)
+          return null
+        }
         return {
           ...roomData.room,
           selectedQuantity: quantity,
           totalPrice: roomData.room.price * quantity,
         }
       })
+      .filter((room) => room !== null)
+
+    console.log("Rooms to book:", roomsToBook) // Debugging line
 
     if (roomsToBook.length === 0) {
       alert("Please select at least one room")
@@ -293,6 +308,7 @@ const HotelInfor = () => {
               <RoomQuantity
                 maxQuantity={roomData.quantity}
                 onChange={(quantity) => handleQuantityChange(roomData.room.id, quantity)}
+                initialValue={selectedRooms[roomData.room.id] || 0}
               />
             </div>
           ))}

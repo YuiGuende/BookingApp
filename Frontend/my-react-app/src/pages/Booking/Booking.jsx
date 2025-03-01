@@ -108,7 +108,7 @@ const Booking = () => {
                   <h4>{room.name}</h4>
                   <p>Số lượng: {room.selectedQuantity}</p>
                   <p className="room-price">
-                    ${room.price} x {room.selectedQuantity} đêm = ${room.totalPrice}
+                    VND{room.price} x {room.selectedQuantity} đêm = VND{room.totalPrice}
                   </p>
                 </div>
               ))}
