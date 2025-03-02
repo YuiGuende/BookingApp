@@ -1,49 +1,57 @@
 /* Chỉnh sửa giao diện trang đăng nhập */
 .login-page {
-    width: 100%;
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .login-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .input-container {
-    margin-bottom: 15px;
-  }
-  
-  .input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  .button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .error {
-    color: red;
-    margin-top: 10px;
-    text-align: center;
-  }
-  
+  width: 30%;
+  padding: 5%;
+  margin: 4% auto;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.3);
+}
+
+#loginStnce {
+  text-align: center;
+  margin-top: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-container {
+  margin-bottom: 2%;
+  width: 100%;
+}
+
+.input-line {
+  width: 94%;
+  padding: 2%;
+  margin: 1%;
+  border-radius: 6px;
+  border: 0.08rem solid #ccc;
+}
+
+.login-button {
+  width: 100%;
+  padding: 3%;
+  background-color: #0759d3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  display: flex;
+  margin-top: 5%;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+.login-button:hover{
+  background-color: #003b95;
+}
+.error {
+  color: red;
+  margin-top: 5%;
+  text-align: center;
+}

@@ -6,6 +6,7 @@ import Booking from "./Booking/Booking";
 import Confirm from "./Confirm/Confirm";
 import Login from "./login/Login";
 import Signup from "./signup/Signup";
+import BookingHistory from "./bookingHistory/BookingHistory";
 
 export default function Page() {
   return (
@@ -17,6 +18,7 @@ export default function Page() {
       <Route path="/confirm" element={<Confirm/>}/>
       <Route path="/login" element={<Login></Login>}/>
       <Route path="/signup" element={<Signup/>}/>
+      <Route path="/bookingHistory" element={<BookingHistory/>}/>
     </Routes>
   );
 }

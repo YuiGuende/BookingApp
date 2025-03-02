@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './SignupStyles.css'; // Import file CSS
 import axios from 'axios'; // Cần cài đặt axios bằng npm install axios
 import { useNavigate } from "react-router-dom"
+import Header from '../../components/header/Header';
 const Signup = () => {
   // Các state lưu trữ thông tin đăng ký
   const [name, setName] = useState('');
@@ -40,8 +41,10 @@ const Signup = () => {
   };
 
   return (
+    <>
+    <div className='header'><Header/></div>
     <div className="signup-page">
-      <h2>Sign Up</h2>
+      <h2 id='signupStnce'>Sign Up</h2>
       <form onSubmit={handleSubmit} className="signup-form">
         <div className="input-container">
           <label>Full name</label>
@@ -49,7 +52,7 @@ const Signup = () => {
             type="text" 
             value={name} 
             onChange={(e) => setName(e.target.value)} 
-            className="input" 
+            className="input-line" 
             required 
           />
         </div>
@@ -59,7 +62,7 @@ const Signup = () => {
             type="email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
-            className="input" 
+            className="input-line" 
             required 
           />
         </div>
@@ -69,7 +72,7 @@ const Signup = () => {
             type="text" 
             value={username} 
             onChange={(e) => setUsername(e.target.value)} 
-            className="input" 
+            className="input-line" 
             required 
           />
         </div>
@@ -79,7 +82,7 @@ const Signup = () => {
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
-            className="input" 
+            className="input-line" 
             required 
           />
         </div>
@@ -89,15 +92,16 @@ const Signup = () => {
             type="text" 
             value={phone} 
             onChange={(e) => setPhone(e.target.value)} 
-            className="input" 
+            className="input-line" 
             required 
           />
         </div>
         {error && <div className="error">{error}</div>}
         {successMessage && <div className="success">{successMessage}</div>}
-        <button type="submit" className="button">Sign up</button>
+        <button type="submit" className="signup-button">Sign up</button>
       </form>
     </div>
+    </>
   );
 };
 

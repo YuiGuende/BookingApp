@@ -50,107 +50,10 @@ public class GeoUtils {
     }
     private static final String NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search";
 
-    // public double[] getCoordinates(String location) {
-    //     @SuppressWarnings("deprecation")
-    //     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(NOMINATIM_BASE_URL)
-    //             .queryParam("q", location)
-    //             .queryParam("format", "json")
-    //             .queryParam("limit", 1);
-    //     JsonNode response = restTemplate.getForObject(builder.toUriString(), JsonNode.class);
-    //     if (response != null && response.isArray() && response.size() > 0) {
-    //         JsonNode firstResult = response.get(0);
-    //         double lat = firstResult.get("lat").asDouble();
-    //         double lon = firstResult.get("lon").asDouble();
-    //         return new double[]{lat, lon};
-    //     }
-    //     return null;
-    // }
-    // public double[] getCoordinates(String location) {
-    //     try {
-    //         String url = UriComponentsBuilder.fromHttpUrl(NOMINATIM_BASE_URL)
-    //                 .queryParam("q", location)
-    //                 .queryParam("format", "json")
-    //                 .queryParam("limit", 1)
-    //                 .build()
-    //                 .toUriString();
-    //         logger.info("Requesting coordinates for location: {}", location);
-    //         logger.info("URL: {}", url);
-    //         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-    //         logger.info("Response status: {}", response.getStatusCode());
-    //         logger.info("Response body: {}", response.getBody());
-    //         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-    //             ObjectMapper mapper = new ObjectMapper();
-    //             JsonNode jsonNode = mapper.readTree(response.getBody());
-    //             if (jsonNode.isArray() && jsonNode.size() > 0) {
-    //                 JsonNode firstResult = jsonNode.get(0);
-    //                 double lat = firstResult.get("lat").asDouble();
-    //                 double lon = firstResult.get("lon").asDouble();
-    //                 logger.info("Coordinates found: lat={}, lon={}", lat, lon);
-    //                 return new double[]{lat, lon};
-    //             } else {
-    //                 logger.warn("No results found for location: {}", location);
-    //             }
-    //         } else {
-    //             logger.warn("Unsuccessful response for location: {}", location);
-    //         }
-    //     } catch (RestClientException e) {
-    //         logger.error("RestClientException while fetching coordinates for location: {}", location, e);
-    //     } catch (JsonProcessingException e) {
-    //         logger.error("JsonProcessingException while parsing response for location: {}", location, e);
-    //     } catch (Exception e) {
-    //         logger.error("Unexpected error while fetching coordinates for location: {}", location, e);
-    //     }
-    //     return null;
-    // }
-    // public Map<String, String> getAddressComponents(String location) {
-    //     Map<String, String> result = new HashMap<>();
-    //     try {
-    //         String url = UriComponentsBuilder.fromHttpUrl(NOMINATIM_BASE_URL)
-    //                 .queryParam("q", location)
-    //                 .queryParam("format", "json")
-    //                 .queryParam("limit", 1)
-    //                 .build()
-    //                 .toUriString();
-    //         logger.info("Requesting coordinates for location: {}", location);
-    //         logger.info("URL: {}", url);
-    //         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-    //         logger.info("Response status: {}", response.getStatusCode());
-    //         logger.info("Response body: {}", response.getBody());
-    //         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-    //             ObjectMapper mapper = new ObjectMapper();
-    //             JsonNode jsonNode = mapper.readTree(response.getBody());
-    //             if (jsonNode.isArray() && jsonNode.size() > 0) {
-    //                 JsonNode address = jsonNode.get(0).get("address");
-    //                 result.put("road", address.has("road") ? address.get("road").asText() : "");
-    //                 result.put("city", address.has("city") ? address.get("city").asText() : "");
-    //                 result.put("state", address.has("state") ? address.get("state").asText() : "");
-    //                 result.put("country", address.has("country") ? address.get("country").asText() : "");
-    //             } else {
-    //                 logger.warn("No results found for location: {}", location);
-    //             }
-    //         } else {
-    //             logger.warn("Unsuccessful response for location: {}", location);
-    //         }
-    //     } catch (RestClientException e) {
-    //         logger.error("RestClientException while fetching address components for location: {}", location, e);
-    //     } catch (JsonProcessingException e) {
-    //         logger.error("JsonProcessingException while parsing response for location: {}", location, e);
-    //     } catch (Exception e) {
-    //         logger.error("Unexpected error while fetching address components for location: {}", location, e);
-    //     }
-    //     return result;
-    // }
-    // public Address loadAddress(Address address,String location){
-    //     Map<String, String > addressComponents = getAddressComponents(location);
-    //     address.setCountry(addressComponents.getOrDefault("country", null));
-    //     address.setState(addressComponents.getOrDefault("state", null));
-    //     address.setCity(addressComponents.getOrDefault("city", null));
-    //     address.setStreet(addressComponents.getOrDefault("street", null));
-    //     return address;
-    // }
     public Map<String, String> getAddressComponents(String location) {
         Map<String, String> result = new HashMap<>();
         try {
+            @SuppressWarnings("deprecation")
             String url = UriComponentsBuilder.fromHttpUrl(NOMINATIM_BASE_URL)
                     .queryParam("q", location)
                     .queryParam("format", "json")

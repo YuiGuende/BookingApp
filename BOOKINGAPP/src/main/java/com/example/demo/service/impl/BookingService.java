@@ -2,8 +2,10 @@ package com.example.demo.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,14 +52,10 @@ public class BookingService implements BookingServiceInterface {
         return bookingRepository.findAll();
     }
 
-    
     // public void saveBooking(BookingRequiredmentDTO booking) {
     //     validateBooking(booking);
-
-
     //     if (booking.getBooking().getCustomer() == null) {//kiểm tra customer tồn tại chưa, nếu chưa thì tạo user mới
     //         Optional<Customer> existingCustomer = customerRepository.findByEmailOrPhone(booking.getBooking().getEmail(), booking.getBooking().getPhone());
-
     //         if (existingCustomer.isPresent()) {
     //             booking.getBooking().setCustomer(existingCustomer.get());
     //         } else {
@@ -68,42 +66,37 @@ public class BookingService implements BookingServiceInterface {
     //             customer =customerRepository.save(customer);
     //         }
     //     }
-
     //     booking.getBooking().setStatus(BookingStatus.PENDING);//fix lai logic o day
-
     //     bookingRepository.save(booking.getBooking());
     //     for(Room room:booking.getRooms()){
     //         bookingRoomRepository.save(new BookingRoom(booking.getBooking(), room));//save lai bookingroom cho tung room
     //     }
     // }
-
     @Override
     public void saveBooking(BookingRequiredmentDTO booking) {
         validateBooking(booking);
-    
+
         Customer customer = booking.getBooking().getCustomer();
         if (customer == null) {
             Optional<Customer> existingCustomer = customerRepository.findTopByEmailOrPhone(
-                booking.getBooking().getEmail(), booking.getBooking().getPhone()
+                    booking.getBooking().getEmail(), booking.getBooking().getPhone()
             );
-    
+
             if (existingCustomer.isPresent()) {
                 customer = existingCustomer.get();
                 booking.getBooking().setCustomer(customer);
-            } 
-            else {
+            } else {
                 // customer = new Customer(booking.getBooking().getEmail(), booking.getBooking().getName(), booking.getBooking().getPhone());
                 // customer = customerRepository.save(customer); 
-                 booking.getBooking().setCustomer(null);
+                booking.getBooking().setCustomer(null);
             }
         }
-    
-       
+
         booking.getBooking().setStatus(BookingStatus.PENDING);
-        
-        bookingRepository.save(booking.getBooking()); 
+
+        bookingRepository.save(booking.getBooking());
         // customerRepository.save(customer); 
-    
+
         for (Room room : booking.getRooms()) {
             bookingRoomRepository.save(new BookingRoom(booking.getBooking(), room));
         }
@@ -150,9 +143,30 @@ public class BookingService implements BookingServiceInterface {
 
     @Override
     public List<BookingDetaislDTO> getBookingDetaislDTOs(String email, String phone) {
-        List<BookingDetaislDTO> bookings = new ArrayList<>();
-       
-        return bookings;
+        Optional<Customer> customer = customerRepository.findTopByEmailOrPhone(email, phone);
+        if (customer.isEmpty()) {
+            throw new ResourceNotFoundException("Your account is not available!");
+        }
+        Set<BookingDetaislDTO> uniqueBookings = new HashSet<>();
+        List<Object[]> bookingTemp = bookingRepository.findBookingsByCustomer(customer.get());
+        for (Object[] b : bookingTemp) {
+            String hotelName = (String) b[0];
+            String fullAddress = (String) b[1];
+            String image = (String) b[2];  // Trả về dạng JSON String 
+            Long bookingId = (Long) b[3];
+            LocalDate checkInDate = (LocalDate) b[4];
+            LocalDate checkOutDate = (LocalDate) b[5];
+            double totalPrice = (double) b[6];
+            BookingStatus status = (BookingStatus) b[7];
+
+            uniqueBookings.add(new BookingDetaislDTO(bookingId, image, checkInDate, checkOutDate, totalPrice, status, fullAddress, hotelName));
+        }
+
+        if (uniqueBookings.isEmpty()) {
+            throw new ResourceNotFoundException("You havent book any hotel yet!");
+        }
+        
+        return new ArrayList<>(uniqueBookings);
     }
 
 }

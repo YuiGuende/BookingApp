@@ -3,14 +3,13 @@ package com.example.demo.service.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.SignUpDTO;
 import com.example.demo.model.user.customer.Customer;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.service.AccountServiceInterface;
-import com.example.demo.utils.ApiResponse;
+
 
 import jakarta.transaction.Transactional;
 

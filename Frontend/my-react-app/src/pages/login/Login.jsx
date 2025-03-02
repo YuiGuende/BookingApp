@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './LoginStyles.css'; // Import file CSS
 import axios from 'axios'; // Cần cài đặt axios bằng npm install axios
 import { useNavigate } from "react-router-dom"
+import Header from '../../components/header/Header';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -36,8 +37,10 @@ const Login = () => {
   };
 
   return (
+    <>
+      <div className='header'><Header/></div>
     <div className="login-page">
-      <h2>Log In</h2>
+      <h2 id='loginStnce'>Log In</h2>
       <form onSubmit={handleSubmit} className="login-form">
         <div className="input-container">
           <label>Username</label>
@@ -45,7 +48,7 @@ const Login = () => {
             type="text" 
             value={username} 
             onChange={(e) => setUsername(e.target.value)} 
-            className="input" 
+            className="input-line" 
             required 
           />
         </div>
@@ -55,14 +58,15 @@ const Login = () => {
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
-            className="input" 
+            className="inpinput-lineut" 
             required 
           />
         </div>
         {error && <div className="error">{error}</div>}
-        <button type="submit" className="button">Log in</button>
+        <button type="submit" className="login-button">Log in</button>
       </form>
     </div>
+    </>
   );
 };
 
