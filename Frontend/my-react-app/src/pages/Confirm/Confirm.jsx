@@ -38,39 +38,73 @@ const Confirm = () => {
   if (!bookingData) return null
 
   return (
+    <>
+    <div className="header"><Header/></div>
     <div className="confirm-page">
-      <h1>Confirm Your Booking</h1>
-      <div className="booking-details">
-        <h2>Booking Details</h2>
-        <p>
-          <strong>Name:</strong> {bookingData.booking.customer.name}
-        </p>
-        <p>
-          <strong>Email:</strong> {bookingData.booking.customer.email}
-        </p>
-        <p>
-          <strong>Phone:</strong> {bookingData.booking.customer.phone}
-        </p>
-        <p>
-          <strong>Check-in Date:</strong> {bookingData.booking.checkInDate}
-        </p>
-        <p>
-          <strong>Check-out Date:</strong> {bookingData.booking.checkOutDate}
-        </p>
-        <p>
-          <strong>Total Price:</strong> ${bookingData.booking.totalPrice}
-        </p>
-        <h3>Rooms:</h3>
-        <ul>
-          {bookingData.rooms.map((bookingRoom, index) => (
-            <li key={index}>
-              Room ID: {bookingRoom.id}, Quantity: {bookingRoom.quantity}
-            </li>
-          ))}
-        </ul>
+      <div className="booking-progress">
+        <div className="progress-step completed">
+          <span className="step-number">1</span>
+          <span className="step-text">Bạn chọn</span>
+        </div>
+        <div className="progress-step completed">
+          <span className="step-number">2</span>
+          <span className="step-text">Chi tiết về bạn</span>
+        </div>
+        <div className="progress-step active">
+          <span className="step-number">3</span>
+          <span className="step-text">Hoàn tất đặt phòng</span>
+        </div>
       </div>
-      <button onClick={handleConfirm}>Confirm Booking</button>
-    </div>
+      <h1 id="confirm-header">Confirm Your Booking</h1>
+      <div className="booking-details">
+        <div className="detail-line">
+          <p>
+            <strong>Name:</strong>
+          </p>
+          <p>{bookingData.booking.customer.name}</p>
+        </div>
+        <div className="detail-line">
+          <p>
+            <strong>Email:</strong>
+          </p>
+          <p>{bookingData.booking.customer.email}</p>
+        </div>
+        <div className="detail-line">
+          <p>
+            <strong>Phone:</strong>
+          </p>
+          <p>{bookingData.booking.customer.phone}</p>
+        </div>
+        <div className="detail-line">
+          <p>
+            <strong>Check-in Date:</strong>
+          </p>
+          <p>{bookingData.booking.customer.checkInDate}</p>
+        </div>
+        <div className="detail-line">
+          <p>
+            <strong>Check-out Date:</strong>
+          </p>
+          <p>{bookingData.booking.customer.checkOutDate}</p>
+        </div>
+        <div className="detail-line">
+          <p>
+            <strong>Total Price:</strong>
+          </p>
+          <p>{bookingData.booking.customer.totalPrice}</p>
+        </div>
+          <h3>Rooms:</h3>
+          <ul>
+            {bookingData.rooms.map((bookingRoom, index) => (
+              <li key={index}>
+                Room ID: {bookingRoom.id}, Quantity: {bookingRoom.quantity}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <button id='confirmBtn' onClick={handleConfirm}>Confirm Booking</button>
+    </>
   )
 }
 

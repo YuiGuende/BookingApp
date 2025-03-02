@@ -1,74 +1,101 @@
 
-"use client"
+"use client";
 
-import { useParams, useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
-import axios from "axios"
-import "./HotelInfor.css"
-import RoomQuantity from "../../components/roomquantity/RoomQuantity"
-import Header from "../../components/header/Header"
-import SearchBar from "../../components/searchbar/SearchBar"
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import "./HotelInfor.css";
+import RoomQuantity from "../../components/roomquantity/RoomQuantity";
+import Header from "../../components/header/Header";
+import SearchBar from "../../components/searchbar/SearchBar";
 
 const HotelInfor = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [hotel, setHotel] = useState(null)
-  const [selectedRooms, setSelectedRooms] = useState({})
-  const [selectedRoom, setSelectedRoom] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [hotel, setHotel] = useState(null);
+  const [selectedRooms, setSelectedRooms] = useState({});
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/customer/getHotel/${id}`)
       .then((response) => {
-        setHotel(response.data.data)
-        console.log(response.data.data)
-        setLoading(false)
+        const rawRooms = response.data.data.rooms;
+
+        // Nhóm các phòng cùng name và type lại để hiển thị UI nhưng vẫn giữ danh sách gốc
+        const groupedRooms = {};
+        rawRooms.forEach(({ room, quantity }) => {
+          const key = `${room.name}-${room.type}`; // Nhóm theo tên và loại
+          if (!groupedRooms[key]) {
+            groupedRooms[key] = { ...room, totalQuantity: 0, originalRooms: [] };
+          }
+          groupedRooms[key].totalQuantity += quantity;
+          groupedRooms[key].originalRooms.push({ ...room, availableQuantity: quantity });
+        });
+
+        setHotel({
+          ...response.data.data,
+          rooms: Object.values(groupedRooms), // Chỉ hiển thị nhóm đã gộp
+          allRooms: rawRooms.map(({ room, quantity }) => ({ ...room, availableQuantity: quantity })), // Danh sách gốc
+        });
+
+        setLoading(false);
       })
       .catch((error) => {
-        setError(error.message)
-        setLoading(false)
-      })
-  }, [id])
+        setError(error.message);
+        setLoading(false);
+      });
+  }, [id]);
 
-  const handleQuantityChange = (roomId, quantity) => {
-    console.log(roomId)
-    console.log(quantity)
+  const handleQuantityChange = (roomKey, quantity) => {
+    console.log("Selected Room:", roomKey, "Quantity:", quantity);
+
     setSelectedRooms((prev) => {
       if (quantity === 0) {
-        const newSelected = { ...prev }
-        delete newSelected[roomId]
-        return newSelected
+        const newSelected = { ...prev };
+        delete newSelected[roomKey];
+        return newSelected;
       }
-      return { ...prev, [roomId]: quantity }
-    })
-  }
+
+      return { ...prev, [roomKey]: quantity };
+    });
+  };
 
   const handleBooking = () => {
-    console.log("Selected Rooms:", selectedRooms) // Debugging line
+    console.log("Selected Rooms:", selectedRooms);
 
-    const roomsToBook = Object.entries(selectedRooms)
-      .filter(([_, quantity]) => quantity > 0)
-      .map(([roomId, quantity]) => {
-        const roomData = hotel.rooms.find((r) => r.room.id === Number.parseInt(roomId))
-        if (!roomData) {
-          console.error(`Room with id ${roomId} not found`)
-          return null
-        }
-        return {
-          ...roomData.room,
-          selectedQuantity: quantity,
-          totalPrice: roomData.room.price * quantity,
-        }
-      })
-      .filter((room) => room !== null)
+    const roomsToBook = [];
 
-    console.log("Rooms to book:", roomsToBook) // Debugging line
+    Object.entries(selectedRooms).forEach(([roomKey, quantity]) => {
+      const groupedRoom = hotel.rooms.find((r) => `${r.name}-${r.type}` === roomKey);
+      if (!groupedRoom) {
+        console.error(`Room group ${roomKey} not found`);
+        return;
+      }
+
+      let remainingQuantity = quantity;
+      groupedRoom.originalRooms.forEach((roomData) => {
+        if (remainingQuantity > 0) {
+          const toAdd = Math.min(roomData.availableQuantity, remainingQuantity);
+          for (let i = 0; i < toAdd; i++) {
+            roomsToBook.push({
+              ...roomData,
+              selectedQuantity: 1,
+              totalPrice: roomData.price,
+            });
+          }
+          remainingQuantity -= toAdd;
+        }
+      });
+    });
+
+    console.log("Rooms to book:", roomsToBook);
 
     if (roomsToBook.length === 0) {
-      alert("Please select at least one room")
-      return
+      alert("Please select at least one room");
+      return;
     }
 
     const bookingData = {
@@ -76,15 +103,15 @@ const HotelInfor = () => {
       hotelId: hotel.id,
       rooms: roomsToBook,
       totalPrice: roomsToBook.reduce((sum, room) => sum + room.totalPrice, 0),
-    }
+    };
 
-    localStorage.setItem("bookingData", JSON.stringify(bookingData))
-    navigate("/Booking")
-  }
+    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+    navigate("/Booking");
+  };
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error: {error}</p>
-  if (!hotel) return <p>No hotel data available</p>
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!hotel) return <p>No hotel data available</p>;
 
   return (
     <>
@@ -100,12 +127,10 @@ const HotelInfor = () => {
           </span>
         </div>
 
-        {/* Ảnh chính */}
         <div className="hotel-images">
           <img src={hotel.images[0] || "/placeholder.svg"} alt={hotel.hotelName} className="main-image" />
         </div>
 
-        {/* Danh sách ảnh nhỏ */}
         <div className="hotel-gallery">
           {hotel.images.map((img, index) => (
             <img key={index} src={img || "/placeholder.svg"} alt={`Hotel ${index}`} className="hotel-thumbnail" />
@@ -115,25 +140,21 @@ const HotelInfor = () => {
         <p className="hotel-description">{hotel.description}</p>
 
         <div className="room-list">
-          {hotel.rooms.map((roomData) => (
-            <div key={roomData.room.id} className="room-card">
-              <img
-                src={roomData.room.images[0] || "/placeholder.svg"}
-                alt={roomData.room.name}
-                className="room-image"
-              />
+          {hotel.rooms.map((room) => (
+            <div key={`${room.name}-${room.type}`} className="room-card">
+              <img src={room.images[0] || "/placeholder.svg"} alt={room.name} className="room-image" />
               <div className="room-details">
-                <h3 className="room-title" onClick={() => setSelectedRoom(roomData.room)}>
-                  {roomData.room.name}
+                <h3 className="room-title" onClick={() => setSelectedRoom(room)}>
+                  {room.name}
                 </h3>
-                <p className="room-description">{roomData.room.description}</p>
-                <p className="room-price">${roomData.room.price} / đêm</p>
-                <p className="room-quantity">Số lượng còn lại: {roomData.quantity}</p>
+                <p className="room-description">{room.description}</p>
+                <p className="room-price">${room.price} / đêm</p>
+                <p className="room-quantity">Số lượng còn lại: {room.totalQuantity}</p>
               </div>
               <RoomQuantity
-                maxQuantity={roomData.quantity}
-                onChange={(quantity) => handleQuantityChange(roomData.room.id, quantity)}
-                initialValue={selectedRooms[roomData.room.id] || 0}
+                maxQuantity={room.totalQuantity}
+                onChange={(quantity) => handleQuantityChange(`${room.name}-${room.type}`, quantity)}
+                initialValue={selectedRooms[`${room.name}-${room.type}`] || 0}
               />
             </div>
           ))}
@@ -145,7 +166,6 @@ const HotelInfor = () => {
           </button>
         </div>
 
-        {/* Cửa sổ chi tiết phòng */}
         {selectedRoom && (
           <div className="room-modal">
             <div className="modal-container">
@@ -157,17 +177,17 @@ const HotelInfor = () => {
               </div>
               <div className="modal-content">
                 <div className="room-modal-images">
-                    {/* Ảnh chính */}
-                    <div className="room-images">
-                        <img src={selectedRoom.images[0] || "/placeholder.svg"} alt={selectedRoom.roomName} className="main-image" />
-                    </div>
-                    {/* Danh sách ảnh nhỏ */}
-                    <div className="room-gallery">
-                        {selectedRoom.images.map((img, index) => (
-                        <img key={index} src={img || "/placeholder.svg"} alt={`Room ${index}`} className="room-thumbnail" />
-                        ))}
-                    </div>
-                    {/* {selectedRoom.images.map((img, index) => (
+                  {/* Ảnh chính */}
+                  <div className="room-images">
+                    <img src={selectedRoom.images[0] || "/placeholder.svg"} alt={selectedRoom.roomName} className="main-image" />
+                  </div>
+                  {/* Danh sách ảnh nhỏ */}
+                  <div className="room-gallery">
+                    {selectedRoom.images.map((img, index) => (
+                      <img key={index} src={img || "/placeholder.svg"} alt={`Room ${index}`} className="room-thumbnail" />
+                    ))}
+                  </div>
+                  {/* {selectedRoom.images.map((img, index) => (
                         <img key={index} src={img || "/placeholder.svg"} alt={`Room ${index}`} />
                     ))} */}
                 </div>
@@ -182,20 +202,22 @@ const HotelInfor = () => {
                     <strong>Sức chứa:</strong> {selectedRoom.maxAdults} người lớn, {selectedRoom.maxChildrens} trẻ em
                   </p>
                   <h3>Tiện nghi:</h3>
-                    <ul className="room-amenities">
-                        {selectedRoom.amenity.map((a, index) => (
-                            <li key={index}>✔ {a.name}</li>
-                        ))}
-                    </ul>
-                  </div>
+                  <ul className="room-amenities">
+                    {selectedRoom.amenity.map((a, index) => (
+                      <li key={index}>✔ {a.name}</li>
+                    ))}
+                  </ul>
                 </div>
+              </div>
             </div>
           </div>
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default HotelInfor
+export default HotelInfor;
+
+
 

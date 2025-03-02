@@ -1,33 +1,111 @@
+.header{
+  font-family: Arial, Helvetica, sans-serif;
+  height: 30%;
+  width: 100vw;
+  background-color: #071f6c;
+  font-size: 1.3em;
+}
 .confirm-page {
-    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
   }
+  .booking-progress {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10%;
+    margin-bottom: 5%;
+    position: relative;
+  }
+  .progress-step {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    align-items:  center;
+    flex: 1;
+  }
   
+  .progress-step::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 40%; 
+    width: 60%;
+    height: 2px;
+    background: #c6c5c5;
+    z-index: -1;
+}
+  .progress-step:last-child::before {
+    display: none;
+  }
+  .step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 3%;
+    font-weight: bold;
+  }
+  .step-text{
+    width: fit-content;
+    font-size: 1rem;
+  }
+  .progress-step.completed .step-number,
+  .progress-step.active .step-number {
+    background: #0071c2;
+    color: white;
+  }
+  
+  .booking-container {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 30px;
+  }
+  #confirm-header{
+    text-align: center;
+    color: rgb(4, 68, 152);
+  }
   .booking-details {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 20px;
+    margin: 0 auto;
+    width: 30%;
+    height: 40%;
+    background-color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 3%;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
   }
-  
-  .booking-details h2 {
-    margin-top: 0;
+  .detail-line{
+    display: flex;
+    justify-content: space-between;
   }
-  
-  .booking-details p {
-    margin-bottom: 10px;
-  }
-  
   .booking-details ul {
     list-style-type: none;
     padding: 0;
   }
-  
-  .booking-details li {
-    margin-bottom: 5px;
-  }
-  
+ #confirmBtn{
+    display: flex;
+    justify-content: center;
+    padding: 2%;
+    text-align: center;
+    align-items: center;
+    background-color: #003b95;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0 auto;
+    width: 20%;
+    height: 10%;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#confirmBtn:hover{
+    background-color: #01245a;
+}
 
   

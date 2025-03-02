@@ -1,3 +1,10 @@
+.header{
+  font-family: Arial, Helvetica, sans-serif;
+  height: 30%;
+  width: 100vw;
+  background-color: #071f6c;
+  font-size: 1.3em;
+}
 .booking-page {
     max-width: 1200px;
     margin: 0 auto;
@@ -7,35 +14,35 @@
   }
   
   .booking-progress {
+    width: 90%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 40px;
+    margin-left: 15%;
+    margin-bottom: 5%;
     padding: 20px 0;
     position: relative;
   }
-  
   .progress-step {
     display: flex;
-    align-items: center;
+    flex-direction: row;
     position: relative;
+    align-items:  center;
     flex: 1;
   }
   
-  .progress-step::after {
+  .progress-step::before {
     content: "";
     position: absolute;
     top: 50%;
-    left: 40px;
-    right: 0;
+    left: 35%; 
+    width: 70%;
     height: 2px;
-    background: #e0e0e0;
+    background: #c6c5c5;
     z-index: -1;
-  }
-  
-  .progress-step:last-child::after {
+}
+  .progress-step:last-child::before {
     display: none;
   }
-  
   .step-number {
     width: 30px;
     height: 30px;
@@ -44,10 +51,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 10px;
+    margin-right: 3%;
     font-weight: bold;
   }
-  
+  .step-text{
+    width: fit-content;
+  }
   .progress-step.completed .step-number,
   .progress-step.active .step-number {
     background: #0071c2;
@@ -64,9 +73,13 @@
     background: white;
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
   }
-  
+ .form-group label[for]::after {
+    content: " *";  /* Thêm dấu * vào sau nội dung */
+    color: red;     /* Đặt màu đỏ cho dấu * */
+    font-weight: bold;
+  }
   .form-section {
     margin-bottom: 30px;
     padding-bottom: 20px;
@@ -76,9 +89,9 @@
   .form-section:last-child {
     border-bottom: none;
   }
-  
-  .form-group {
-    margin-bottom: 20px;
+
+  .progress-step::after {
+    display: none;
   }
   
   .form-group label {
@@ -144,7 +157,7 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
   }
   
   .hotel-info h3 {

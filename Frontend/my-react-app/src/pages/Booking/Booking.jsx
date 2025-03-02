@@ -144,7 +144,18 @@ const Booking = () => {
         phone: "",
     })
     const [acceptNewsLetter, setAcceptNewsLetter] = useState(false)
-
+    const groupRoomsByName = (rooms) => {
+        return rooms.reduce((acc, room) => {
+            const existingRoom = acc.find(r => r.name === room.name)
+            if (existingRoom) {
+                existingRoom.selectedQuantity += room.selectedQuantity
+                existingRoom.totalPrice += room.totalPrice
+            } else {
+                acc.push({ ...room })
+            }
+            return acc
+        }, [])
+    }
     useEffect(() => {
         const bookingDataStr = localStorage.getItem("bookingData")
         const searchInfoStr = localStorage.getItem("searchInfor")
@@ -202,6 +213,8 @@ const Booking = () => {
     if (!bookingData || !searchInfo) return null
 
     return (
+        <>
+        <div className="header"><Header/></div>
         <div className="booking-page">
             <div className="booking-progress">
                 <div className="progress-step completed">
@@ -224,7 +237,7 @@ const Booking = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="form-section">
                             <div className="form-group">
-                                <label htmlFor="name">Họ tên (tiếng Anh) *</label>
+                                <label htmlFor="name">Họ tên (tiếng Anh)</label>
                                 <input
                                     type="text"
                                     id="name"
@@ -236,7 +249,7 @@ const Booking = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="email">Địa chỉ email *</label>
+                                <label htmlFor="email">Địa chỉ email</label>
                                 <input
                                     type="email"
                                     id="email"
@@ -248,7 +261,7 @@ const Booking = () => {
                                 <small>Email xác nhận đặt phòng sẽ được gửi đến địa chỉ này</small>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="phone">Số điện thoại *</label>
+                                <label htmlFor="phone">Số điện thoại</label>
                                 <div className="phone-input">
                                     <select name="countryCode" defaultValue="+84">
                                         <option value="+84">VN +84</option>
@@ -265,7 +278,7 @@ const Booking = () => {
                             </div>
                         </div>
                         <button type="submit" className="submit-button">
-                            Tiếp tục đến bước cuối cùng
+                            Tiếp tục
                         </button>
                     </form>
                 </div>
@@ -293,7 +306,7 @@ const Booking = () => {
 
                     <div className="selected-rooms">
                         <h4>Phòng đã chọn</h4>
-                        {bookingData.rooms.map((room, index) => (
+                        {groupRoomsByName(bookingData.rooms).map((room, index) => (
                             <div key={index} className="room-summary">
                                 <h5>{room.name}</h5>
                                 <p>Số lượng: {room.selectedQuantity}</p>
@@ -326,6 +339,7 @@ const Booking = () => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 

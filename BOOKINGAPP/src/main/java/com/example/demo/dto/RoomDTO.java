@@ -129,13 +129,13 @@ public class RoomDTO {
             return false;
         }
         RoomDTO roomDTO = (RoomDTO) obj;
-        return Objects.equals(type, roomDTO.type);
+        return Objects.equals(id, roomDTO.id);
     }
 
     // Override hashCode để sử dụng id làm giá trị băm
     @Override
     public int hashCode() {
-        return Objects.hash(type);
+        return Objects.hash(id);
     }
 
     @Override
