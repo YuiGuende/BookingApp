@@ -4,6 +4,8 @@ import HotelResult from "./HotelResult/HotelResult";
 import HotelInfor from "./Hotel_infor/HotelInfor";
 import Booking from "./Booking/Booking";
 import Confirm from "./Confirm/Confirm";
+import Login from "./login/Login";
+import Signup from "./signup/Signup";
 
 export default function Page() {
   return (
@@ -13,6 +15,8 @@ export default function Page() {
       <Route path="/hotel/:id" element={<HotelInfor/>} />
       <Route path="booking" element={<Booking/>}/>
       <Route path="/confirm" element={<Confirm/>}/>
+      <Route path="/login" element={<Login></Login>}/>
+      <Route path="/signup" element={<Signup/>}/>
     </Routes>
   );
 }

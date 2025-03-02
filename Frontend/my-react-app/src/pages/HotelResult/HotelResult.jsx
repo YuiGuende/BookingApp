@@ -76,9 +76,10 @@ export default function HotelResult() {
   return (
     <>
       <div className="header-container">
-      <Header/>
-       
-      <SearchBar onSearch={handleSearch} initialParams={searchParams}/>
+      < Header/>
+      </div>
+      <div className="searchbar-container">
+        <SearchBar onSearch={handleSearch} initialParams={searchParams}/>
       </div>
       <div className="result">
         <AmenityDetails filters={filters} onFilterChange={handleFilterChange} />

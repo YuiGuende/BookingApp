@@ -133,6 +133,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import "./Booking.css"
+import Header from "../../components/header/Header"
 
 const Booking = () => {
     const navigate = useNavigate()
@@ -143,6 +144,12 @@ const Booking = () => {
         email: "",
         phone: "",
     })
+    const customerInfor = localStorage.getItem("customerInfor")
+    useEffect(() => {
+        setCustomer(JSON.parse(customerInfor))
+    }, [customerInfor]
+    )
+
     const [acceptNewsLetter, setAcceptNewsLetter] = useState(false)
     const groupRoomsByName = (rooms) => {
         return rooms.reduce((acc, room) => {
@@ -184,15 +191,19 @@ const Booking = () => {
         try {
             const bookingToValidate = {
                 booking: {
-                    customer: customer,
+                    // customer: customer,//customer ở đây sẽ get từ session
+                    name: customer.name,
+                    email: customer.email,
+                    phone: customer.phone,
                     checkInDate: searchInfo?.checkInDate,
                     checkOutDate: searchInfo?.checkOutDate,
                     totalPrice: bookingData.totalPrice,
                     status: "PENDING"
                 },
                 rooms: bookingData.rooms.map((room) => ({
-                    id: room.id
-                })),    
+                    id: room.id,
+                    roomName:room.name
+                })),
             }
             console.log(bookingToValidate)
 
@@ -214,131 +225,131 @@ const Booking = () => {
 
     return (
         <>
-        <div className="header"><Header/></div>
-        <div className="booking-page">
-            <div className="booking-progress">
-                <div className="progress-step completed">
-                    <span className="step-number">1</span>
-                    <span className="step-text">Bạn chọn</span>
+            <div className="header"><Header /></div>
+            <div className="booking-page">
+                <div className="booking-progress">
+                    <div className="progress-step completed">
+                        <span className="step-number">1</span>
+                        <span className="step-text">You choose</span>
+                    </div>
+                    <div className="progress-step active">
+                        <span className="step-number">2</span>
+                        <span className="step-text">Your information</span>
+                    </div>
+                    <div className="progress-step">
+                        <span className="step-number">3</span>
+                        <span className="step-text">Complete booking</span>
+                    </div>
                 </div>
-                <div className="progress-step active">
-                    <span className="step-number">2</span>
-                    <span className="step-text">Chi tiết về bạn</span>
-                </div>
-                <div className="progress-step">
-                    <span className="step-number">3</span>
-                    <span className="step-text">Hoàn tất đặt phòng</span>
-                </div>
-            </div>
 
-            <div className="booking-container">
-                <div className="booking-form">
-                    <h2>Nhập thông tin chi tiết của bạn</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-section">
-                            <div className="form-group">
-                                <label htmlFor="name">Họ tên (tiếng Anh)</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={customer.name}
-                                    onChange={handleCustomerChange}
-                                    required
-                                    placeholder="Nhập họ tên như trong hộ chiếu"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="email">Địa chỉ email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={customer.email}
-                                    onChange={handleCustomerChange}
-                                    required
-                                />
-                                <small>Email xác nhận đặt phòng sẽ được gửi đến địa chỉ này</small>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="phone">Số điện thoại</label>
-                                <div className="phone-input">
-                                    <select name="countryCode" defaultValue="+84">
-                                        <option value="+84">VN +84</option>
-                                    </select>
+                <div className="booking-container">
+                    <div className="booking-form">
+                        <h2>Enter your information</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-section">
+                                <div className="form-group">
+                                    <label htmlFor="name">Full name (English)</label>
                                     <input
-                                        type="tel"
-                                        id="phone"
-                                        name="phone"
-                                        value={customer.phone}
+                                        type="text"
+                                        id="name"
+                                        name="name"
+                                        value={customer.name}
+                                        onChange={handleCustomerChange}
+                                        required
+                                        placeholder="Enter full name as in the passport"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="email">Email address</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={customer.email}
                                         onChange={handleCustomerChange}
                                         required
                                     />
+                                    <small>The booking confirmation email will be sent to this address</small>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="phone">Phone number</label>
+                                    <div className="phone-input">
+                                        <select name="countryCode" defaultValue="+84">
+                                            <option value="+84">VN +84</option>
+                                        </select>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            name="phone"
+                                            value={customer.phone}
+                                            onChange={handleCustomerChange}
+                                            required
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <button type="submit" className="submit-button">
-                            Tiếp tục
-                        </button>
-                    </form>
-                </div>
-
-                <div className="booking-summary">
-                    <div className="hotel-info">
-                        <h3>{bookingData.hotelName}</h3>
-                        <div className="booking-dates">
-                            <div>
-                                <strong>Nhận phòng</strong>
-                                <p>{searchInfo.checkInDate}</p>
-                                <p>14:00 – 22:00</p>
-                            </div>
-                            <div>
-                                <strong>Trả phòng</strong>
-                                <p>{searchInfo.checkOutDate}</p>
-                                <p>12:00</p>
-                            </div>
-                        </div>
-                        <div className="stay-duration">
-                            <p>Tổng thời gian lưu trú:</p>
-                            <p>{calculateNights(searchInfo.checkInDate, searchInfo.checkOutDate)} đêm</p>
-                        </div>
+                            <button type="submit" className="submit-button">
+                                Continue
+                            </button>
+                        </form>
                     </div>
 
-                    <div className="selected-rooms">
-                        <h4>Phòng đã chọn</h4>
-                        {groupRoomsByName(bookingData.rooms).map((room, index) => (
-                            <div key={index} className="room-summary">
-                                <h5>{room.name}</h5>
-                                <p>Số lượng: {room.selectedQuantity}</p>
-                                <p className="room-price">
-                                    {formatPrice(room.price)} x {room.selectedQuantity} = {formatPrice(room.totalPrice)}
-                                </p>
+                    <div className="booking-summary">
+                        <div className="hotel-info">
+                            <h3>{bookingData.hotelName}</h3>
+                            <div className="booking-dates">
+                                <div>
+                                    <strong>Check-in Date</strong>
+                                    <p>{searchInfo.checkInDate}</p>
+                                    <p>14:00 – 22:00</p>
+                                </div>
+                                <div>
+                                    <strong>Check-out Date</strong>
+                                    <p>{searchInfo.checkOutDate}</p>
+                                    <p>12:00</p>
+                                </div>
                             </div>
-                        ))}
-                    </div>
+                            <div className="stay-duration">
+                                <p>Total stay duration:</p>
+                                <p>{calculateNights(searchInfo.checkInDate, searchInfo.checkOutDate)} đêm</p>
+                            </div>
+                        </div>
 
-                    <div className="price-breakdown">
-                        <div className="price-row">
-                            <span>Giá gốc</span>
-                            <span>{formatPrice(bookingData.totalPrice)}</span>
+                        <div className="selected-rooms">
+                            <h4>Selected room</h4>
+                            {groupRoomsByName(bookingData.rooms).map((room, index) => (
+                                <div key={index} className="room-summary">
+                                    <h5>{room.name}</h5>
+                                    <p>Quantity: {room.selectedQuantity}</p>
+                                    <p className="room-price">
+                                        {formatPrice(room.price)} x {room.selectedQuantity} = {formatPrice(room.totalPrice)}
+                                    </p>
+                                </div>
+                            ))}
                         </div>
-                        <div className="price-row">
-                            <span>Thuế và phí</span>
-                            <span>{formatPrice(bookingData.totalPrice * 0.1)}</span>
-                        </div>
-                        <div className="total-price">
-                            <strong>Tổng cộng</strong>
-                            <strong>{formatPrice(bookingData.totalPrice * 1.1)}</strong>
-                        </div>
-                    </div>
 
-                    <div className="cancellation-policy">
-                        <h4>Chính sách hủy phòng</h4>
-                        <p>Miễn phí hủy phòng trước 18:00, ngày {searchInfo.checkInDate}</p>
+                        <div className="price-breakdown">
+                            <div className="price-row">
+                                <span>Original price</span>
+                                <span>{formatPrice(bookingData.totalPrice)}</span>
+                            </div>
+                            <div className="price-row">
+                                <span>Thuế và phí</span>
+                                <span>{formatPrice(bookingData.totalPrice * 0.1)}</span>
+                            </div>
+                            <div className="total-price">
+                                <strong>Taxes and fees</strong>
+                                <strong>{formatPrice(bookingData.totalPrice * 1.1)}</strong>
+                            </div>
+                        </div>
+
+                        <div className="cancellation-policy">
+                            <h4>How much does it cost to cancel?</h4>
+                            <p>Free cancellation before 18:00 {searchInfo.checkInDate}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </>
     )
 }

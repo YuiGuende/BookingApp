@@ -3,12 +3,12 @@ package com.example.demo.service.impl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.BookingDetaislDTO;
 import com.example.demo.dto.BookingRequiredmentDTO;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.booking.Booking;
@@ -83,23 +83,26 @@ public class BookingService implements BookingServiceInterface {
     
         Customer customer = booking.getBooking().getCustomer();
         if (customer == null) {
-            Optional<Customer> existingCustomer = customerRepository.findByEmailOrPhone(
+            Optional<Customer> existingCustomer = customerRepository.findTopByEmailOrPhone(
                 booking.getBooking().getEmail(), booking.getBooking().getPhone()
             );
     
             if (existingCustomer.isPresent()) {
                 customer = existingCustomer.get();
-            } else {
-                customer = new Customer(booking.getBooking().getEmail(), booking.getBooking().getName(), booking.getBooking().getPhone());
-                customer = customerRepository.save(customer); 
+                booking.getBooking().setCustomer(customer);
+            } 
+            else {
+                // customer = new Customer(booking.getBooking().getEmail(), booking.getBooking().getName(), booking.getBooking().getPhone());
+                // customer = customerRepository.save(customer); 
+                 booking.getBooking().setCustomer(null);
             }
         }
     
-        booking.getBooking().setCustomer(customer);
+       
         booking.getBooking().setStatus(BookingStatus.PENDING);
         
         bookingRepository.save(booking.getBooking()); 
-        customerRepository.save(customer); 
+        // customerRepository.save(customer); 
     
         for (Room room : booking.getRooms()) {
             bookingRoomRepository.save(new BookingRoom(booking.getBooking(), room));
@@ -143,6 +146,13 @@ public class BookingService implements BookingServiceInterface {
                 throw new IllegalArgumentException("This room has been booked at this date!");
             }
         }
+    }
+
+    @Override
+    public List<BookingDetaislDTO> getBookingDetaislDTOs(String email, String phone) {
+        List<BookingDetaislDTO> bookings = new ArrayList<>();
+       
+        return bookings;
     }
 
 }

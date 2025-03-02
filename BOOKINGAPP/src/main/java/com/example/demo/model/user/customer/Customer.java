@@ -19,11 +19,23 @@ public class Customer extends User {
      
     }
 
+    public Customer(String name, String email, String username, String password, String phone) {
+        super(name, email, username, password, phone);
+    }
+
+
 
     @Override
     public String getRole() {
         return "User";
     }
+
+
+    
+    
+
+
+    
 
     // public List<Booking> getBookings() {
     //     return bookings;
@@ -32,4 +44,6 @@ public class Customer extends User {
     // public void setBookings(List<Booking> bookings) {
     //     this.bookings = bookings;
     // }
+
+    
 }

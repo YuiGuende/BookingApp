@@ -116,8 +116,10 @@ const HotelInfor = () => {
   return (
     <>
       <div className="header-container">
-        <Header />
-        <SearchBar />
+      < Header/>
+      </div>
+      <div className="searchbar-container">
+        <SearchBar/>
       </div>
       <div className="hotel-container-infor">
         <div className="hotel-header-infor">

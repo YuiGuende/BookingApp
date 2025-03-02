@@ -13,4 +13,6 @@ public interface AuthServiceInterface {
     ResponseEntity<ApiResponse<Void>> validateStaffId(HttpSession session);
 
     ResponseEntity<ApiResponse<Void>> validateCustomerId(HttpSession session);
+
+    
 }

@@ -174,3 +174,6 @@
   display: flex;
   justify-content: space-between;
 }
+.searchbar-container{
+  margin-top: -5vh;
+}

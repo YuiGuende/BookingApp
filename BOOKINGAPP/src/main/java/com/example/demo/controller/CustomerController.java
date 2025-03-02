@@ -18,7 +18,6 @@ import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelSearchInforDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
-import com.example.demo.model.booking.Booking;
 import com.example.demo.model.room.Room;
 import com.example.demo.service.BookingServiceInterface;
 import com.example.demo.service.HotelServiceInterface;
@@ -96,6 +95,8 @@ public class CustomerController {
         //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         // }
     }
+
+    // public ResponseEntity<ApiResponse<Booking>>
 
     @GetMapping(path = "/getRoom/{id}")//get step 2
     public ResponseEntity<ApiResponse<Room>> getRoomById(@PathVariable Long id) {

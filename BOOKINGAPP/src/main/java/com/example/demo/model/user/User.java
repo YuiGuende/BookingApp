@@ -92,4 +92,12 @@ public abstract class User {
     }
 
     public abstract String getRole();
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", name=" + name + ", email=" + email + ", username=" + username + ", password="
+                + password + ", phone=" + phone + "]";
+    }
+
+    
 }

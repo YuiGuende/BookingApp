@@ -17,7 +17,7 @@ header{
 .startBtn{
   display: flex;
   justify-content: space-around;
-  width: 25%;
+  width: 20%;
 }
 #loginBtn, #signupBtn{
   width: 8vw;

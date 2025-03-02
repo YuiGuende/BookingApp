@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import com.example.demo.model.user.customer.Customer;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -30,8 +29,8 @@ public class Booking {
     )
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
 
     private String name; // Tên khách hàng

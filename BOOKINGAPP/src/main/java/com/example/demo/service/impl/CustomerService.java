@@ -15,7 +15,6 @@ import com.example.demo.service.CustomerServiceInterface;
 public class CustomerService implements CustomerServiceInterface {
     private final CustomerRepository customerRepository;
 
-
     @Autowired
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -33,7 +32,7 @@ public class CustomerService implements CustomerServiceInterface {
 
     @Override
     public Customer getCurrentCustomer(String username, String password) {
-        Optional<Customer> findCustomer = customerRepository.findByUsernameAndPassword(username, password);
+        Optional<Customer> findCustomer = customerRepository.findTopByUsernameAndPassword(username, password);
         if (findCustomer.isPresent()) {
             return findCustomer.get();
         } else {

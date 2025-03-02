@@ -7,12 +7,9 @@ import com.example.demo.utils.UserType;
 
 @Component
 public class AccountDTO {
-
     private String username;
     private String password;
     private UserType userType;
-
-    
 
     public AccountDTO() {
     }

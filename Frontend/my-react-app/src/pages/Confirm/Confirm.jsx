@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import "./Confirm.css"
+import Header from "../../components/header/Header"
+
 
 const Confirm = () => {
   const navigate = useNavigate()
@@ -61,43 +63,42 @@ const Confirm = () => {
           <p>
             <strong>Name:</strong>
           </p>
-          <p>{bookingData.booking.customer.name}</p>
+          <p>{bookingData.booking.name}</p>
         </div>
         <div className="detail-line">
           <p>
             <strong>Email:</strong>
           </p>
-          <p>{bookingData.booking.customer.email}</p>
+          <p>{bookingData.booking.email}</p>
         </div>
         <div className="detail-line">
           <p>
             <strong>Phone:</strong>
           </p>
-          <p>{bookingData.booking.customer.phone}</p>
+          <p>{bookingData.booking.phone}</p>
         </div>
         <div className="detail-line">
           <p>
             <strong>Check-in Date:</strong>
           </p>
-          <p>{bookingData.booking.customer.checkInDate}</p>
+          <p>{bookingData.booking.checkInDate}</p>
         </div>
         <div className="detail-line">
           <p>
             <strong>Check-out Date:</strong>
           </p>
-          <p>{bookingData.booking.customer.checkOutDate}</p>
+          <p>{bookingData.booking.checkOutDate}</p>
         </div>
         <div className="detail-line">
           <p>
             <strong>Total Price:</strong>
           </p>
-          <p>{bookingData.booking.customer.totalPrice}</p>
+          <p>{bookingData.booking.totalPrice}</p>
         </div>
           <h3>Rooms:</h3>
           <ul>
             {bookingData.rooms.map((bookingRoom, index) => (
-              <li key={index}>
-                Room ID: {bookingRoom.id}, Quantity: {bookingRoom.quantity}
+              <li key={index}> {bookingRoom.roomName}
               </li>
             ))}
           </ul>

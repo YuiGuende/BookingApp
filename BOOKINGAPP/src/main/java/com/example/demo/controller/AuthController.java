@@ -3,12 +3,14 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AccountDTO;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.model.user.customer.Customer;
 import com.example.demo.model.user.host.Host;
 import com.example.demo.model.user.staff.Staff;
@@ -19,7 +21,7 @@ import com.example.demo.utils.ApiResponse;
 import com.example.demo.utils.UserType;
 
 import jakarta.servlet.http.HttpSession;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -64,7 +66,7 @@ public class AuthController {
             session.setAttribute("userId", customer.getId());
             session.setAttribute("userType", UserType.CUSTOMER);
             session.setMaxInactiveInterval(1800);//3hrs
-            return ResponseEntity.ok(new ApiResponse<>("success", "Customer login successful", customer));
+            return ResponseEntity.ok(new ApiResponse<>("success", "Customer login successful", UserDTO.mappUserDTO(customer)));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

@@ -39,7 +39,9 @@ export default function Home() {
         <h1>Find your next place to stay</h1>
         <h3>Find hotel deals, home stays and more...</h3>
       </div>
-      <SearchBar onSearch={handleSearch} initialParams={searchParams} />
+      <div className="searchbar">
+        <SearchBar onSearch={handleSearch} initialParams={searchParams} />
+      </div>
     </div>
   );
 }
