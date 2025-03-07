@@ -74,7 +74,7 @@ public class BookingService implements BookingServiceInterface {
     // }
     @Override
     public void saveBooking(BookingRequiredmentDTO booking) {
-        validateBooking(booking);
+        booking.setBooking(validateBooking(booking));
 
         Customer customer = booking.getBooking().getCustomer();
         if (customer == null) {
@@ -92,7 +92,7 @@ public class BookingService implements BookingServiceInterface {
             }
         }
 
-        booking.getBooking().setStatus(BookingStatus.PENDING);
+        booking.getBooking().setStatus(BookingStatus.CONFIRMED);
 
         bookingRepository.save(booking.getBooking());
         // customerRepository.save(customer); 
@@ -131,7 +131,8 @@ public class BookingService implements BookingServiceInterface {
     }
 
     @Override
-    public void validateBooking(BookingRequiredmentDTO booking) {
+    public Booking validateBooking(BookingRequiredmentDTO booking) {
+        System.out.println("booking to validate:"+booking.getBooking());
         for (Room room : booking.getRooms()) {
             Room findRoom = roomRepository.findById(room.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Room with id " + room.getId() + " not found"));
@@ -139,6 +140,15 @@ public class BookingService implements BookingServiceInterface {
                 throw new IllegalArgumentException("This room has been booked at this date!");
             }
         }
+        Long bookingId = booking.getBooking().getId() == null ? 0 : booking.getBooking().getId();
+        if (bookingId != 0) {
+            Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
+            if (bookingOptional.isEmpty()) {
+                throw new ResourceNotFoundException("Booking not found!");
+            }
+            return bookingRepository.save(bookingOptional.get());
+        }
+        return bookingRepository.save(booking.getBooking());
     }
 
     @Override
@@ -165,8 +175,17 @@ public class BookingService implements BookingServiceInterface {
         if (uniqueBookings.isEmpty()) {
             throw new ResourceNotFoundException("You havent book any hotel yet!");
         }
-        
+
         return new ArrayList<>(uniqueBookings);
+    }
+
+    @Override
+    public Booking findBookingById(Long id) {
+        Optional<Booking> booking = bookingRepository.findBookingById(id);
+        if (booking.isEmpty()) {
+            throw new ResourceNotFoundException("Booking not found!");
+        }
+        return booking.get();
     }
 
 }

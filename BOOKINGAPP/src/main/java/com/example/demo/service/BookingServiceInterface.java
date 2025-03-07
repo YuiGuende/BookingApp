@@ -12,12 +12,13 @@ public interface BookingServiceInterface {
     List<Booking> getBookingList();
 
     List<Booking> getBookingListByHotelId(Long id);
+    Booking findBookingById(Long id);
 
     void saveBooking(BookingRequiredmentDTO bookingRequiredmentDTO);
 
     void updateBookingStatus(Booking booking, BookingStatus status);
 
-    void validateBooking(BookingRequiredmentDTO bookingRequiredmentDTO);
+    Booking validateBooking(BookingRequiredmentDTO bookingRequiredmentDTO);
 
     List<BookingDetaislDTO> getBookingDetaislDTOs(String email, String phone);
 

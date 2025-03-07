@@ -308,11 +308,12 @@ public class HotelService implements HotelServiceInterface {
         dto.setDescription(hotel.getDescription());
 
         for (Room room : hotel.getRooms()) {
-           dto.addOrUpdateRoom(mapToRoomDTO(room), 1); 
+            dto.addOrUpdateRoom(mapToRoomDTO(room), 1);
         }
         dto.setAddress(addressDTO);
         dto.setStars(hotel.getStars());
         dto.setRate(hotel.getRate());
+        dto.setRequireTT(hotel.isRequireTT());
         return dto;
     }
 

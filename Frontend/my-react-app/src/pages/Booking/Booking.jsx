@@ -186,23 +186,114 @@ const Booking = () => {
         })
     }
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault()
+    //     try {
+    //         if(bookingData.isRequireTT){
+    //             const vnpayURL = await axios.post("http://localhost:8080/api/payment/create_payment_url",{
+    //                 amount:bookingData.totalPrice
+    //             })
+    //             window.location.href=vnpayURL
+    //         }
+
+
+    //         const bookingToValidate = {
+    //             booking: {
+    //                 name: customer.name,
+    //                 email: customer.email,
+    //                 phone: customer.phone,
+    //                 checkInDate: searchInfo?.checkInDate,
+    //                 checkOutDate: searchInfo?.checkOutDate,
+    //                 totalPrice: bookingData.totalPrice,
+    //                 status: "PENDING"
+    //             },
+    //             rooms: bookingData.rooms.map((room) => ({
+    //                 id: room.id,
+    //                 roomName:room.name
+    //             })),
+    //         }
+    //         console.log(bookingToValidate)
+
+    //         const response = await axios.post("http://localhost:8080/api/customer/booking/validate", bookingToValidate)
+
+    //         if (response.data.status === "success") {
+    //             localStorage.setItem("validatedBooking", JSON.stringify(bookingToValidate))
+    //             navigate("/confirm")
+    //         } else {
+    //             alert(response.data.message)
+    //         }
+    //     } catch (error) {
+    //         console.error("Error validating booking:", error)
+    //         alert("An error occurred while validating your booking.")
+    //     }
+    // }
     const handleSubmit = async (e) => {
         e.preventDefault()
+
         try {
+            if (bookingData.requireTT) {
+                // Kiểm tra nếu có điều kiện trả trước thì chuyển hướng qua trang url của vnpay
+                // Lưu thông tin đặt phòng vào localStorage để sử dụng sau khi thanh toán
+                const bookingToValidate = {
+                    booking: {
+                        name: customer.name,
+                        email: customer.email,
+                        phone: customer.phone,
+                        checkInDate: searchInfo?.checkInDate,
+                        checkOutDate: searchInfo?.checkOutDate,
+                        totalPrice: bookingData.totalPrice,
+                        status: "PENDING",
+                    },
+                    rooms: bookingData.rooms.map((room) => ({
+                        id: room.id,
+                        roomName: room.name,
+                    })),
+                }
+
+                const validateResponse = await axios.post("http://localhost:8080/api/customer/booking/validate", bookingToValidate)
+                
+                if (validateResponse.data.status === "success") {
+                    console.log("Validated success")
+                    const validatedBookingWithId = {
+                        ...bookingToValidate,
+                        booking: {
+                            ...bookingToValidate.booking,
+                            id: validateResponse.data.data.id
+                        }
+                    };
+                    console.log("Booking with id",validatedBookingWithId)
+                    localStorage.setItem("validatedBooking", JSON.stringify(validatedBookingWithId))
+                } else {
+                    alert(validateResponse.data.message)
+                }
+                console.log("bookingId",validateResponse.data)
+                const response = await axios.post("http://localhost:8080/api/payment/create_payment_url", {
+                    amount: bookingData.totalPrice,
+                    bookingId:validateResponse.data.data.id
+                })
+                
+                console.log("link",response)
+               
+
+                // Chuyển hướng đến URL thanh toán VNPAY
+                window.location.href = response.data.data
+                return
+            }
+
+            // Xử lý đặt phòng không cần thanh toán trước
             const bookingToValidate = {
                 booking: {
-                    // customer: customer,//customer ở đây sẽ get từ session
                     name: customer.name,
                     email: customer.email,
                     phone: customer.phone,
                     checkInDate: searchInfo?.checkInDate,
                     checkOutDate: searchInfo?.checkOutDate,
                     totalPrice: bookingData.totalPrice,
-                    status: "PENDING"
+                    status: "PENDING",
                 },
                 rooms: bookingData.rooms.map((room) => ({
                     id: room.id,
-                    roomName:room.name
+                    roomName: room.name,
                 })),
             }
             console.log(bookingToValidate)

@@ -40,11 +40,11 @@ public class Booking {
     private LocalDate checkInDate; // Ngày nhận phòng
     private LocalDate checkOutDate; // Ngày trả phòng
     private double totalPrice; // Tổng tiền cho kỳ nghỉ
+    private boolean paid;
 
     //không lưu BookingRoom để tránh bị lặp
     // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     // private List<BookingRoom> bookingRooms = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     private BookingStatus status; // Trạng thái đặt phòng (PENDING, CONFIRMED,  CANCELED)
 
@@ -53,7 +53,7 @@ public class Booking {
     }
 
     public Booking(Customer customer, String name, String email, String phone, LocalDate checkInDate,
-            LocalDate checkOutDate, double totalPrice, 
+            LocalDate checkOutDate, double totalPrice,
             // List<BookingRoom> bookingRooms, 
             BookingStatus status) {
         // this.bookingRooms = new ArrayList<>();
@@ -140,12 +140,26 @@ public class Booking {
         this.status = status;
     }
 
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking [id=" + id + ", customer=" + customer + ", name=" + name + ", email=" + email + ", phone="
+                + phone + ", checkInDate=" + checkInDate + ", checkOutDate=" + checkOutDate + ", totalPrice="
+                + totalPrice + ", paid=" + paid + ", status=" + status + "]";
+    }
+
     // public List<BookingRoom> getBookingRooms() {
     //     return bookingRooms;
     // }
-
     // public void setBookingRooms(List<BookingRoom> bookingRooms) {
     //     this.bookingRooms = bookingRooms;
     // }
-
+    
 }

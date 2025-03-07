@@ -2,11 +2,12 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import HotelResult from "./HotelResult/HotelResult";
 import HotelInfor from "./Hotel_infor/HotelInfor";
-import Booking from "./Booking/Booking";
+import Booking from "./booking/Booking";
 import Confirm from "./Confirm/Confirm";
 import Login from "./login/Login";
 import Signup from "./signup/Signup";
 import BookingHistory from "./bookingHistory/BookingHistory";
+import PaymentReturn from "./payment/return";
 
 export default function Page() {
   return (
@@ -19,6 +20,7 @@ export default function Page() {
       <Route path="/login" element={<Login></Login>}/>
       <Route path="/signup" element={<Signup/>}/>
       <Route path="/bookingHistory" element={<BookingHistory/>}/>
+      <Route path="/payment/return" element={<PaymentReturn></PaymentReturn>}></Route>
     </Routes>
   );
 }

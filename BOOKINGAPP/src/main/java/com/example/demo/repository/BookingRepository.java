@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             + "JOIN Address a ON h.address.id = a.id "
             + "WHERE b.customer = :customer")
     List<Object[]> findBookingsByCustomer(@Param("customer") Customer customer);
+    Optional<Booking> findBookingById(Long id);
 
 }

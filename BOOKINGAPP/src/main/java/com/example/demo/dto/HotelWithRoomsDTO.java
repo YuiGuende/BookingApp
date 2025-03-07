@@ -21,14 +21,27 @@ public class HotelWithRoomsDTO {
     private Rate rate;
     private double price;
     private int stars;
+    private boolean requireTT;
 
     public HotelWithRoomsDTO() {
         this.rate = new Rate();
         this.roomsMap = new HashMap<>();
     }
 
+    // public HotelWithRoomsDTO(Map<RoomDTO, Integer> roomsMap, String hotelName, List<String> images, AddressDTO address,
+    //         String description, Rate rate, double price, int stars) {
+    //     this.roomsMap = roomsMap;
+    //     this.hotelName = hotelName;
+    //     this.images = images;
+    //     this.address = address;
+    //     this.description = description;
+    //     this.rate = rate;
+    //     this.price = price;
+    //     this.stars = stars;
+    //     this.roomsMap = new HashMap<>();
+    // }
     public HotelWithRoomsDTO(Map<RoomDTO, Integer> roomsMap, String hotelName, List<String> images, AddressDTO address,
-            String description, Rate rate, double price, int stars) {
+            String description, Rate rate, double price, int stars, boolean requireTT) {
         this.roomsMap = roomsMap;
         this.hotelName = hotelName;
         this.images = images;
@@ -38,6 +51,7 @@ public class HotelWithRoomsDTO {
         this.price = price;
         this.stars = stars;
         this.roomsMap = new HashMap<>();
+        this.requireTT = requireTT;
     }
 
     @JsonIgnore
@@ -140,6 +154,14 @@ public class HotelWithRoomsDTO {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public boolean isRequireTT() {
+        return requireTT;
+    }
+
+    public void setRequireTT(boolean requireTT) {
+        this.requireTT = requireTT;
     }
 
 }

@@ -3,9 +3,11 @@ package com.example.demo.model.payment;
 import java.time.LocalDate;
 
 import com.example.demo.model.booking.Booking;
+import com.example.demo.model.booking.BookingStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,19 +38,36 @@ public class Payment {
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
     private Booking booking; // Đơn đặt phòng liên kết với thanh toán
 
-    private String transactionId; // Mã giao dịch thanh toán
+    private String vnp;//mã giao dịch của VNpay
 
-    public Payment(String paymentMethod, LocalDate paymentDate, double amount, Booking booking, String transactionId) {
-        this.paymentMethod = paymentMethod;
-        this.paymentDate = paymentDate;
-        this.amount = amount;
-        this.booking = booking;
-        this.transactionId = transactionId;
+    private PaymentStatus paymentStatus;
+
+    public Payment() {
     }
+
 
     // public Host getHost(){//kiểm tra lại
     //     return getBooking().getBookingRooms().get(0).getRoom().getHotel().getHost();
     // }
+    public Payment(String paymentMethod, LocalDate paymentDate, double amount, Booking booking, String vnp) {
+        this.paymentMethod = paymentMethod;
+        this.paymentDate = paymentDate;
+        this.amount = amount;
+        this.booking = booking;
+        this.vnp = vnp;
+    }
+    
+
+    public Payment(String paymentMethod, LocalDate paymentDate, double amount, Booking booking, String vnp,
+            PaymentStatus paymentStatus) {
+        this.paymentMethod = paymentMethod;
+        this.paymentDate = paymentDate;
+        this.amount = amount;
+        this.booking = booking;
+        this.vnp = vnp;
+        this.paymentStatus = paymentStatus;
+    }
+
 
     public Long getId() {
         return id;
@@ -90,13 +109,22 @@ public class Payment {
         this.booking = booking;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getVnp() {
+        return vnp;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setVnp(String vnp) {
+        this.vnp = vnp;
     }
-    
-    // Getters và Setters
+
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
 }

@@ -47,6 +47,8 @@ public class Hotel {
     @Column(length = 2000)
     private String description;
 
+    private boolean requireTT;
+
     @Embedded
     private Rate rate;
 
@@ -65,7 +67,7 @@ public class Hotel {
         this.name = name;
         this.host = host;
         this.address = address;
- 
+
         this.stars = stars;
         this.rooms = rooms;
     }
@@ -80,6 +82,14 @@ public class Hotel {
         this.images = images;
         this.stars = stars;
         this.rooms = rooms;
+    }
+
+    public boolean isRequireTT() {
+        return requireTT;
+    }
+
+    public void setRequireTT(boolean requireTT) {
+        this.requireTT = requireTT;
     }
 
     public String getDescription() {
@@ -115,8 +125,6 @@ public class Hotel {
         this.name = name;
     }
 
- 
-
     public int getStars() {
         return stars;
     }
@@ -148,8 +156,6 @@ public class Hotel {
     public void setHost(Host host) {
         this.host = host;
     }
-
-    
 
     public List<String> getImages() {
         return images;

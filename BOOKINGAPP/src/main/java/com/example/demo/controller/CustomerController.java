@@ -20,7 +20,7 @@ import com.example.demo.dto.HotelSearchInforDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
 import com.example.demo.dto.SignUpDTO;
-import com.example.demo.model.room.Room;
+import com.example.demo.model.booking.Booking;
 import com.example.demo.service.BookingServiceInterface;
 import com.example.demo.service.HotelServiceInterface;
 import com.example.demo.service.RoomServiceInterface;
@@ -89,9 +89,9 @@ public class CustomerController {
     @GetMapping(path = "/getHotel/{id}")//get step 1
     public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(@PathVariable Long id) {
         try {
-        HotelWithRoomsDTO dto = hotelService.getHotelDTOById(id);
-        ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", "hotel details", dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+            HotelWithRoomsDTO dto = hotelService.getHotelDTOById(id);
+            ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", "hotel details", dto);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", e.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -113,28 +113,28 @@ public class CustomerController {
         }
     }
 
-    @GetMapping(path = "/getRoom/{id}")//get step 2
-    public ResponseEntity<ApiResponse<Room>> getRoomById(@PathVariable Long id) {
-        try {
-            Room room = roomService.getRoomById(id);
-            ApiResponse<Room> response = new ApiResponse<>("success", "Room details", room);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception e) {
-            ApiResponse<Room> response = new ApiResponse<>("error", e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
+    // @GetMapping(path = "/getRoom/{id}")//get step 2
+    // public ResponseEntity<ApiResponse<Room>> getRoomById(@PathVariable Long id) {
+    //     try {
+    //         Room room = roomService.getRoomById(id);
+    //         ApiResponse<Room> response = new ApiResponse<>("success", "Room details", room);
+    //         return ResponseEntity.status(HttpStatus.OK).body(response);
+    //     } catch (Exception e) {
+    //         ApiResponse<Room> response = new ApiResponse<>("error", e.getMessage(), null);
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    //     }
+    // }
 
     //post step 2
     @PostMapping(path = "/booking/validate")
-    public ResponseEntity<ApiResponse<Void>> validateBooking(@RequestBody BookingRequiredmentDTO bookingToValidate) {
+    public ResponseEntity<ApiResponse<Booking>> validateBooking(@RequestBody BookingRequiredmentDTO bookingToValidate) {
         try {
             System.out.println(bookingToValidate);
-            bookingService.validateBooking(bookingToValidate);
-            ApiResponse<Void> response = new ApiResponse<>("success", "This booking is valid!", null);
+            
+            ApiResponse<Booking> response = new ApiResponse<>("success", "This booking is valid!", bookingService.validateBooking(bookingToValidate));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         } catch (Exception e) {
-            ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
+            ApiResponse<Booking> response = new ApiResponse<>("error", e.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

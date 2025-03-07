@@ -98,7 +98,7 @@ const Confirm = () => {
           <h3>Rooms:</h3>
           <ul>
             {bookingData.rooms.map((bookingRoom, index) => (
-              <li key={index}> {bookingRoom.roomName}
+              <li key={index}> ⭐{bookingRoom.roomName}
               </li>
             ))}
           </ul>

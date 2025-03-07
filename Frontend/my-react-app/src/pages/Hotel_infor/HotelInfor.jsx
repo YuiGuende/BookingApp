@@ -100,10 +100,12 @@ const HotelInfor = () => {
 
     const bookingData = {
       hotelName: hotel.hotelName,
+      requireTT:hotel.requireTT,
       hotelId: hotel.id,
       rooms: roomsToBook,
       totalPrice: roomsToBook.reduce((sum, room) => sum + room.totalPrice, 0),
     };
+    console.log("require hotel",hotel.requireTT)
 
     localStorage.setItem("bookingData", JSON.stringify(bookingData));
     navigate("/Booking");
