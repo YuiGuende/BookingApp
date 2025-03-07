@@ -83,13 +83,36 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
               AND br.booking.checkOutDate > :checkInDate
         )
   """)
-  List<Room> findAvailableRoomsByHotelAndCriteria(
-          @Param("hotelId") Long hotelId,
-          @Param("adultQuantity") int adultQuantity,
-          @Param("childrenQuantity") int childrenQuantity,
-          @Param("checkInDate") LocalDate checkInDate,
-          @Param("checkOutDate") LocalDate checkOutDate
-  );
-  
+    List<Room> findAvailableRoomsByHotelAndCriteria(
+            @Param("hotelId") Long hotelId,
+            @Param("adultQuantity") int adultQuantity,
+            @Param("childrenQuantity") int childrenQuantity,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate
+    );
+
+    @Query(value = """
+      SELECT DISTINCT r
+      FROM Room r
+      WHERE r.hotel.id = :hotelId
+        AND r.occupancy.maxAdults >= :adultQuantity
+        AND r.occupancy.maxChildrens >= :childrenQuantity
+        AND r.isAvailable = true
+        AND NOT EXISTS (
+            SELECT 1 FROM BookingRoom br
+            WHERE br.room.id = r.id
+              AND br.booking.status IN ('PENDING', 'CONFIRMED')
+              AND br.booking.checkInDate < :checkOutDate
+              AND br.booking.checkOutDate > :checkInDate
+        )
+    """)
+    List<Room> findAvailableRoomsByHotelId(
+            @Param("hotelId") Long hotelId,
+            @Param("adultQuantity") int adultQuantity,
+            @Param("childrenQuantity") int childrenQuantity,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate
+    );
+
 
 }

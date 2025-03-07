@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.config.VNpayConfig;
 import com.example.demo.dto.PaymentDTO;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.booking.BookingStatus;
 import com.example.demo.model.payment.Payment;
 import com.example.demo.model.payment.PaymentStatus;
 import com.example.demo.repository.BookingRepository;
+import com.example.demo.repository.PaymentRepository;
 import com.example.demo.service.VNPayServiceInteface;
 import com.example.demo.utils.ApiResponse;
 
@@ -36,14 +39,17 @@ public class VNPayService implements VNPayServiceInteface {
     private final PaymentService paymentService;
     private final BookingService bookingService;
     private final BookingRepository bookingRepository;
+    private final PaymentRepository paymentRepository;
 
     @Autowired
     public VNPayService(PaymentService paymentService,
             BookingService bookingService,
-            BookingRepository bookingRepository) {
+            BookingRepository bookingRepository,
+            PaymentRepository paymentRepository) {
         this.paymentService = paymentService;
         this.bookingService = bookingService;
         this.bookingRepository = bookingRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     @Override
@@ -140,16 +146,26 @@ public class VNPayService implements VNPayServiceInteface {
             // if (requestParams.containsKey("vnp_SecureHash")) {
             //     requestParams.remove("vnp_SecureHash");
             // }
+            String vnp_TxnRef = requestParams.get("vnp_TxnRef");
+            Optional<Payment> paymetOptional = paymentRepository.findByVnp(vnp_TxnRef);
+            if (paymetOptional.isEmpty()) {
+                throw new ResourceNotFoundException("vnp_TxnRef not found!");
+            }
+            if(paymetOptional.get().getPaymentStatus()==PaymentStatus.CONFIRMED){
+                return new ApiResponse<>("checked", "Thanh toán này đã hoàn thành trước đó", null);
+            }
+
             boolean isPaymentValid = false;
             String vnp_ResponseCode = requestParams.get("vnp_ResponseCode");
             Payment payment = new Payment();
             if ("00".equals(vnp_ResponseCode)) {
-                String vnp_TxnRef = requestParams.get("vnp_TxnRef");
+
                 payment = paymentService.updatePaymentStatus(vnp_TxnRef, PaymentStatus.CONFIRMED);
                 payment.getBooking().setStatus(BookingStatus.CONFIRMED);
                 isPaymentValid = true;
                 bookingRepository.save(payment.getBooking());
             } else {
+                System.out.println("Verifyyyyyyyyyyyyyy cancellll");
                 payment.setPaymentStatus(PaymentStatus.CANCELED);
                 payment.getBooking().setStatus(BookingStatus.CANCELED);
                 paymentService.savePayment(payment);
@@ -215,6 +231,7 @@ public class VNPayService implements VNPayServiceInteface {
                                 paymentService.updatePaymentStatus(vnp_TxnRef, PaymentStatus.CONFIRMED);
                             } else {
                                 // Giao dịch thất bại, cập nhật database
+                                System.out.println("INPnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn cancellll");
                                 paymentService.updatePaymentStatus(vnp_TxnRef, PaymentStatus.CANCELED);
                             }
 

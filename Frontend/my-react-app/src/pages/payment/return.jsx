@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState ,useRef} from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import axios from "axios"
 import { CheckCircle, XCircle } from "lucide-react"
@@ -10,9 +10,11 @@ export default function PaymentReturn() {
   const location = useLocation()
   const [status, setStatus] = useState("loading") // "loading" | "success" | "failed"
   const [message, setMessage] = useState("")
-
+  const hasVerified = useRef(false) 
   useEffect(() => {
     const verifyPayment = async () => {
+      if (hasVerified.current) return
+      console.log("the url is change ?")
       try {
         // Lấy tất cả các tham số từ URL
         const searchParams = new URLSearchParams(location.search)
@@ -45,7 +47,13 @@ export default function PaymentReturn() {
           setStatus("success")
 
           setMessage("Thanh toán thành công! Đơn đặt phòng của bạn đã được xác nhận.")
-        } else {
+        }
+        else if(response.data.status === "checked") {
+          setStatus("checked")
+
+          setMessage("Giao dịch đã được xử lý")
+        }
+        else {
           setStatus("failed")
           setMessage(response.data.message || "Thanh toán không thành công")
         }
@@ -57,7 +65,8 @@ export default function PaymentReturn() {
     }
 
     verifyPayment()
-  }, [location.search])
+    hasVerified.current = true 
+  }, [])
 
   const handleContinue = () => {
     if (status === "success") {
@@ -95,6 +104,19 @@ export default function PaymentReturn() {
           <div className="text-center">
             <XCircle className="h-16 w-16 text-red-500 mx-auto" />
             <h2 className="mt-4 text-2xl font-bold text-red-500">Thanh toán thất bại</h2>
+            <p className="mt-2 text-gray-600">{message}</p>
+            <button
+              onClick={handleContinue}
+              className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors"
+            >
+              Quay lại trang chủ
+            </button>
+          </div>
+        )}
+        {status === "checked" && (
+          <div className="text-center">
+            <XCircle className="h-16 w-16 text-gray-500 mx-auto" />
+            <h2 className="mt-4 text-2xl font-bold text-red-500">Thanh toán không xác định</h2>
             <p className="mt-2 text-gray-600">{message}</p>
             <button
               onClick={handleContinue}

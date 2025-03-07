@@ -14,7 +14,12 @@ public interface HotelServiceInterface {
 
     Hotel getHotelByHotelId(Long id);
 
-    HotelWithRoomsDTO getHotelDTOById(Long id);
+    HotelWithRoomsDTO getHotelDTOById(Long id,
+    int roomQuantity,
+    int adultQuantity,
+    int childrenQuantity,
+    LocalDate checkinDate,
+    LocalDate checkoutDate);
 
     void addHotel(Hotel hotel);
 

@@ -19,15 +19,28 @@ const HotelInfor = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const searchInfoStr = localStorage.getItem("searchInfor");
+    if (!searchInfoStr) return;
+
+    const searchData = JSON.parse(searchInfoStr);
+
     axios
-      .get(`http://localhost:8080/api/customer/getHotel/${id}`)
+      .get(`http://localhost:8080/api/customer/getHotel/${id}`, {
+        params: {
+          roomQuantity: searchData.roomQuantity,
+          adultQuantity: searchData.adultQuantity,
+          childrenQuantity: searchData.childrenQuantity,
+          checkInDate: searchData.checkInDate,
+          checkOutDate: searchData.checkOutDate,
+        }
+      }) // Chuyển từ GET sang POST
       .then((response) => {
         const rawRooms = response.data.data.rooms;
 
         // Nhóm các phòng cùng name và type lại để hiển thị UI nhưng vẫn giữ danh sách gốc
         const groupedRooms = {};
         rawRooms.forEach(({ room, quantity }) => {
-          const key = `${room.name}-${room.type}`; // Nhóm theo tên và loại
+          const key = `${room.name}-${room.type}`;
           if (!groupedRooms[key]) {
             groupedRooms[key] = { ...room, totalQuantity: 0, originalRooms: [] };
           }
@@ -37,8 +50,8 @@ const HotelInfor = () => {
 
         setHotel({
           ...response.data.data,
-          rooms: Object.values(groupedRooms), // Chỉ hiển thị nhóm đã gộp
-          allRooms: rawRooms.map(({ room, quantity }) => ({ ...room, availableQuantity: quantity })), // Danh sách gốc
+          rooms: Object.values(groupedRooms),
+          allRooms: rawRooms.map(({ room, quantity }) => ({ ...room, availableQuantity: quantity })),
         });
 
         setLoading(false);
@@ -48,6 +61,7 @@ const HotelInfor = () => {
         setLoading(false);
       });
   }, [id]);
+
 
   const handleQuantityChange = (roomKey, quantity) => {
     console.log("Selected Room:", roomKey, "Quantity:", quantity);
@@ -100,12 +114,12 @@ const HotelInfor = () => {
 
     const bookingData = {
       hotelName: hotel.hotelName,
-      requireTT:hotel.requireTT,
+      requireTT: hotel.requireTT,
       hotelId: hotel.id,
       rooms: roomsToBook,
       totalPrice: roomsToBook.reduce((sum, room) => sum + room.totalPrice, 0),
     };
-    console.log("require hotel",hotel.requireTT)
+    console.log("require hotel", hotel.requireTT)
 
     localStorage.setItem("bookingData", JSON.stringify(bookingData));
     navigate("/Booking");
@@ -118,10 +132,10 @@ const HotelInfor = () => {
   return (
     <>
       <div className="header-container">
-      < Header/>
+        < Header />
       </div>
       <div className="searchbar-container">
-        <SearchBar/>
+        <SearchBar />
       </div>
       <div className="hotel-container-infor">
         <div className="hotel-header-infor">

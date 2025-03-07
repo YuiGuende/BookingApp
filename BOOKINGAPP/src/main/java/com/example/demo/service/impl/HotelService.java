@@ -287,7 +287,12 @@ public class HotelService implements HotelServiceInterface {
     }
 
     @Override
-    public HotelWithRoomsDTO getHotelDTOById(Long id) {
+    public HotelWithRoomsDTO getHotelDTOById(Long id,
+            int roomQuantity,
+            int adultQuantity,
+            int childrenQuantity,
+            LocalDate checkinDate,
+            LocalDate checkoutDate) {
         Hotel hotel = getHotelByHotelId(id);
         HotelWithRoomsDTO dto = new HotelWithRoomsDTO();
         Address address1 = hotel.getAddress();
@@ -307,7 +312,7 @@ public class HotelService implements HotelServiceInterface {
         dto.setImages(hotel.getImages().isEmpty() ? null : hotel.getImages());
         dto.setDescription(hotel.getDescription());
 
-        for (Room room : hotel.getRooms()) {
+        for (Room room : roomRepository.findAvailableRoomsByHotelId(id, adultQuantity, childrenQuantity, checkinDate, checkoutDate)) {
             dto.addOrUpdateRoom(mapToRoomDTO(room), 1);
         }
         dto.setAddress(addressDTO);

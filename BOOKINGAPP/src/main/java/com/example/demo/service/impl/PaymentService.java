@@ -16,7 +16,10 @@ import com.example.demo.repository.HostRepository;
 import com.example.demo.repository.PaymentRepository;
 import com.example.demo.service.PaymentServiceInterface;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class PaymentService implements PaymentServiceInterface {
 
     private final PaymentRepository paymentRepository;

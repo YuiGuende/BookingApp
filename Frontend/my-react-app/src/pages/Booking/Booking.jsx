@@ -1,131 +1,3 @@
-// "use client"
-
-// import { useState, useEffect } from "react"
-// import { useNavigate } from "react-router-dom"
-// import axios from "axios"
-// import "./Booking.css"
-
-// const Booking = () => {
-//   const navigate = useNavigate()
-//   const [bookingData, setBookingData] = useState(null)
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     phone: "",
-//     checkInDate: "",
-//     checkOutDate: "",
-//   })
-
-//   useEffect(() => {
-//     const data = localStorage.getItem("bookingData")
-//     if (!data) {
-//       navigate("/")
-//       return
-//     }
-//     const parsedData = JSON.parse(data)
-//     setBookingData(parsedData)
-//     setFormData((prevState) => ({
-//       ...prevState,
-//       checkInDate: parsedData.checkInDate,
-//       checkOutDate: parsedData.checkOutDate,
-//     }))
-//   }, [navigate])
-
-//   const handleInputChange = (e) => {
-//     setFormData({
-//       ...formData,
-//       [e.target.name]: e.target.value,
-//     })
-//   }
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault()
-//     try {
-//       const bookingToValidate = {
-//         ...formData,
-//         customer: { id: 1 }, // Assuming you have a way to get the customer ID
-//         totalPrice: bookingData.totalPrice,
-//         bookingRooms: bookingData.rooms.map((room) => ({
-//           room: { id: room.id },
-//           quantity: room.selectedQuantity,
-//         })),
-//         status: "PENDING",
-//       }
-
-//       const response = await axios.post("http://localhost:8080/api/customer/booking/validate", bookingToValidate)
-
-//       if (response.data.status === "success") {
-//         localStorage.setItem("validatedBooking", JSON.stringify(bookingToValidate))
-//         navigate("/confirm")
-//       } else {
-//         alert(response.data.message)
-//       }
-//     } catch (error) {
-//       console.error("Error validating booking:", error)
-//       alert("An error occurred while validating your booking. Please try again.")
-//     }
-//   }
-
-//   if (!bookingData) return null
-
-//   return (
-//     <div className="booking-page">
-//       <h1>Booking Details</h1>
-//       <form onSubmit={handleSubmit}>
-//         <div className="form-group">
-//           <label htmlFor="name">Name:</label>
-//           <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
-//         </div>
-//         <div className="form-group">
-//           <label htmlFor="email">Email:</label>
-//           <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required />
-//         </div>
-//         <div className="form-group">
-//           <label htmlFor="phone">Phone:</label>
-//           <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} required />
-//         </div>
-//         <div className="form-group">
-//           <label htmlFor="checkInDate">Check-in Date:</label>
-//           <input
-//             type="date"
-//             id="checkInDate"
-//             name="checkInDate"
-//             value={formData.checkInDate}
-//             onChange={handleInputChange}
-//             required
-//           />
-//         </div>
-//         <div className="form-group">
-//           <label htmlFor="checkOutDate">Check-out Date:</label>
-//           <input
-//             type="date"
-//             id="checkOutDate"
-//             name="checkOutDate"
-//             value={formData.checkOutDate}
-//             onChange={handleInputChange}
-//             required
-//           />
-//         </div>
-//         <button type="submit">Validate Booking</button>
-//       </form>
-//       <div className="booking-summary">
-//         <h2>Booking Summary</h2>
-//         <p>Hotel: {bookingData.hotelName}</p>
-//         <p>Total Price: ${bookingData.totalPrice}</p>
-//         <h3>Rooms:</h3>
-//         <ul>
-//           {bookingData.rooms.map((room, index) => (
-//             <li key={index}>
-//               {room.name} - Quantity: {room.selectedQuantity}, Price: ${room.price * room.selectedQuantity}
-//             </li>
-//           ))}
-//         </ul>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default Booking
 
 "use client"
 
@@ -144,12 +16,13 @@ const Booking = () => {
         email: "",
         phone: "",
     })
+    
     const customerInfor = localStorage.getItem("customerInfor")
     useEffect(() => {
         setCustomer(JSON.parse(customerInfor))
     }, [customerInfor]
     )
-
+ 
     const [acceptNewsLetter, setAcceptNewsLetter] = useState(false)
     const groupRoomsByName = (rooms) => {
         return rooms.reduce((acc, room) => {
@@ -186,47 +59,6 @@ const Booking = () => {
         })
     }
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault()
-    //     try {
-    //         if(bookingData.isRequireTT){
-    //             const vnpayURL = await axios.post("http://localhost:8080/api/payment/create_payment_url",{
-    //                 amount:bookingData.totalPrice
-    //             })
-    //             window.location.href=vnpayURL
-    //         }
-
-
-    //         const bookingToValidate = {
-    //             booking: {
-    //                 name: customer.name,
-    //                 email: customer.email,
-    //                 phone: customer.phone,
-    //                 checkInDate: searchInfo?.checkInDate,
-    //                 checkOutDate: searchInfo?.checkOutDate,
-    //                 totalPrice: bookingData.totalPrice,
-    //                 status: "PENDING"
-    //             },
-    //             rooms: bookingData.rooms.map((room) => ({
-    //                 id: room.id,
-    //                 roomName:room.name
-    //             })),
-    //         }
-    //         console.log(bookingToValidate)
-
-    //         const response = await axios.post("http://localhost:8080/api/customer/booking/validate", bookingToValidate)
-
-    //         if (response.data.status === "success") {
-    //             localStorage.setItem("validatedBooking", JSON.stringify(bookingToValidate))
-    //             navigate("/confirm")
-    //         } else {
-    //             alert(response.data.message)
-    //         }
-    //     } catch (error) {
-    //         console.error("Error validating booking:", error)
-    //         alert("An error occurred while validating your booking.")
-    //     }
-    // }
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -301,7 +133,15 @@ const Booking = () => {
             const response = await axios.post("http://localhost:8080/api/customer/booking/validate", bookingToValidate)
 
             if (response.data.status === "success") {
-                localStorage.setItem("validatedBooking", JSON.stringify(bookingToValidate))
+                const validatedBookingWithId = {
+                    ...bookingToValidate,
+                    booking: {
+                        ...bookingToValidate.booking,
+                        id: response.data.data.id
+                    }
+                };
+                console.log("Booking with id",validatedBookingWithId)
+                localStorage.setItem("validatedBooking", JSON.stringify(validatedBookingWithId))
                 navigate("/confirm")
             } else {
                 alert(response.data.message)
@@ -344,7 +184,7 @@ const Booking = () => {
                                         type="text"
                                         id="name"
                                         name="name"
-                                        value={customer.name}
+                                        value={customer?.name || ""}
                                         onChange={handleCustomerChange}
                                         required
                                         placeholder="Enter full name as in the passport"
@@ -356,7 +196,7 @@ const Booking = () => {
                                         type="email"
                                         id="email"
                                         name="email"
-                                        value={customer.email}
+                                        value={customer?.email || ""}
                                         onChange={handleCustomerChange}
                                         required
                                     />
@@ -372,7 +212,7 @@ const Booking = () => {
                                             type="tel"
                                             id="phone"
                                             name="phone"
-                                            value={customer.phone}
+                                            value={customer?.phone || ""}
                                             onChange={handleCustomerChange}
                                             required
                                         />

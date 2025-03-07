@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.BookingDetaislDTO;
@@ -24,6 +25,7 @@ import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.service.BookingServiceInterface;
 
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -50,6 +52,10 @@ public class BookingService implements BookingServiceInterface {
     @Override
     public List<Booking> getBookingList() {
         return bookingRepository.findAll();
+    }
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    public Booking saveBooking(Booking booking){
+        return bookingRepository.save(booking);
     }
 
     // public void saveBooking(BookingRequiredmentDTO booking) {
@@ -94,12 +100,18 @@ public class BookingService implements BookingServiceInterface {
 
         booking.getBooking().setStatus(BookingStatus.CONFIRMED);
 
-        bookingRepository.save(booking.getBooking());
+       Booking booking2= saveBooking(booking.getBooking());
         // customerRepository.save(customer); 
-
-        for (Room room : booking.getRooms()) {
-            bookingRoomRepository.save(new BookingRoom(booking.getBooking(), room));
+        Set<Room> roomsSet = new HashSet<>(booking.getRooms());
+        int i=0;
+        for (Room room : roomsSet) {
+            System.out.println("roommmmmmmmmmmmmmmmmmmmmmmmm"+i++ +room);
+           
         }
+        for (Room room : roomsSet) {
+            bookingRoomRepository.save(new BookingRoom(booking2, room));
+        }
+        
     }
 
     public boolean isRoomAvailable(Room room, LocalDate checkInDate, LocalDate checkOutDate) {
@@ -148,7 +160,7 @@ public class BookingService implements BookingServiceInterface {
             }
             return bookingRepository.save(bookingOptional.get());
         }
-        return bookingRepository.save(booking.getBooking());
+        return saveBooking(booking.getBooking());
     }
 
     @Override

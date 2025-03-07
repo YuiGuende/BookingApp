@@ -8,6 +8,8 @@ import com.example.demo.model.booking.BookingStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,7 +41,7 @@ public class Payment {
     private Booking booking; // Đơn đặt phòng liên kết với thanh toán
 
     private String vnp;//mã giao dịch của VNpay
-
+     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
     public Payment() {
