@@ -14,6 +14,7 @@ export default function HotelDetails({ hotel }) {
           </div>
         </div>
         {/* <p>{hotel.hotelWithRoomsDTO.description}</p> */}
+        <p>Cách điểm bạn chọn {hotel.distance.toFixed(2)}km </p>
         <p>⭐ {hotel.hotelWithRoomsDTO.stars} stars</p>
         <p>📍 {hotel.hotelWithRoomsDTO.address.city}, {hotel.hotelWithRoomsDTO.address.state}</p>
         <p className="price">VND {hotel.hotelWithRoomsDTO.price.toLocaleString()}</p>

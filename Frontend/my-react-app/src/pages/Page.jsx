@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./Home";
-import HotelResult from "./HotelResult/HotelResult";
+import HotelResult from "./hotelResult/HotelResult";
 import HotelInfor from "./Hotel_infor/HotelInfor";
 import Booking from "./booking/Booking";
 import Confirm from "./Confirm/Confirm";

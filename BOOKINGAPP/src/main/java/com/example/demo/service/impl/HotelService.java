@@ -30,6 +30,7 @@ import com.example.demo.model.room.Amenity;
 import com.example.demo.model.room.Room;
 import com.example.demo.model.room.SubRoomType;
 import com.example.demo.repository.AddressRepository;
+import com.example.demo.repository.AmenityRepository;
 import com.example.demo.repository.HotelRepository;
 import com.example.demo.repository.RoomAmentityRepository;
 import com.example.demo.repository.RoomRepository;
@@ -50,6 +51,7 @@ public class HotelService implements HotelServiceInterface {
     private final RoomAmentityRepository roomAmentityRepository;
     private static final Logger logger = LoggerFactory.getLogger(GeoUtils.class);
     private final SubRoomRepository subRoomRepository;
+    private final AmenityRepository amenityRepository;
 
     @Autowired
     public HotelService(
@@ -58,13 +60,15 @@ public class HotelService implements HotelServiceInterface {
             RoomRepository roomRepository,
             GeoUtils geoUtils,
             RoomAmentityRepository roomAmentityRepository,
-            SubRoomRepository subRoomRepository) {
+            SubRoomRepository subRoomRepository,
+            AmenityRepository amenityRepository) {
         this.hotelRepository = hotelRepository;
         this.addressRepository = addressRepository;
         this.roomRepository = roomRepository;
         this.geoUtils = geoUtils;
         this.roomAmentityRepository = roomAmentityRepository;
         this.subRoomRepository = subRoomRepository;
+        this.amenityRepository = amenityRepository;
     }
 
     @Override
@@ -220,6 +224,7 @@ public class HotelService implements HotelServiceInterface {
                     roomAmenities.isEmpty() ? new ArrayList<>() : roomAmenities,
                     subRoomTypes.isEmpty() ? new ArrayList<>() : subRoomTypes
             );
+            hotelDTO.getAmenities().addAll(roomAmenities);
 
             hotelDTO.getRooms().add(roomDTO);
             if (hotelDTO.getPrice() > roomDTO.getPrice() * daysBetween) {
@@ -338,5 +343,10 @@ public class HotelService implements HotelServiceInterface {
                 subRoomTypes.isEmpty() ? new ArrayList<>() : subRoomTypes
         );
 
+    }
+
+    @Override
+    public List<Amenity> getAllAmenities() {
+        return amenityRepository.findAll();
     }
 }

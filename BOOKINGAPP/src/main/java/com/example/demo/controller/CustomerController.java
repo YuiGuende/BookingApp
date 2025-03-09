@@ -24,6 +24,7 @@ import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
 import com.example.demo.dto.SignUpDTO;
 import com.example.demo.model.booking.Booking;
+import com.example.demo.model.room.Amenity;
 import com.example.demo.service.BookingServiceInterface;
 import com.example.demo.service.HotelServiceInterface;
 import com.example.demo.service.RoomServiceInterface;
@@ -69,6 +70,11 @@ public class CustomerController {
         }
     }
 
+    @GetMapping(path="/amenity")
+    public List<Amenity> getAmenites(){
+        return hotelService.getAllAmenities();
+    }
+
     @GetMapping(path = "/hotels/{id}/available-rooms")//ma no chu
     public ResponseEntity<ApiResponse<List<RoomDTO>>> searchHotelWithAvailableRoom(
             @PathVariable Long hotelId,
@@ -89,7 +95,7 @@ public class CustomerController {
         }
     }
 
-    @GetMapping(path = "/getHotel/{id}") 
+    @GetMapping(path = "/getHotel/{id}")
     public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(
             @PathVariable Long id,
             @RequestParam int roomQuantity,

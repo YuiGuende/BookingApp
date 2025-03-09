@@ -1,11 +1,11 @@
 import { useState} from "react";
 import "./ReceptionStyles.css";
-import Capacity from "../../utils/capacity/Capacity";
 import { LocalizationProvider } from "@mui/x-date-pickers-pro/LocalizationProvider"
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker"
 import dayjs from "dayjs"
 import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs"
-
+import { Calendar, Clock, CheckCircle, XCircle, User, Phone, Mail, CreditCard, Hotel, DoorOpen, CalendarIcon, Search, CheckSquare, BedDouble, AlertCircle } from 'lucide-react';
+import axios from "axios";
 
 export default function Checkin() {
   const [activeTab, setActiveTab] = useState("booking");
@@ -15,8 +15,8 @@ export default function Checkin() {
     phone: "",
     email: "",
     roomIds: "",
-    checkInDate: new Date(),
-    checkOutDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+      checkInDate: dayjs(), // Sử dụng dayjs thay vì Date()
+      checkOutDate: dayjs().add(1, 'day'), // Cộng thêm 1 ngày
   });
   // Validate booking
   const validateBooking = () => {
@@ -37,9 +37,9 @@ export default function Checkin() {
         name: checkinForm.name,
         email: checkinForm.email,
         phone: checkinForm.phone,
-        checkInDate: checkinForm.checkInDate.toISOString().split('T')[0],
-        checkOutDate: checkinForm.checkOutDate.toISOString().split('T')[0],
-      },
+        checkInDate: dayjs(checkinForm.checkInDate).format('YYYY-MM-DD'),
+    checkOutDate: dayjs(checkinForm.checkOutDate).format('YYYY-MM-DD'),
+        },
       rooms: roomIds.map(id => ({ id: parseInt(id) }))
     };
     
@@ -57,6 +57,7 @@ export default function Checkin() {
             }
           });
           alert("Đặt phòng hợp lệ! Vui lòng xác nhận để hoàn tất.");
+          console.log(bookingToValidate)
         } else {
           alert(res.data.message || "Có lỗi xảy ra khi xác thực đặt phòng.");
         }
@@ -70,14 +71,20 @@ export default function Checkin() {
       });
   };
   const [validatedBooking, setValidatedBooking] = useState(null);
-    const handleDateRangeChange = (dateRange) => {
-        const [checkIn, checkOut] = dateRange
-        setBooking((prev) => ({
-          ...prev,
-          checkInDate: checkIn ? dayjs(checkIn).format("YYYY-MM-DD") : null,
-          checkOutDate: checkOut ? dayjs(checkOut).format("YYYY-MM-DD") : null,
-        }))
+    // Handle date change for check-in form
+    const handleCheckinDateChange = (dates) => {
+      if (!dates || dates.length !== 2) return;
+    
+      setCheckinForm(prev => ({
+        ...prev,
+        checkInDate: dates[0],  // Lấy ngày check-in từ phần tử đầu tiên của mảng
+        checkOutDate: dates[1]   // Lấy ngày check-out từ phần tử thứ hai của mảng
+      }));
+    
+      if (validatedBooking) {
+        setValidatedBooking(null);
       }
+    };
       const handleCheckinFormChange = (e) => {
         const { name, value } = e.target;
         setCheckinForm(prev => ({
@@ -90,7 +97,40 @@ export default function Checkin() {
           setValidatedBooking(null);
         }
       };
+      const confirmBooking = () => {
+        if (!validatedBooking) {
+          alert("Vui lòng xác thực đặt phòng trước!");
+          return;
+        }
     
+        setLoading(true);
+    
+        axios.post("http://localhost:8080/api/customer/booking/add", validatedBooking)
+          .then((res) => {
+            if (res.data && res.data.status === "success") {
+              alert("Đặt phòng thành công!");
+              // Reset form
+              setCheckinForm({
+                name: "",
+                phone: "",
+                email: "",
+                roomIds: "",
+                checkInDate: new Date(),
+                checkOutDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+              });
+              setValidatedBooking(null);
+            } else {
+              alert(res.data.message || "Có lỗi xảy ra khi đặt phòng.");
+            }
+          })
+          .catch((err) => {
+            console.error("Error confirming booking:", err);
+            alert(err.response?.data?.message || "Không thể đặt phòng. Vui lòng thử lại!");
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      };
     return (
         <>
             <div className="mini-tab">
@@ -161,9 +201,12 @@ export default function Checkin() {
                   <label>Thời gian lưu trú <span className="reception-required">*</span></label>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DateRangePicker
-                                startDate={checkinForm.checkInDate}
-                                endDate={checkinForm.checkOutDate}
-                                onChange={handleDateRangeChange}
+                                localeText={{ start: "Check-in", end: "Check-out" }}
+                                value={[
+                                  checkinForm.checkInDate ? dayjs(checkinForm.checkInDate) : null,
+                                  checkinForm.checkOutDate ? dayjs(checkinForm.checkOutDate) : null,
+                                ]}
+                                onChange={handleCheckinDateChange}
                                 disablePast
                             />
                         </LocalizationProvider>

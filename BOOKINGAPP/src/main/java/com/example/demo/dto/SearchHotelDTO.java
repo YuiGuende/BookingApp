@@ -1,8 +1,11 @@
 package com.example.demo.dto;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.example.demo.model.hotel.Rate;
+import com.example.demo.model.room.Amenity;
 
 public class SearchHotelDTO {
 
@@ -15,10 +18,11 @@ public class SearchHotelDTO {
     private Rate rate;
     private double price;
     private int stars;
-
+    private Set<Amenity> amenities;
     public SearchHotelDTO() {
         this.rate = new Rate();
         this.price = Double.MAX_VALUE;
+        this.amenities=new HashSet<>();
     }
 
     public SearchHotelDTO(List<RoomDTO> rooms, Long hotelId, String hotelName, String image, AddressDTO address,
@@ -32,7 +36,9 @@ public class SearchHotelDTO {
         this.rate = rate;
         this.price = Double.MAX_VALUE;
         this.stars = stars;
+        this.amenities=new HashSet<>();
     }
+    
 
     public String getDescription() {
         return description;
@@ -104,6 +110,14 @@ public class SearchHotelDTO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Set<Amenity> getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(Set<Amenity> amenities) {
+        this.amenities = amenities;
     }
 
 }

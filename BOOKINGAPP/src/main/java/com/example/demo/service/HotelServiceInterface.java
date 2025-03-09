@@ -7,6 +7,7 @@ import com.example.demo.dto.HotelDistanceDTO;
 import com.example.demo.dto.HotelWithRoomsDTO;
 import com.example.demo.dto.RoomDTO;
 import com.example.demo.model.hotel.Hotel;
+import com.example.demo.model.room.Amenity;
 
 public interface HotelServiceInterface {
 
@@ -15,11 +16,13 @@ public interface HotelServiceInterface {
     Hotel getHotelByHotelId(Long id);
 
     HotelWithRoomsDTO getHotelDTOById(Long id,
-    int roomQuantity,
-    int adultQuantity,
-    int childrenQuantity,
-    LocalDate checkinDate,
-    LocalDate checkoutDate);
+            int roomQuantity,
+            int adultQuantity,
+            int childrenQuantity,
+            LocalDate checkinDate,
+            LocalDate checkoutDate);
+
+    List<Amenity> getAllAmenities();
 
     void addHotel(Hotel hotel);
 

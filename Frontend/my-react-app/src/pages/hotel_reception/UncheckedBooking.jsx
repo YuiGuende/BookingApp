@@ -1,26 +1,31 @@
-import { useState} from "react";
+import { useState, useEffect} from "react";
 import axios from "axios";
 import { Calendar, Clock, CheckCircle, XCircle, User, Phone, Mail, CreditCard, Hotel, DoorOpen, CalendarIcon, Search, CheckSquare, BedDouble, AlertCircle } from 'lucide-react';
 
 export default function UncheckedBooking(prop) {
     const [uncheckedBookings, setUncheckedBookings] = useState([]);
-    axios.get(`http://localhost:8080/api/staff/unCheckedBooking/${prop.staffId}`)
-        .then((res) => {
-          console.log("Unchecked bookings:", res.data);
-          if (res.data && res.data.status === "success" && Array.isArray(res.data.data)) {
-            setUncheckedBookings(res.data.data);
-          } else {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+      console.log("Unchecked bookings:", prop.staffId);
+      axios.get(`http://localhost:8080/api/staff/unCheckedBooking/${prop.staffId}`)
+          .then((res) => {
+            
+            if (res.data && res.data.status === "success" && Array.isArray(res.data.data)) {
+              setUncheckedBookings(res.data.data);
+            } else {
+              setUncheckedBookings([]);
+            }
+          })
+          .catch((err) => {
+            console.error("Error fetching unchecked bookings:", err);
+            setError("Không thể tải danh sách đặt phòng chưa kiểm tra");
             setUncheckedBookings([]);
-          }
-        })
-        .catch((err) => {
-          console.error("Error fetching unchecked bookings:", err);
-          setError("Không thể tải danh sách đặt phòng chưa kiểm tra");
-          setUncheckedBookings([]);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+  }, [prop.activeTab]); // Chỉ chạy lại nếu staffId thay đổi
     // Format date
     const formatDate = (dateString) => {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };

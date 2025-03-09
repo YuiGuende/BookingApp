@@ -1,4 +1,4 @@
-.container{
+/* .container{
   font-family: Arial, Helvetica, sans-serif;
   height: 80vh;
   width: 100vw;
@@ -20,4 +20,234 @@
 }
 .searchbar{
   margin-top: 15vh;
+} */
+ /* Home.module.css */
+.container {
+  font-family: Arial, Helvetica, sans-serif;
+  height: 80vh;
+  width: 100%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("https://res.cloudinary.com/dpotw9bhe/image/upload/v1739436915/background_gfba8f.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.welcome-sentence {
+  height: 27%;
+  color: white;
+  padding: 3%;
+  font-size: 1.4em;
+}
+
+.searchbar {
+  margin-top: 15vh;
+  padding-bottom: 3vh;
+}
+
+/* Trending Destinations Section */
+/* Thêm vào file index.css trong thư mục assets */
+
+/* Trending Destinations Section */
+.trending-section {
+  background-color: white;
+  padding: 40px 5%;
+}
+
+.trending-section h2 {
+  font-size: 24px;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.trending-section p {
+  color: #6b6b6b;
+  margin-bottom: 24px;
+}
+
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.destination-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.destination-card:hover {
+  transform: scale(1.02);
+}
+
+.destination-image {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.destination-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: white;
+}
+
+.destination-info h3 {
+  font-size: 20px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flag {
+  font-size: 16px;
+}
+
+.destination-info p {
+  font-size: 14px;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Explore Section */
+.explore-section {
+  background-color: #f5f5f5;
+  padding: 40px 5%;
+}
+
+.explore-section h2 {
+  font-size: 24px;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.explore-section p {
+  color: #6b6b6b;
+  margin-bottom: 24px;
+}
+
+.carousel-container {
+  position: relative;
+  padding: 0 40px;
+}
+
+.carousel-wrapper {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  padding: 10px 0;
+}
+
+.carousel-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  transition: all 0.2s;
+}
+
+.carousel-button:hover {
+  background-color: #f5f5f5;
+  border-color: #c0c0c0;
+}
+
+.carousel-button-left {
+  left: 0;
+}
+
+.carousel-button-right {
+  right: 0;
+}
+
+.explore-card {
+  flex: 0 0 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.explore-card:hover {
+  transform: translateY(-4px);
+}
+
+.explore-image {
+  width: 100%;
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+}
+
+.explore-info {
+  padding: 12px;
+}
+
+.explore-info h4 {
+  font-size: 16px;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+}
+
+.explore-info p {
+  font-size: 14px;
+  color: #6b6b6b;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .trending-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-image {
+    height: 160px;
+  }
+
+  .carousel-container {
+    padding: 0 20px;
+  }
+
+  .explore-card {
+    flex: 0 0 160px;
+  }
+
+  .explore-image {
+    height: 100px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .trending-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
