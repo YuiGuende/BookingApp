@@ -7,7 +7,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [userType, setUserType] = useState('CUSTOMER');
+  const [userType, setUserType] = useState('STAFF');
   const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,11 +15,13 @@ const Login = () => {
     const accountRequest = {
       username: username,
       password: password,
-      userType: 'CUSTOMER'
+      userType: 'STAFF'
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', accountRequest);
+      const response = await axios.post('http://localhost:8080/api/auth/login', accountRequest, {
+        withCredentials: true
+    });
 
       if (response.data.status === 'success') {
         localStorage.removeItem("customerInfor")
@@ -58,7 +60,7 @@ const Login = () => {
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
-            className="inpinput-lineut" 
+            className="input-line" 
             required 
           />
         </div>

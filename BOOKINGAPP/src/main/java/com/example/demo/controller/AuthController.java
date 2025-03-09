@@ -21,6 +21,7 @@ import com.example.demo.utils.ApiResponse;
 import com.example.demo.utils.UserType;
 
 import jakarta.servlet.http.HttpSession;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/auth")
@@ -43,21 +44,25 @@ public class AuthController {
             @RequestBody AccountDTO accountRequest,
             HttpSession session
     ) {
-        try {
-            return switch (accountRequest.getUserType()) {
-                case HOST -> loginHost(accountRequest, session);
-                case STAFF -> loginStaff(accountRequest, session);
-                case CUSTOMER -> loginCustomer(accountRequest, session);
-                default -> ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(new ApiResponse<>("error", "Wrong user type", null));
-            };
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse<>("error", e.getMessage(), null));
-            //status != ok, DISPLAY STATUS 
-        }
+        // try {
+        return switch (accountRequest.getUserType()) {
+            case HOST ->
+                loginHost(accountRequest, session);
+            case STAFF ->
+                loginStaff(accountRequest, session);
+            case CUSTOMER ->
+                loginCustomer(accountRequest, session);
+            default ->
+                ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>("error", "Wrong user type", null));
+        };
+        // } catch (Exception e) {
+        //     return ResponseEntity
+        //             .status(HttpStatus.BAD_REQUEST)
+        //             .body(new ApiResponse<>("error", e.getMessage(), null));
+        //     //status != ok, DISPLAY STATUS 
+        // }
     }
 
     private ResponseEntity<ApiResponse<?>> loginCustomer(AccountDTO accountRequest, HttpSession session) {
@@ -75,18 +80,21 @@ public class AuthController {
     }
 
     private ResponseEntity<ApiResponse<?>> loginStaff(AccountDTO accountRequest, HttpSession session) {
-        try {
-            Staff staff = staffService.getCurrentsStaff(accountRequest.getUsername(), accountRequest.getPassword());
-            session.setAttribute("userId", staff.getId());
-            session.setAttribute("userType", UserType.STAFF);
-            session.setMaxInactiveInterval(1800);
-            return ResponseEntity.ok(new ApiResponse<>("success", "Staff login successful", staff));
+        // try {
 
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse<>("error", "Invalid staff credentials", null));
-        }
+        Staff staff = staffService.getCurrentsStaff(accountRequest.getUsername(), accountRequest.getPassword());
+        System.out.println("Staff logginnnnnnnnnnnnn");
+        session.setAttribute("userId", staff.getId());
+        System.out.println("Session User ID: " + session.getAttribute("userId"));
+        session.setAttribute("userType", UserType.STAFF);
+        session.setMaxInactiveInterval(1800);
+        return ResponseEntity.ok(new ApiResponse<>("success", "Staff login successful", staff));
+
+        // } catch (Exception e) {
+        //     return ResponseEntity
+        //             .status(HttpStatus.BAD_REQUEST)
+        //             .body(new ApiResponse<>("error", "Invalid staff credentials", null));
+        // }
     }
 
     private ResponseEntity<ApiResponse<?>> loginHost(AccountDTO accountRequest, HttpSession session) {

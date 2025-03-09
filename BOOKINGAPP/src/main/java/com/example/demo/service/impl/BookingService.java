@@ -7,23 +7,35 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.BookingDetaislDTO;
 import com.example.demo.dto.BookingRequiredmentDTO;
+import com.example.demo.dto.RoomDTO;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.booking.BookingRoom;
 import com.example.demo.model.booking.BookingStatus;
+import com.example.demo.model.hotel.Hotel;
+import com.example.demo.model.room.Amenity;
 import com.example.demo.model.room.Room;
+import com.example.demo.model.room.SubRoomType;
 import com.example.demo.model.user.customer.Customer;
+import com.example.demo.model.user.staff.BookingForStaff;
+import com.example.demo.repository.BookingForStaffRepository;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.BookingRoomRepository;
 import com.example.demo.repository.CustomerRepository;
+import com.example.demo.repository.HotelRepository;
+import com.example.demo.repository.RoomAmentityRepository;
 import com.example.demo.repository.RoomRepository;
+import com.example.demo.repository.SubRoomRepository;
 import com.example.demo.service.BookingServiceInterface;
+import com.example.demo.utils.GeoUtils;
 
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
@@ -35,49 +47,41 @@ public class BookingService implements BookingServiceInterface {
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
     private final RoomRepository roomRepository;
+    private final BookingForStaffRepository bookingForStaffRepository;
     private final BookingRoomRepository bookingRoomRepository;
-
+    private final HotelRepository hotelRepository;
+     private final RoomAmentityRepository roomAmentityRepository;
+    private final SubRoomRepository subRoomRepository;
     @Autowired
     public BookingService(
             BookingRepository bookingRepositoryy,
             CustomerRepository customerRepository,
             RoomRepository roomRepository,
-            BookingRoomRepository bookingRoomRepository) {
+            BookingRoomRepository bookingRoomRepository,
+            BookingForStaffRepository bookingForStaffRepository,
+            HotelRepository hotelRepository,
+            RoomAmentityRepository roomAmentityRepository,
+            SubRoomRepository subRoomRepository) {
         this.bookingRepository = bookingRepositoryy;
         this.customerRepository = customerRepository;
         this.roomRepository = roomRepository;
         this.bookingRoomRepository = bookingRoomRepository;
+        this.bookingForStaffRepository = bookingForStaffRepository;
+        this.hotelRepository = hotelRepository;
+        this.roomAmentityRepository=roomAmentityRepository;
+        this.subRoomRepository=subRoomRepository;
     }
 
     @Override
     public List<Booking> getBookingList() {
         return bookingRepository.findAll();
     }
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    public Booking saveBooking(Booking booking){
+    public Booking saveBooking(Booking booking) {
         return bookingRepository.save(booking);
     }
 
-    // public void saveBooking(BookingRequiredmentDTO booking) {
-    //     validateBooking(booking);
-    //     if (booking.getBooking().getCustomer() == null) {//kiểm tra customer tồn tại chưa, nếu chưa thì tạo user mới
-    //         Optional<Customer> existingCustomer = customerRepository.findByEmailOrPhone(booking.getBooking().getEmail(), booking.getBooking().getPhone());
-    //         if (existingCustomer.isPresent()) {
-    //             booking.getBooking().setCustomer(existingCustomer.get());
-    //         } else {
-    //             List<Booking> newBookingList = new ArrayList<>();
-    //             newBookingList.add(booking.getBooking());
-    //             Customer customer = new Customer(newBookingList, booking.getBooking().getEmail(), booking.getBooking().getName(), booking.getBooking().getPhone());
-    //             booking.getBooking().setCustomer(customer);
-    //             customer =customerRepository.save(customer);
-    //         }
-    //     }
-    //     booking.getBooking().setStatus(BookingStatus.PENDING);//fix lai logic o day
-    //     bookingRepository.save(booking.getBooking());
-    //     for(Room room:booking.getRooms()){
-    //         bookingRoomRepository.save(new BookingRoom(booking.getBooking(), room));//save lai bookingroom cho tung room
-    //     }
-    // }
     @Override
     public void saveBooking(BookingRequiredmentDTO booking) {
         booking.setBooking(validateBooking(booking));
@@ -100,18 +104,15 @@ public class BookingService implements BookingServiceInterface {
 
         booking.getBooking().setStatus(BookingStatus.CONFIRMED);
 
-       Booking booking2= saveBooking(booking.getBooking());
-        // customerRepository.save(customer); 
-        Set<Room> roomsSet = new HashSet<>(booking.getRooms());
-        int i=0;
-        for (Room room : roomsSet) {
-            System.out.println("roommmmmmmmmmmmmmmmmmmmmmmmm"+i++ +room);
-           
+        Booking booking2 = saveBooking(booking.getBooking());
+
+        for (RoomDTO room : booking.getRooms()) {
+            Optional<Room> roomTemp = roomRepository.findById(room.getId());
+            bookingRoomRepository.save(new BookingRoom(booking2, roomTemp.get()));
         }
-        for (Room room : roomsSet) {
-            bookingRoomRepository.save(new BookingRoom(booking2, room));
-        }
-        
+        System.out.println("Boking 22222222222222222222" + booking2);
+        addBookingToStaff(booking2);
+
     }
 
     public boolean isRoomAvailable(Room room, LocalDate checkInDate, LocalDate checkOutDate) {
@@ -144,8 +145,8 @@ public class BookingService implements BookingServiceInterface {
 
     @Override
     public Booking validateBooking(BookingRequiredmentDTO booking) {
-        System.out.println("booking to validate:"+booking.getBooking());
-        for (Room room : booking.getRooms()) {
+        System.out.println("booking to validate:" + booking.getBooking());
+        for (RoomDTO room : booking.getRooms()) {
             Room findRoom = roomRepository.findById(room.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Room with id " + room.getId() + " not found"));
             if (!isRoomAvailable(findRoom, booking.getBooking().getCheckInDate(), booking.getBooking().getCheckOutDate())) {
@@ -198,6 +199,144 @@ public class BookingService implements BookingServiceInterface {
             throw new ResourceNotFoundException("Booking not found!");
         }
         return booking.get();
+    }
+
+    @Transactional
+    public void addBookingToStaff(Booking booking) {
+        Long bookingId = booking.getId();
+        // Kiểm tra booking có tồn tại trong bảng booking_room không
+        List<BookingRoom> bookingRoomOpt = bookingRoomRepository.findByBooking(booking);
+        if (bookingRoomOpt.isEmpty() || bookingRoomOpt == null) {
+            throw new RuntimeException("Booking không tồn tại!");
+        }
+
+        BookingRoom bookingRoom = bookingRoomOpt.get(0);
+
+        Optional<Room> room = roomRepository.findById(bookingRoom.getRoom().getId());
+        if (room.isEmpty() || room == null) {
+            throw new RuntimeException("Booking không tồn tại!");
+        }
+        Long hotelId = room.get().getHotel().getId(); // Lấy hotel_id từ booking
+
+        // Tìm BookingForStaff của khách sạn đó
+        BookingForStaff bookingForStaff = bookingForStaffRepository.findByHotelId(hotelId)
+                .orElseGet(() -> {
+                    // Nếu chưa có thì tạo mới
+                    Hotel hotel = hotelRepository.findHotelById(hotelId)
+                            .orElseThrow(() -> new RuntimeException("Không tìm thấy khách sạn"));
+                    return new BookingForStaff(hotel, new ArrayList<>(), new ArrayList<>());
+                });
+
+        // Thêm booking vào danh sách unCheckedBooking nếu chưa có
+        if (!bookingForStaff.getUnCheckedBooking().contains(bookingId)) {
+            bookingForStaff.getUnCheckedBooking().add(bookingId);
+        }
+
+        // Lưu lại vào DB
+        bookingForStaffRepository.save(bookingForStaff);
+    }
+
+    @Override
+    @Transactional
+    public void markBookingsAsChecked(Long hotelId, List<Long> bookingIds) {
+        // Tìm BookingForStaff theo hotelId
+        BookingForStaff bookingForStaff = bookingForStaffRepository.findByHotelId(hotelId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy dữ liệu của khách sạn!"));
+
+        // Lọc danh sách các booking chưa được check
+        List<Long> unChecked = bookingForStaff.getUnCheckedBooking();
+        List<Long> checked = bookingForStaff.getCheckedBooking();
+
+        List<Long> bookingsToMove = bookingIds.stream()
+                .filter(unChecked::contains) // Chỉ lấy các booking có trong danh sách chưa check
+                .toList();
+
+        if (bookingsToMove.isEmpty()) {
+            throw new RuntimeException("Không có booking nào hợp lệ để chuyển!");
+        }
+
+        // Cập nhật danh sách
+        unChecked.removeAll(bookingsToMove); // Xóa khỏi danh sách chưa check
+        bookingsToMove.forEach(bookingId -> {
+            if (!checked.contains(bookingId)) { // Tránh duplicate
+                checked.add(bookingId);
+            }
+        });
+
+        // Lưu lại vào DB
+        bookingForStaffRepository.save(bookingForStaff);
+    }
+
+    @Override
+    public List<BookingRequiredmentDTO> getUnCheckedBooking(Long hotelId) {
+        List<BookingRequiredmentDTO> list = new ArrayList<>();
+        List<Long> unCheckedBooking = bookingForStaffRepository.findByHotelId(hotelId).get().getUnCheckedBooking();
+        for (Long id : unCheckedBooking) {
+            Booking booking = bookingRepository.findById(id).get();
+            if (booking == null) {
+                continue;
+            }
+            List<RoomDTO> roomDTOs = new ArrayList<>();
+            for (Room room : bookingRoomRepository.findRoomByBooking(booking)) {
+                List<Amenity> roomAmenities = roomAmentityRepository.findAmenitiesByRoom(room);
+                List<SubRoomType> subRoomTypes = subRoomRepository.findSubRoomTypesByRoom(room);
+                RoomDTO roomDTO = new RoomDTO(
+                        room.getId(),
+                        room.getName(),
+                        room.getType(),
+                        room.getDescription(),
+                        room.getPrice(),
+                        room.getOccupancy().getMaxAdults(),
+                        room.getOccupancy().getMaxChildrens(),
+                        room.getImages(),
+                        roomAmenities.isEmpty() ? new ArrayList<>() : roomAmenities,
+                        subRoomTypes.isEmpty() ? new ArrayList<>() : subRoomTypes
+                );
+
+                roomDTOs.add(roomDTO);
+            }
+            list.add(
+                    new BookingRequiredmentDTO(booking, roomDTOs)
+            );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<BookingRequiredmentDTO> getCheckedBooking(Long hotelId) {
+        List<BookingRequiredmentDTO> list = new ArrayList<>();
+        List<Long> unCheckedBooking = bookingForStaffRepository.findByHotelId(hotelId).get().getCheckedBooking();
+        for (Long id : unCheckedBooking) {
+            Booking booking = bookingRepository.findById(id).get();
+            if (booking == null) {
+                continue;
+            }
+            List<RoomDTO> roomDTOs = new ArrayList<>();
+            for (Room room : bookingRoomRepository.findRoomByBooking(booking)) {
+                List<Amenity> roomAmenities = roomAmentityRepository.findAmenitiesByRoom(room);
+                List<SubRoomType> subRoomTypes = subRoomRepository.findSubRoomTypesByRoom(room);
+                RoomDTO roomDTO = new RoomDTO(
+                        room.getId(),
+                        room.getName(),
+                        room.getType(),
+                        room.getDescription(),
+                        room.getPrice(),
+                        room.getOccupancy().getMaxAdults(),
+                        room.getOccupancy().getMaxChildrens(),
+                        room.getImages(),
+                        roomAmenities.isEmpty() ? new ArrayList<>() : roomAmenities,
+                        subRoomTypes.isEmpty() ? new ArrayList<>() : subRoomTypes
+                );
+
+                roomDTOs.add(roomDTO);
+            }
+            list.add(
+                    new BookingRequiredmentDTO(booking, roomDTOs)
+            );
+        }
+
+        return list;
     }
 
 }

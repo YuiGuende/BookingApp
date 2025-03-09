@@ -173,4 +173,9 @@ public class Hotel {
         this.rate = rate;
     }
 
+    @Override
+    public String toString() {
+        return "Hotel [id=" + id + ", name=" + name + "]";
+    }
+
 }

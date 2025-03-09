@@ -40,6 +40,7 @@ public class RoomDTO {
         this.subRoomTypes = subRoomTypes;
     }
 
+
     public int getMaxAdults() {
         return maxAdults;
     }

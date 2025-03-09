@@ -60,6 +60,13 @@ public class Room {
         this.images = images;
     }
 
+    
+
+    @Override
+    public String toString() {
+        return "Room [id=" + id + ", name=" + name + ", hotel=" + hotel + "]";
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

@@ -1,0 +1,1005 @@
+/* Modern Hotel Reception CSS .header-bar {
+  height: 10%;
+  background-color: #071f6c;
+}
+
+.reception-container {
+  background-color: solid white;
+  margin: 0;
+  padding-left: 5%;
+  padding-right: 5%;
+  text-align: center;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.tabs button {
+  padding: 12px 20px;
+  border: none;
+  background: none;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s, border-bottom 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.tabs button.active {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  font-weight: bold;
+}
+
+.content {
+  background: #fff;
+  width: auto;
+  padding: 5%;
+  border-radius: 10px;
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.161);
+  text-align: left;
+  margin-bottom: 5%;
+}
+
+.date {
+  width: 90%;
+  margin: 1%;
+}
+
+.input-line {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  margin: auto;
+  font-size: 1.1rem;
+}
+
+.input-guest {
+  display: flex;
+  gap: 1%;
+  width: 100%;
+  margin-bottom: 1%;
+}
+
+.guest-phone {
+  display: flex;
+  gap: 10px;
+  margin: 1%;
+  width: 100%;
+}
+
+.input-guest select {
+  width: 10%;
+  height: 5%;
+  padding: 1% 0.5%;
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#reception-btn {
+  padding: 14px 18px;
+  background: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+#reception-btn:hover {
+  background: #218838;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: white;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 14px;
+  text-align: center;
+  font-size: 15px;
+}
+
+th {
+  background: #007bff;
+  color: white;
+  text-transform: uppercase;
+}
+
+td {
+  background: #f9f9f9;
+}
+
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+
+  .tabs button {
+    margin-bottom: 10px;
+  }
+} */
+ /* ReceptionStyles.css */
+/* ReceptionStyles.css */
+.reception-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.reception-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  color: #1a365d;
+  font-size: 28px;
+}
+
+.reception-title-icon {
+  margin-right: 12px;
+  color: #3182ce;
+}
+
+.reception-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.reception-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #4a5568;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.reception-tabs button:hover {
+  background-color: #edf2f7;
+}
+
+.reception-tabs button.reception-tab-active {
+  background-color: #3182ce;
+  color: white;
+  border-color: #3182ce;
+}
+
+.reception-content {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0.4rem 0.4rem rgba(0, 0, 0, 0.3);
+  padding: 24px;
+}
+
+.reception-content-header {
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 16px;
+}
+
+.reception-content-header h2 {
+  font-size: 20px;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.reception-content-header p {
+  color: #718096;
+  font-size: 14px;
+}
+
+/* Booking cards */
+.reception-bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.reception-booking-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.reception-booking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.reception-booking-card.reception-checked {
+  border-left: 4px solid #48bb78;
+}
+
+.reception-booking-card-header {
+  padding: 16px;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reception-booking-card-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.reception-booking-card-content {
+  padding: 16px;
+}
+
+.reception-booking-info {
+  margin-bottom: 16px;
+}
+
+.reception-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.reception-info-item svg {
+  color: #718096;
+}
+
+.reception-rooms-info {
+  margin-bottom: 16px;
+}
+
+.reception-rooms-info h4 {
+  font-size: 14px;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+.reception-room-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reception-room-tag {
+  background-color: #ebf8ff;
+  color: #3182ce;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.reception-price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.reception-price-label {
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.reception-price-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.reception-payment-info {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.reception-booking-card-actions {
+  padding: 16px;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reception-view-details-button, .reception-check-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.reception-view-details-button {
+  background-color: #edf2f7;
+  color: #4a5568;
+}
+
+.reception-view-details-button:hover {
+  background-color: #e2e8f0;
+}
+
+.reception-check-button {
+  background-color: #38a169;
+  color: white;
+}
+
+.reception-check-button:hover {
+  background-color: #2f855a;
+}
+
+/* Status badges */
+.reception-status-badge {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.reception-status-badge.reception-status-confirmed {
+  background-color: #c6f6d5;
+  color: #2f855a;
+}
+
+.reception-status-badge.reception-status-pending {
+  background-color: #feebc8;
+  color: #c05621;
+}
+
+.reception-status-badge.reception-status-cancelled {
+  background-color: #fed7d7;
+  color: #c53030;
+}
+
+.reception-status-badge.reception-status-completed {
+  background-color: #bee3f8;
+  color: #2b6cb0;
+}
+
+/* Payment status */
+.reception-payment-status {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.reception-payment-status.reception-payment-paid {
+  background-color: #c6f6d5;
+  color: #2f855a;
+}
+
+.reception-payment-status.reception-payment-unpaid {
+  background-color: #fed7d7;
+  color: #c53030;
+}
+
+/* No bookings state */
+.reception-no-bookings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  color: #a0aec0;
+}
+
+.reception-no-bookings img {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.reception-no-bookings p {
+  font-size: 16px;
+}
+
+/* Loading state */
+.reception-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.reception-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #3182ce;
+  animation: reception-spin 1s ease-in-out infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes reception-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error message */
+.reception-error-message {
+  background-color: #fff5f5;
+  color: #c53030;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid #fc8181;
+}
+
+/* Forms */
+.reception-checkin-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.reception-form-group {
+  margin-bottom: 20px;
+}
+
+.reception-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.reception-required {
+  color: #e53e3e;
+  margin-left: 2px;
+}
+
+.reception-input-line {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.reception-input-line:focus {
+  border-color: #3182ce;
+  outline: none;
+}
+
+.reception-phone-input {
+  display: flex;
+}
+
+.reception-country-code {
+  width: 100px;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px 0 0 6px;
+  background-color: #f7fafc;
+}
+
+.reception-phone-input .reception-input-line {
+  flex: 1;
+  border-radius: 0 6px 6px 0;
+}
+
+.reception-form-hint {
+  display: block;
+  margin-top: 4px;
+  color: #718096;
+  font-size: 12px;
+}
+
+.reception-validate-button, .reception-confirm-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.reception-validate-button {
+  background-color: #38a169;
+  color: white;
+}
+
+.reception-validate-button:hover {
+  background-color: #2f855a;
+}
+
+.reception-confirm-button {
+  background-color: #3182ce;
+  color: white;
+}
+
+.reception-confirm-button:hover {
+  background-color: #2b6cb0;
+}
+
+.reception-validated-booking {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f0fff4;
+  border: 1px solid #c6f6d5;
+}
+
+.reception-validation-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2f855a;
+  margin-bottom: 12px;
+}
+
+.reception-validation-details {
+  margin-bottom: 16px;
+}
+
+.reception-validation-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.reception-validation-label {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.reception-validation-value {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Coming soon */
+.reception-coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  color: #a0aec0;
+}
+
+.reception-coming-soon img {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.reception-coming-soon p {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Room search */
+.reception-room-search {
+  margin-top: 24px;
+}
+
+.reception-search-form {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.reception-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.reception-search-row:last-child {
+  margin-bottom: 0;
+}
+
+.reception-search-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.reception-search-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.reception-search-dates {
+  flex: 2;
+}
+
+.reception-search-button-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.reception-search-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.reception-search-button:hover {
+  background-color: #2b6cb0;
+}
+
+.reception-room-status-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.reception-room-tab {
+  padding: 8px 16px;
+  background-color: #edf2f7;
+  border: none;
+  border-radius: 6px;
+  color: #4a5568;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.reception-room-tab:hover {
+  background-color: #e2e8f0;
+}
+
+.reception-room-tab-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reception-room-section {
+  margin-bottom: 32px;
+  scroll-margin-top: 20px;
+}
+
+.reception-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: #2d3748;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.reception-room-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.reception-room-status-card {
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.reception-room-status-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.reception-room-status-card.reception-available {
+  background-color: #f0fff4;
+  border: 1px solid #c6f6d5;
+}
+
+.reception-room-status-card.reception-available::before {
+  background-color: #48bb78;
+}
+
+.reception-room-status-card.reception-occupied {
+  background-color: #ebf8ff;
+  border: 1px solid #bee3f8;
+}
+
+.reception-room-status-card.reception-occupied::before {
+  background-color: #3182ce;
+}
+
+.reception-room-status-card.reception-upcoming {
+  background-color: #fffaf0;
+  border: 1px solid #feebc8;
+}
+
+.reception-room-status-card.reception-upcoming::before {
+  background-color: #ed8936;
+}
+
+.reception-room-number {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.reception-room-type {
+  font-size: 14px;
+  color: #718096;
+  margin-bottom: 12px;
+}
+
+.reception-room-status {
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.reception-room-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-top: 8px;
+}
+
+.reception-guest-info, .reception-checkout-date, .reception-checkin-date {
+  font-size: 13px;
+  color: #4a5568;
+  margin-top: 4px;
+}
+
+.reception-no-rooms {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: #f7fafc;
+  border-radius: 8px;
+  color: #a0aec0;
+}
+
+.reception-no-rooms svg {
+  margin-bottom: 12px;
+  color: #cbd5e0;
+}
+
+/* Modal */
+.reception-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.reception-modal-content {
+  background-color: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.reception-modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reception-modal-header h2 {
+  font-size: 20px;
+  color: #2d3748;
+  margin: 0;
+}
+
+.reception-close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #a0aec0;
+}
+
+.reception-modal-body {
+  padding: 24px;
+}
+
+.reception-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.reception-booking-detail-section {
+  margin-bottom: 24px;
+}
+
+.reception-booking-detail-section h3 {
+  font-size: 16px;
+  color: #4a5568;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reception-detail-row {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.reception-detail-label {
+  width: 150px;
+  font-weight: 500;
+  color: #718096;
+}
+
+.reception-detail-value {
+  flex: 1;
+  color: #2d3748;
+}
+
+.reception-detail-value.reception-price {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.reception-rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.reception-room-card {
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.reception-room-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.reception-room-type {
+  font-size: 12px;
+  color: #718096;
+}
+
+.reception-cancel-button {
+  background-color: #edf2f7;
+  color: #4a5568;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.mini-tab{
+  display: flex;
+  justify-content: left;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+}
+.mini-tab button {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #2e79e3;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid white;
+  transition: color 0.3s, border-bottom 0.3s;
+}
+/* Responsive */
+@media (max-width: 768px) {
+  .reception-bookings-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .reception-room-status-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .reception-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .reception-tabs button {
+    flex: 1 0 calc(50% - 8px);
+  }
+  
+  .reception-modal-content {
+    width: 95%;
+  }
+  
+  .reception-search-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .reception-search-group {
+    width: 100%;
+  }
+}

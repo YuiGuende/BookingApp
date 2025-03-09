@@ -16,6 +16,9 @@ public class Staff extends User {
     // private LocalDate checkInDate;
     // private LocalDate checkOutDate;
     private Long hotelId;
+    
+    public Staff() {
+    }
 
     public Staff(Long hotelId) {
         this.hotelId = hotelId;

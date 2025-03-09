@@ -12,6 +12,7 @@ public interface BookingServiceInterface {
     List<Booking> getBookingList();
 
     List<Booking> getBookingListByHotelId(Long id);
+
     Booking findBookingById(Long id);
 
     void saveBooking(BookingRequiredmentDTO bookingRequiredmentDTO);
@@ -21,5 +22,10 @@ public interface BookingServiceInterface {
     Booking validateBooking(BookingRequiredmentDTO bookingRequiredmentDTO);
 
     List<BookingDetaislDTO> getBookingDetaislDTOs(String email, String phone);
+
+    List<BookingRequiredmentDTO> getUnCheckedBooking(Long hotelId);
+
+    void markBookingsAsChecked(Long hotelId, List<Long> bookingIds);
+    List<BookingRequiredmentDTO> getCheckedBooking(Long hotelId);
 
 }

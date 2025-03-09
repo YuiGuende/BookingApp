@@ -14,39 +14,39 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 
-@Entity
-public class Booking {
+    @Entity
+    public class Booking {
 
-    @Id
-    @SequenceGenerator(
-            name = "booking_sequence",
-            sequenceName = "booking_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "booking_sequence"
-    )
-    private Long id;
+        @Id
+        @SequenceGenerator(
+                name = "booking_sequence",
+                sequenceName = "booking_sequence",
+                allocationSize = 1
+        )
+        @GeneratedValue(
+                strategy = GenerationType.SEQUENCE,
+                generator = "booking_sequence"
+        )
+        private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = true)
-    private Customer customer;
+        @ManyToOne
+        @JoinColumn(name = "customer_id", nullable = true)
+        private Customer customer;
 
-    private String name; // Tên khách hàng
-    private String email; // Email khách hàng
-    private String phone; // Số điện thoại khách hàng
+        private String name; // Tên khách hàng
+        private String email; // Email khách hàng
+        private String phone; // Số điện thoại khách hàng
 
-    private LocalDate checkInDate; // Ngày nhận phòng
-    private LocalDate checkOutDate; // Ngày trả phòng
-    private double totalPrice; // Tổng tiền cho kỳ nghỉ
-    private boolean paid;
+        private LocalDate checkInDate; // Ngày nhận phòng
+        private LocalDate checkOutDate; // Ngày trả phòng
+        private double totalPrice; // Tổng tiền cho kỳ nghỉ
+        private boolean paid;
 
-    //không lưu BookingRoom để tránh bị lặp
-    // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<BookingRoom> bookingRooms = new ArrayList<>();
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status; // Trạng thái đặt phòng (PENDING, CONFIRMED,  CANCELED)
+        //không lưu BookingRoom để tránh bị lặp
+        // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+        // private List<BookingRoom> bookingRooms = new ArrayList<>();
+        @Enumerated(EnumType.STRING)
+        private BookingStatus status; // Trạng thái đặt phòng (PENDING, CONFIRMED,  CANCELED)
 
     public Booking() {
         // this.bookingRooms = new ArrayList<>();

@@ -89,24 +89,23 @@ public class CustomerController {
         }
     }
 
-    @GetMapping(path = "/getHotel/{id}") // get step 1
-public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(
-        @PathVariable Long id,
-        @RequestParam int roomQuantity,
-        @RequestParam int adultQuantity,
-        @RequestParam int childrenQuantity,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
-    try {
-        HotelWithRoomsDTO dto = hotelService.getHotelDTOById(id, roomQuantity, adultQuantity, childrenQuantity, checkInDate, checkOutDate);
-        ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", "hotel details", dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    } catch (Exception e) {
-        ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("error", e.getMessage(), null);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    @GetMapping(path = "/getHotel/{id}") 
+    public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(
+            @PathVariable Long id,
+            @RequestParam int roomQuantity,
+            @RequestParam int adultQuantity,
+            @RequestParam int childrenQuantity,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+        try {
+            HotelWithRoomsDTO dto = hotelService.getHotelDTOById(id, roomQuantity, adultQuantity, childrenQuantity, checkInDate, checkOutDate);
+            ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("success", "hotel details", dto);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            ApiResponse<HotelWithRoomsDTO> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
-}
-
 
     @PostMapping(path = "/BookingList")
     public ResponseEntity<ApiResponse<List<BookingDetaislDTO>>> getBookingDetaislDTOs(@RequestBody SignUpDTO signUpDTO) {
@@ -135,11 +134,10 @@ public ResponseEntity<ApiResponse<HotelWithRoomsDTO>> getHotelById(
     //     }
     // }
     //post step 2
-    @PostMapping(path = "/booking/validate")
+    @PostMapping(path = "/booking/validate")//localhost:8080/api/customer/booking/validate
     public ResponseEntity<ApiResponse<Booking>> validateBooking(@RequestBody BookingRequiredmentDTO bookingToValidate) {
         try {
             System.out.println(bookingToValidate);
-
             ApiResponse<Booking> response = new ApiResponse<>("success", "This booking is valid!", bookingService.validateBooking(bookingToValidate));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         } catch (Exception e) {

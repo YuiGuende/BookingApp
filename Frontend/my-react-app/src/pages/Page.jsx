@@ -8,6 +8,7 @@ import Login from "./login/Login";
 import Signup from "./signup/Signup";
 import BookingHistory from "./bookingHistory/BookingHistory";
 import PaymentReturn from "./payment/return";
+import Hotel_Reception from "./hotel_reception/Hotel_Reception";
 
 export default function Page() {
   return (
@@ -21,6 +22,7 @@ export default function Page() {
       <Route path="/signup" element={<Signup/>}/>
       <Route path="/bookingHistory" element={<BookingHistory/>}/>
       <Route path="/payment/return" element={<PaymentReturn></PaymentReturn>}></Route>
+      <Route path="/reception" element={<Hotel_Reception></Hotel_Reception>}></Route>
     </Routes>
   );
 }
