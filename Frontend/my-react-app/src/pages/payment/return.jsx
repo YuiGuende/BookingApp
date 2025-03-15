@@ -4,6 +4,7 @@ import { useEffect, useState ,useRef} from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import axios from "axios"
 import { CheckCircle, XCircle } from "lucide-react"
+import "./ReturnStyles.css"
 
 export default function PaymentReturn() {
   const navigate = useNavigate()

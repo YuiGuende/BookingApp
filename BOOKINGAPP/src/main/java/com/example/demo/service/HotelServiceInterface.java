@@ -47,4 +47,6 @@ public interface HotelServiceInterface {
     void sort(List<HotelDistanceDTO> dtos);
 
     void updateHotelDetails(Hotel hotel);
+
+    List<RoomDTO> getRoomByHotelIdAndOccupied(Long hotelId,boolean occupied);
 }

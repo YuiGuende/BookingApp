@@ -1,157 +1,3 @@
-/* Modern Hotel Reception CSS .header-bar {
-  height: 10%;
-  background-color: #071f6c;
-}
-
-.reception-container {
-  background-color: solid white;
-  margin: 0;
-  padding-left: 5%;
-  padding-right: 5%;
-  text-align: center;
-}
-
-.title {
-  font-size: 30px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  color: #2c3e50;
-}
-
-.tabs {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 25px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
-}
-
-.tabs button {
-  padding: 12px 20px;
-  border: none;
-  background: none;
-  font-size: 16px;
-  color: #333;
-  cursor: pointer;
-  transition: color 0.3s, border-bottom 0.3s;
-  border-bottom: 2px solid transparent;
-}
-
-.tabs button.active {
-  color: #007bff;
-  border-bottom: 2px solid #007bff;
-  font-weight: bold;
-}
-
-.content {
-  background: #fff;
-  width: auto;
-  padding: 5%;
-  border-radius: 10px;
-  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.161);
-  text-align: left;
-  margin-bottom: 5%;
-}
-
-.date {
-  width: 90%;
-  margin: 1%;
-}
-
-.input-line {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  margin: auto;
-  font-size: 1.1rem;
-}
-
-.input-guest {
-  display: flex;
-  gap: 1%;
-  width: 100%;
-  margin-bottom: 1%;
-}
-
-.guest-phone {
-  display: flex;
-  gap: 10px;
-  margin: 1%;
-  width: 100%;
-}
-
-.input-guest select {
-  width: 10%;
-  height: 5%;
-  padding: 1% 0.5%;
-  margin: auto;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-#reception-btn {
-  padding: 14px 18px;
-  background: #28a745;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: background 0.3s;
-  width: 100%;
-}
-
-#reception-btn:hover {
-  background: #218838;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background: white;
-}
-
-table,
-th,
-td {
-  border: 1px solid #ddd;
-}
-
-th,
-td {
-  padding: 14px;
-  text-align: center;
-  font-size: 15px;
-}
-
-th {
-  background: #007bff;
-  color: white;
-  text-transform: uppercase;
-}
-
-td {
-  background: #f9f9f9;
-}
-
-
-@media (max-width: 768px) {
-  .container {
-    padding: 20px;
-  }
-
-  .tabs {
-    flex-direction: column;
-  }
-
-  .tabs button {
-    margin-bottom: 10px;
-  }
-} */
- /* ReceptionStyles.css */
 /* ReceptionStyles.css */
 .reception-container {
   max-width: 1200px;
@@ -209,7 +55,7 @@ td {
 .reception-content {
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 0.4rem 0.4rem rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 24px;
 }
 
@@ -956,22 +802,7 @@ td {
   font-weight: 500;
   cursor: pointer;
 }
-.mini-tab{
-  display: flex;
-  justify-content: left;
-  margin-bottom: 25px;
-  padding-bottom: 10px;
-}
-.mini-tab button {
-  padding: 12px 20px;
-  border-radius: 10px;
-  background: #2e79e3;
-  font-size: 16px;
-  color: white;
-  cursor: pointer;
-  border: 1px solid white;
-  transition: color 0.3s, border-bottom 0.3s;
-}
+
 /* Responsive */
 @media (max-width: 768px) {
   .reception-bookings-grid {
@@ -1002,4 +833,72 @@ td {
   .reception-search-group {
     width: 100%;
   }
+}
+.mini-tab{
+  display: flex;
+  justify-content: left;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+}
+.mini-tab button {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #2e79e3;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid white;
+  transition: color 0.3s, border-bottom 0.3s;
+}
+.checkout-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: #eef5ff;
+  border-radius: 10px;
+}
+.service-selected, .service-list {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+.service-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.service-item {
+  background: #007bff;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+.selected-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+.quantity-input {
+  width: 50px;
+}
+.checkout-button {
+  width: 100%;
+  padding: 10px;
+  background: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.checkout-button:disabled {
+  background: #ccc;
+}
+.service-container{
+  display: flex;
+  flex-direction: row;
 }

@@ -342,11 +342,22 @@ public class HotelService implements HotelServiceInterface {
                 roomAmenities.isEmpty() ? new ArrayList<>() : roomAmenities,
                 subRoomTypes.isEmpty() ? new ArrayList<>() : subRoomTypes
         );
-
     }
 
     @Override
     public List<Amenity> getAllAmenities() {
         return amenityRepository.findAll();
+    }
+
+    @Override
+    public List<RoomDTO> getRoomByHotelIdAndOccupied(Long hotelId, boolean occupied) {
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new ResourceNotFoundException("Hotel not found!"));
+
+        List<Room> rooms = roomRepository.findByHotelAndOccupied(hotel, occupied);
+        List<RoomDTO> roomDTOs = new ArrayList<>();
+        for (Room room : rooms) {
+            roomDTOs.add(mapToRoomDTO(room));
+        }
+        return roomDTOs;
     }
 }

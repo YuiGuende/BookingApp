@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./ReceptionStyles.css";
@@ -5,8 +6,6 @@ import CustomerDatePicker from "../../utils/CustomerDatePicker";
 import Header from "../../components/header/Header";
 import { Calendar, Clock, CheckCircle, XCircle, User, Phone, Mail, CreditCard, Hotel, DoorOpen, CalendarIcon, Search, CheckSquare, BedDouble, AlertCircle } from 'lucide-react';
 import Checkin from "./Checkin";
-import CheckedBooking from "./CheckedBooking";
-import UncheckedBooking from "./UncheckedBooking";
 
 export default function Hotel_Reception() {
   const [activeTab, setActiveTab] = useState("unchecked-bookings");
@@ -17,6 +16,13 @@ export default function Hotel_Reception() {
   const [error, setError] = useState(null);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [order, setOrder] = useState(null);
+  const [services, setServices] = useState({});
+  const [bookingId, setBookingId] = useState("");
+  const [selectedServices, setSelectedServices] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [bookingDetails, setBookingDetails] = useState(null);
+
 
   // Check-in form state
   const [checkinForm, setCheckinForm] = useState({
@@ -64,65 +70,111 @@ export default function Hotel_Reception() {
     setError(null);
 
     if (activeTab === "unchecked-bookings") {
-
-    }
-
-    if (activeTab === "checked-bookings") {
-
-    }
-
-    if (activeTab === "rooms" && hotelId) {
-      // Fetch available rooms
-      searchAvailableRooms();
-
-      // Fetch occupied rooms (placeholder for now)
-      axios.get(`http://localhost:8080/api/staff/getOccupiedRoom/${hotelId}`)
+      axios.get(`http://localhost:8080/api/staff/unCheckedBooking/${staffId}`)
         .then((res) => {
-          if (res.data && res.data.status === "success") {
-            setOccupiedRooms(res.data.data || []);
+          console.log("Unchecked bookings:", res.data);
+          if (res.data && res.data.status === "success" && Array.isArray(res.data.data)) {
+            setUncheckedBookings(res.data.data);
+          } else {
+            setUncheckedBookings([]);
           }
         })
         .catch((err) => {
-          console.error("Error fetching occupied rooms:", err);
-          // Placeholder data for now
-          setOccupiedRooms([
-            { id: 101, name: "Deluxe Room 101", type: "DELUXE", guestName: "Nguyễn Văn A", checkOutDate: "2025-03-15" },
-            { id: 102, name: "Standard Room 102", type: "STANDARD", guestName: "Trần Thị B", checkOutDate: "2025-03-16" },
-          ]);
+          console.error("Error fetching unchecked bookings:", err);
+          setError("Không thể tải danh sách đặt phòng chưa kiểm tra");
+          setUncheckedBookings([]);
+        })
+        .finally(() => {
+          setLoading(false);
         });
+    }
+
+    if (activeTab === "checked-bookings") {
+      axios.get(`http://localhost:8080/api/staff/checkedBooking/${staffId}`)
+        .then((res) => {
+          console.log("Checked bookings:", res.data);
+          if (res.data && res.data.status === "success" && Array.isArray(res.data.data)) {
+            setCheckedBookings(res.data.data);
+          } else {
+            setCheckedBookings([]);
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching checked bookings:", err);
+          setError("Không thể tải danh sách đặt phòng đã kiểm tra");
+          setCheckedBookings([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+    if (activeTab === "checkin" || activeTab === "checkout") {
+      setLoading(false);
+    }
+
+    if (activeTab === "rooms" && hotelId && staffId) {
+      // Fetch available rooms
+      axios
+        .get(`http://localhost:8080/api/staff/getAvailableRoom/${staffId}`)
+        .then((res) => {
+          if (res.data && res.data.status === "success") {
+            setAvailableRooms(res.data.data || [])
+          } else {
+            setAvailableRooms([])
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching available rooms:", err)
+          setAvailableRooms([])
+        })
+
+      // Fetch occupied rooms
+      axios
+        .get(`http://localhost:8080/api/staff/getOccupiedRoom/${staffId}`)
+        .then((res) => {
+          if (res.data && res.data.status === "success") {
+            setOccupiedRooms(res.data.data || [])
+          } else {
+            setOccupiedRooms([])
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching occupied rooms:", err)
+          setOccupiedRooms([])
+        })
 
       // Placeholder for upcoming check-ins
       setUpcomingCheckins([
         { id: 103, name: "Suite 103", type: "SUITE", guestName: "Lê Văn C", checkInDate: "2025-03-10" },
         { id: 104, name: "Deluxe Room 104", type: "DELUXE", guestName: "Phạm Thị D", checkInDate: "2025-03-11" },
-      ]);
+      ])
     }
   }, [activeTab, staffId, hotelId]);
 
   // Đánh dấu booking đã kiểm tra
-  // const markAsChecked = (bookingId) => {
-  //   setLoading(true);
-  //   axios.post("http://localhost:8080/api/staff/markBookingAsChecked", [bookingId])
-  //     .then(() => {
-  //       // Cập nhật UI
-  //       const markedBooking = uncheckedBookings.find(item => item.booking.id === bookingId);
-  //       setUncheckedBookings(prev => prev.filter(item => item.booking.id !== bookingId));
+  const markAsChecked = (bookingId) => {
+    setLoading(true);
+    axios.post(`http://localhost:8080/api/staff/markBookingAsChecked/${staffId}`, [bookingId])
+      .then(() => {
+        // Cập nhật UI
+        const markedBooking = uncheckedBookings.find(item => item.booking.id === bookingId);
+        setUncheckedBookings(prev => prev.filter(item => item.booking.id !== bookingId));
 
-  //       if (markedBooking) {
-  //         setCheckedBookings(prev => [...prev, markedBooking]);
-  //       }
+        if (markedBooking) {
+          setCheckedBookings(prev => [...prev, markedBooking]);
+        }
 
-  //       // Hiển thị thông báo thành công
-  //       alert("Đã đánh dấu đặt phòng là đã kiểm tra!");
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error marking booking as checked:", err);
-  //       alert("Không thể đánh dấu đặt phòng. Vui lòng thử lại!");
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // };
+        // Hiển thị thông báo thành công
+        alert("Đã đánh dấu đặt phòng là đã kiểm tra!");
+      })
+      .catch((err) => {
+        console.error("Error marking booking as checked:", err);
+        alert("Không thể đánh dấu đặt phòng. Vui lòng thử lại!");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   // Xem chi tiết booking
   const viewBookingDetails = (booking) => {
@@ -158,93 +210,7 @@ export default function Hotel_Reception() {
     }
   };
 
-  // Validate booking
-  const validateBooking = () => {
-    // Check if all required fields are filled
-    if (!checkinForm.name || !checkinForm.phone || !checkinForm.email || !checkinForm.roomIds) {
-      alert("Vui lòng điền đầy đủ thông tin!");
-      return;
-    }
 
-    setLoading(true);
-
-    // Parse room IDs from comma-separated string to array of numbers
-    const roomIds = checkinForm.roomIds.split(",").map(id => id.trim()).filter(id => id);
-
-    // Create booking object
-    const bookingToValidate = {
-      booking: {
-        name: checkinForm.name,
-        email: checkinForm.email,
-        phone: checkinForm.phone,
-        checkInDate: checkinForm.checkInDate.toISOString().split('T')[0],
-        checkOutDate: checkinForm.checkOutDate.toISOString().split('T')[0],
-      },
-      rooms: roomIds.map(id => ({ id: parseInt(id) }))
-    };
-
-    axios.post("http://localhost:8080/api/customer/booking/validate", bookingToValidate)
-      .then((res) => {
-        if (res.data && res.data.status === "success") {
-          setValidatedBooking({
-            ...bookingToValidate,
-            booking: {
-              ...bookingToValidate.booking,
-              id: res.data.data.id,
-              totalPrice: res.data.data.totalPrice,
-              status: res.data.data.status,
-              paid: res.data.data.paid
-            }
-          });
-          alert("Đặt phòng hợp lệ! Vui lòng xác nhận để hoàn tất.");
-        } else {
-          alert(res.data.message || "Có lỗi xảy ra khi xác thực đặt phòng.");
-        }
-      })
-      .catch((err) => {
-        console.error("Error validating booking:", err);
-        alert(err.response?.data?.message || "Không thể xác thực đặt phòng. Vui lòng thử lại!");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  // Confirm booking
-  const confirmBooking = () => {
-    if (!validatedBooking) {
-      alert("Vui lòng xác thực đặt phòng trước!");
-      return;
-    }
-
-    setLoading(true);
-
-    axios.post("http://localhost:8080/api/customer/booking/add", validatedBooking)
-      .then((res) => {
-        if (res.data && res.data.status === "success") {
-          alert("Đặt phòng thành công!");
-          // Reset form
-          setCheckinForm({
-            name: "",
-            phone: "",
-            email: "",
-            roomIds: "",
-            checkInDate: new Date(),
-            checkOutDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-          });
-          setValidatedBooking(null);
-        } else {
-          alert(res.data.message || "Có lỗi xảy ra khi đặt phòng.");
-        }
-      })
-      .catch((err) => {
-        console.error("Error confirming booking:", err);
-        alert(err.response?.data?.message || "Không thể đặt phòng. Vui lòng thử lại!");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
 
   // Handle room search form change
   const handleRoomSearchChange = (e) => {
@@ -316,6 +282,89 @@ export default function Hotel_Reception() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
+  const fetchBookingDetails = async () => {
+    if (!bookingId) {
+      setError("Vui lòng nhập Booking ID");
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:8080/api/staff/bookingDetails/${bookingId}`);
+      const data = await response.json();
+      if (response.ok) {
+        setBookingDetails(data);
+      } else {
+        setError("Không tìm thấy thông tin đặt phòng");
+      }
+    } catch (error) {
+      setError("Lỗi hệ thống");
+    }
+  };
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/staff/serviceList/${hotelId}`);
+        const data = await response.json();
+        console.log("services", data)
+        if (response.ok) {
+
+          setServices(data);
+          const initialSelection = data.reduce((acc, service) => {
+            acc[service.code] = 0;
+            return acc;
+          }, {});
+          setSelectedServices(initialSelection);
+        } else {
+          setError("Không thể tải danh sách dịch vụ");
+        }
+      } catch (error) {
+        setError("Lỗi khi lấy danh sách dịch vụ");
+      }
+    };
+    fetchServices();
+  }, [hotelId]);
+  const handleServiceQuantityChange = (code, quantity) => {
+    setSelectedServices((prev) => ({
+      ...prev,
+      [code]: quantity,
+    }));
+  };
+  const handleCheckout = async () => {
+    if (!bookingId) {
+      setError("Vui lòng nhập Booking ID");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:8080/api/staff/checkout/${bookingId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          services,
+          payment: {
+            paymentMethod: "", // Lấy từ API
+            paymentDate: "", // Lấy từ API
+            amount: 0, // Lấy từ API
+            serviceAmount: 0, // Lấy từ API
+            vnp: "", // Lấy từ API
+            paymentStatus: "" // Lấy từ API
+          },
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setOrder(data.data);
+      } else {
+        setError(data.message || "Lỗi không xác định");
+      }
+    } catch (error) {
+      setError("Lỗi hệ thống");
+    }
+    setLoading(false);
+  };
 
   // Modal chi tiết booking
   const BookingDetailsModal = ({ booking, onClose }) => {
@@ -347,6 +396,10 @@ export default function Hotel_Reception() {
 
             <div className="reception-booking-detail-section">
               <h3><CalendarIcon size={18} /> Thông tin đặt phòng</h3>
+              <div className="reception-detail-row">
+                <span className="reception-detail-label">Booking ID:</span>
+                <span className="reception-detail-value">{booking.booking.id}</span>
+              </div>
               <div className="reception-detail-row">
                 <span className="reception-detail-label">Ngày nhận phòng:</span>
                 <span className="reception-detail-value">{formatDate(booking.booking.checkInDate)}</span>
@@ -454,12 +507,12 @@ export default function Hotel_Reception() {
           </button>
         </div>
 
-        {/* {loading && (
+        {loading && (
           <div className="reception-loading-container">
             <div className="reception-loading-spinner"></div>
             <p>Đang tải dữ liệu...</p>
           </div>
-        )} */}
+        )}
 
         {error && (
           <div className="reception-error-message">
@@ -467,12 +520,145 @@ export default function Hotel_Reception() {
           </div>
         )}
 
-        {activeTab === "unchecked-bookings" && (
-          <UncheckedBooking staffId={staffId} activeTab={activeTab} />
+        {activeTab === "unchecked-bookings" && !loading && (
+          <div className="reception-content">
+            <div className="reception-content-header">
+              <h2>Đặt phòng chưa kiểm tra</h2>
+              <p>Danh sách các đặt phòng cần được kiểm tra trước khi khách nhận phòng</p>
+            </div>
+
+            {Array.isArray(uncheckedBookings) && uncheckedBookings.length > 0 ? (
+              <div className="reception-bookings-grid">
+                {uncheckedBookings.map((bookingItem) => (
+                  <div key={bookingItem.booking.id} className="reception-booking-card">
+                    <div className="reception-booking-card-header">
+                      <h3>{bookingItem.booking.name}</h3>
+                      <span className={`reception-status-badge reception-status-${bookingItem.booking.status.toLowerCase()}`}>
+                        {bookingItem.booking.status}
+                      </span>
+                    </div>
+
+                    <div className="reception-booking-card-content">
+                      <div className="reception-booking-info">
+                        <div className="reception-info-item">
+                          <Calendar size={16} />
+                          <span>{formatDate(bookingItem.booking.checkInDate)} - {formatDate(bookingItem.booking.checkOutDate)}</span>
+                        </div>
+                        <div className="reception-info-item">
+                          <Phone size={16} />
+                          <span>{bookingItem.booking.phone}</span>
+                        </div>
+                        <div className="reception-info-item">
+                          <Mail size={16} />
+                          <span>{bookingItem.booking.email}</span>
+                        </div>
+                      </div>
+
+                      <div className="reception-rooms-info">
+                        <h4>Phòng đã đặt:</h4>
+                        <div className="reception-room-tags">
+                          {bookingItem.rooms.map(room => (
+                            <span key={room.id} className="reception-room-tag">{room.name}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="reception-price-info">
+                        <span className="reception-price-label">Tổng tiền:</span>
+                        <span className="reception-price-value">{bookingItem.booking.totalPrice.toLocaleString('vi-VN')} VND</span>
+                      </div>
+
+                      <div className="reception-payment-info">
+                        <span className={`reception-payment-status reception-payment-${bookingItem.booking.paid ? 'paid' : 'unpaid'}`}>
+                          {bookingItem.booking.paid ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="reception-booking-card-actions">
+                      <button
+                        className="reception-view-details-button"
+                        onClick={() => viewBookingDetails(bookingItem)}
+                      >
+                        Xem chi tiết
+                      </button>
+                      <button
+                        className="reception-check-button"
+                        onClick={() => markAsChecked(bookingItem.booking.id)}
+                      >
+                        Đánh dấu đã kiểm tra
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="reception-no-bookings">
+                <img src="/placeholder.svg?height=100&width=100" alt="No bookings" />
+                <p>Không có đặt phòng nào cần kiểm tra</p>
+              </div>
+            )}
+          </div>
         )}
 
-        {activeTab === "checked-bookings" && (
-          <CheckedBooking staffId={staffId} activeTab={activeTab} />
+        {activeTab === "checked-bookings" && !loading && (
+          <div className="reception-content">
+            <div className="reception-content-header">
+              <h2>Đặt phòng đã kiểm tra</h2>
+              <p>Danh sách các đặt phòng đã được kiểm tra và sẵn sàng cho khách nhận phòng</p>
+            </div>
+
+            {Array.isArray(checkedBookings) && checkedBookings.length > 0 ? (
+              <div className="reception-bookings-grid">
+                {checkedBookings.map((bookingItem) => (
+                  <div key={bookingItem.booking.id} className="reception-booking-card reception-checked">
+                    <div className="reception-booking-card-header">
+                      <h3>{bookingItem.booking.name}</h3>
+                      <span className={`reception-status-badge reception-status-${bookingItem.booking.status.toLowerCase()}`}>
+                        {bookingItem.booking.status}
+                      </span>
+                    </div>
+
+                    <div className="reception-booking-card-content">
+                      <div className="reception-booking-info">
+                        <div className="reception-info-item">
+                          <Calendar size={16} />
+                          <span>{formatDate(bookingItem.booking.checkInDate)} - {formatDate(bookingItem.booking.checkOutDate)}</span>
+                        </div>
+                        <div className="reception-info-item">
+                          <Phone size={16} />
+                          <span>{bookingItem.booking.phone}</span>
+                        </div>
+                      </div>
+
+                      <div className="reception-rooms-info">
+                        <h4>Phòng đã đặt:</h4>
+                        <div className="reception-room-tags">
+                          {bookingItem.rooms.map(room => (
+                            <span key={room.id} className="reception-room-tag">{room.name}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="reception-booking-card-actions">
+                      <button
+                        className="reception-view-details-button"
+                        onClick={() => viewBookingDetails(bookingItem)}
+                      >
+                        Xem chi tiết
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="reception-no-bookings">
+                <img src="/placeholder.svg?height=100&width=100" alt="No bookings" />
+                <p>Không có đặt phòng nào đã kiểm tra</p>
+              </div>
+            )}
+          </div>
         )}
 
         {activeTab === "checkin" && (
@@ -480,193 +666,183 @@ export default function Hotel_Reception() {
         )}
 
         {activeTab === "checkout" && (
-          <div className="reception-content">
-            <div className="reception-content-header">
-              <h2>Trả phòng</h2>
-              <p>Chức năng này sẽ được phát triển trong tương lai</p>
+          <div className="checkout-container">
+            <input
+              type="text"
+              className="reception-input-line"
+              value={bookingId}
+              onChange={(e) => setBookingId(e.target.value)}
+              placeholder="Nhập Booking ID"
+            />
+            <button className="search-button" onClick={fetchBookingDetails}>Tìm kiếm</button>
+            {bookingDetails && <BookingDetailsModal booking={bookingDetails} onClose={() => setBookingDetails(null)} />}
+            <div className="service-container">
+              <div className="service-selected">
+                <h3>Dịch vụ đã chọn</h3>
+                {Object.entries(selectedServices).map(([code, quantity]) => (
+                  quantity > 0 && (
+                    <div key={code} className="selected-item">
+                      <span>{services.find(s => s.code === code)?.name}</span>
+                      <input
+                        type="number"
+                        className="quantity-input"
+                        min="0"
+                        value={quantity}
+                        onChange={(e) => handleServiceQuantityChange(code, Number(e.target.value))}
+                      />
+                    </div>
+                  )
+                ))}
+              </div>
+              <div className="service-list">
+                <h3>Chọn dịch vụ</h3>
+                <div className="service-grid">
+                  {services.map((service) => (
+                    <div key={service.code} className="service-item" onClick={() => handleServiceQuantityChange(service.code, (selectedServices[service.code] || 0) + 1)}>
+                      <p className="service-name">{service.name}</p>
+                      <p className="service-price">{service.price} VND</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-
-            <div className="reception-coming-soon">
-              <img src="/placeholder.svg?height=150&width=150" alt="Coming soon" />
-              <p>Chức năng đang được phát triển</p>
+            <div className="payment-method">
+              <h3>Chọn phương thức thanh toán</h3>
+              <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                <option value="">Chọn phương thức</option>
+                <option value="Card">Thẻ</option>
+                <option value="Cash">Tiền mặt</option>
+                <option value="Online">Trực tuyến</option>
+              </select>
             </div>
+            {error && <p className="error-message">{error}</p>}
+            {order ? (
+              <div className="order-details">
+                <h3>Chi tiết đơn hàng</h3>
+                <pre>{JSON.stringify(order, null, 2)}</pre>
+              </div>
+            ) : (
+              <button className="checkout-button" onClick={handleCheckout} disabled={loading}>
+                {loading ? "Đang xử lý..." : "Xác nhận trả phòng"}
+              </button>
+            )}
           </div>
         )}
 
         {activeTab === "rooms" && (
-          <div className="reception-content">
-            <div className="reception-content-header">
-              <h2>Trạng thái phòng</h2>
-              <p>Tìm kiếm và xem trạng thái hiện tại của các phòng</p>
+          <div className="reception-tab-content">
+            <h2 className="reception-section-title">Tình trạng phòng</h2>
+            <div className="reception-form">
+              <div className="form-group">
+                <label htmlFor="hotelId">Hotel ID:</label>
+                <input type="text" id="hotelId" value={hotelId} onChange={(e) => setHotelId(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="staffId">Staff ID:</label>
+                <input type="text" id="staffId" value={staffId} onChange={(e) => setStaffId(e.target.value)} />
+              </div>
             </div>
 
-            <div className="reception-room-search">
-              <div className="reception-search-form">
-                <div className="reception-search-row">
-                  <div className="reception-search-group">
-                    <label>ID Khách sạn</label>
-                    <input
-                      type="text"
-                      value={hotelId}
-                      onChange={(e) => setHotelId(e.target.value)}
-                      placeholder="Nhập ID khách sạn"
-                      className="reception-input-line"
-                    />
-                  </div>
+            {/* Room Search Form */}
+            <div className="reception-search-form">
+              <h3 className="reception-section-title">
+                <Search size={18} /> Tìm kiếm phòng
+              </h3>
+              <div className="form-group">
+                <label htmlFor="roomQuantity">Số lượng phòng:</label>
+                <input
+                  type="number"
+                  id="roomQuantity"
+                  name="roomQuantity"
+                  value={roomSearch.roomQuantity}
+                  onChange={handleRoomSearchChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="adultQuantity">Số lượng người lớn:</label>
+                <input
+                  type="number"
+                  id="adultQuantity"
+                  name="adultQuantity"
+                  value={roomSearch.adultQuantity}
+                  onChange={handleRoomSearchChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="childrenQuantity">Số lượng trẻ em:</label>
+                <input
+                  type="number"
+                  id="childrenQuantity"
+                  name="childrenQuantity"
+                  value={roomSearch.childrenQuantity}
+                  onChange={handleRoomSearchChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Ngày nhận phòng:</label>
+                <DatePicker
+                  selected={roomSearch.checkInDate}
+                  onChange={(date) => handleDateChange(date, "checkInDate")}
+                  dateFormat="dd/MM/yyyy"
+                />
+              </div>
+              <div className="form-group">
+                <label>Ngày trả phòng:</label>
+                <DatePicker
+                  selected={roomSearch.checkOutDate}
+                  onChange={(date) => handleDateChange(date, "checkOutDate")}
+                  dateFormat="dd/MM/yyyy"
+                />
+              </div>
+              <button className="search-button" onClick={searchAvailableRooms} disabled={loading}>
+                {loading ? "Đang tìm kiếm..." : "Tìm kiếm"}
+              </button>
+            </div>
 
-                  <div className="reception-search-group">
-                    <label>Số lượng phòng</label>
-                    <input
-                      type="number"
-                      name="roomQuantity"
-                      value={roomSearch.roomQuantity}
-                      onChange={handleRoomSearchChange}
-                      min="1"
-                      className="reception-input-line"
-                    />
-                  </div>
-
-                  <div className="reception-search-group">
-                    <label>Số người lớn</label>
-                    <input
-                      type="number"
-                      name="adultQuantity"
-                      value={roomSearch.adultQuantity}
-                      onChange={handleRoomSearchChange}
-                      min="1"
-                      className="reception-input-line"
-                    />
-                  </div>
-
-                  <div className="reception-search-group">
-                    <label>Số trẻ em</label>
-                    <input
-                      type="number"
-                      name="childrenQuantity"
-                      value={roomSearch.childrenQuantity}
-                      onChange={handleRoomSearchChange}
-                      min="0"
-                      className="reception-input-line"
-                    />
-                  </div>
+            {searchResults.length > 0 && (
+              <div className="reception-search-results">
+                <h3 className="reception-section-title">
+                  <Search size={18} /> Kết quả tìm kiếm
+                </h3>
+                <div className="reception-room-status-grid">
+                  {searchResults.map((room) => (
+                    <div key={room.id} className="reception-room-status-card reception-search-result">
+                      <div className="reception-room-number">Phòng {room.id}</div>
+                      <div className="reception-room-type">{room.type}</div>
+                      <div className="reception-room-status">Có thể đặt</div>
+                      <div className="reception-room-price">{room.price?.toLocaleString("vi-VN")} VND/đêm</div>
+                    </div>
+                  ))}
                 </div>
+              </div>
+            )}
 
-                <div className="reception-search-row">
-                  <div className="reception-search-group reception-search-dates">
-                    <label>Thời gian lưu trú</label>
-                    <CustomerDatePicker
-                      startDate={roomSearch.checkInDate}
-                      endDate={roomSearch.checkOutDate}
-                      onChange={handleRoomSearchDateChange}
-                    />
-                  </div>
-
-                  <div className="reception-search-group reception-search-button-container">
-                    <button
-                      className="reception-search-button"
-                      onClick={searchAvailableRooms}
-                      disabled={loading}
-                    >
-                      <Search size={16} /> Tìm kiếm phòng
-                    </button>
-                  </div>
+            {/* Available Rooms */}
+            <h3 className="reception-section-title">
+              <DoorOpen size={18} /> Phòng trống
+            </h3>
+            <div className="reception-room-status-grid">
+              {availableRooms.map((room) => (
+                <div key={room.id} className="reception-room-status-card">
+                  <div className="reception-room-number">Phòng {room.id}</div>
+                  <div className="reception-room-type">{room.type}</div>
+                  <div className="reception-room-status">Trống</div>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              <div className="reception-room-status-tabs">
-                <button
-                  className={`reception-room-tab ${!availableRooms.length ? 'reception-room-tab-disabled' : ''}`}
-                  onClick={() => document.getElementById('reception-available-rooms').scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Phòng trống ({availableRooms.length})
-                </button>
-                <button
-                  className={`reception-room-tab ${!occupiedRooms.length ? 'reception-room-tab-disabled' : ''}`}
-                  onClick={() => document.getElementById('reception-occupied-rooms').scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Phòng đang sử dụng ({occupiedRooms.length})
-                </button>
-                <button
-                  className={`reception-room-tab ${!upcomingCheckins.length ? 'reception-room-tab-disabled' : ''}`}
-                  onClick={() => document.getElementById('reception-upcoming-checkins').scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Phòng sắp nhận khách ({upcomingCheckins.length})
-                </button>
-              </div>
-
-              <div id="reception-available-rooms" className="reception-room-section">
-                <h3 className="reception-section-title">
-                  <BedDouble size={18} /> Phòng trống
-                </h3>
-
-                {availableRooms.length > 0 ? (
-                  <div className="reception-room-status-grid">
-                    {availableRooms.map(room => (
-                      <div key={room.id} className="reception-room-status-card reception-available">
-                        <div className="reception-room-number">Phòng {room.id}</div>
-                        <div className="reception-room-type">{room.type}</div>
-                        <div className="reception-room-status">Trống</div>
-                        <div className="reception-room-price">{room.price?.toLocaleString('vi-VN')} VND/đêm</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="reception-no-rooms">
-                    <AlertCircle size={24} />
-                    <p>Không có phòng trống nào được tìm thấy</p>
-                  </div>
-                )}
-              </div>
-
-              <div id="reception-occupied-rooms" className="reception-room-section">
-                <h3 className="reception-section-title">
-                  <User size={18} /> Phòng đang sử dụng
-                </h3>
-
-                {occupiedRooms.length > 0 ? (
-                  <div className="reception-room-status-grid">
-                    {occupiedRooms.map(room => (
-                      <div key={room.id} className="reception-room-status-card reception-occupied">
-                        <div className="reception-room-number">Phòng {room.id}</div>
-                        <div className="reception-room-type">{room.type}</div>
-                        <div className="reception-room-status">Đang sử dụng</div>
-                        <div className="reception-guest-info">{room.guestName}</div>
-                        <div className="reception-checkout-date">Trả phòng: {formatDate(room.checkOutDate)}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="reception-no-rooms">
-                    <AlertCircle size={24} />
-                    <p>Không có phòng đang sử dụng</p>
-                  </div>
-                )}
-              </div>
-
-              <div id="reception-upcoming-checkins" className="reception-room-section">
-                <h3 className="reception-section-title">
-                  <Calendar size={18} /> Phòng sắp nhận khách
-                </h3>
-
-                {upcomingCheckins.length > 0 ? (
-                  <div className="reception-room-status-grid">
-                    {upcomingCheckins.map(room => (
-                      <div key={room.id} className="reception-room-status-card reception-upcoming">
-                        <div className="reception-room-number">Phòng {room.id}</div>
-                        <div className="reception-room-type">{room.type}</div>
-                        <div className="reception-room-status">Sắp nhận khách</div>
-                        <div className="reception-guest-info">{room.guestName}</div>
-                        <div className="reception-checkin-date">Nhận phòng: {formatDate(room.checkInDate)}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="reception-no-rooms">
-                    <AlertCircle size={24} />
-                    <p>Không có phòng nào sắp nhận khách</p>
-                  </div>
-                )}
-              </div>
+            {/* Occupied Rooms */}
+            <h3 className="reception-section-title">
+              <KeyRound size={18} /> Phòng đang sử dụng
+            </h3>
+            <div className="reception-room-status-grid">
+              {occupiedRooms.map((room) => (
+                <div key={room.id} className="reception-room-status-card occupied">
+                  <div className="reception-room-number">Phòng {room.id}</div>
+                  <div className="reception-room-type">{room.type}</div>
+                  <div className="reception-room-status">Đang sử dụng</div>
+                </div>
+              ))}
             </div>
           </div>
         )}

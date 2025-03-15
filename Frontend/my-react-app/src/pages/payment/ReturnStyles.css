@@ -1,0 +1,75 @@
+.return-container {
+    max-width: 640px;
+    margin: 8% auto;
+    padding: 48px 16px;
+  }
+  
+  .payment-box {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    text-align: center;
+  }
+  
+  .loading-spinner {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top-color: var(--primary-color, #3490dc);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .payment-status-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+  }
+  
+  .status-success {
+    color: #28a745;
+  }
+  
+  .status-failed {
+    color: #dc3545;
+  }
+  
+  .status-checked {
+    color: #6c757d;
+  }
+  
+  .payment-message {
+    margin-top: 8px;
+    color: #4a4a4a;
+  }
+  
+  .payment-button {
+    margin-top: 24px;
+    width: 100%;
+    background-color: var(--primary-color, #3490dc);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .payment-button:hover {
+    background-color: rgba(52, 144, 220, 0.9);
+  }
+  .button-back {
+    background-color: #95a5a6;
+    margin-top: 12px;
+  }
+  
+  .button-back:hover {
+    background-color: #7f8c8d;
+  }

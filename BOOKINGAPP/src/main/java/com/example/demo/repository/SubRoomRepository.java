@@ -11,6 +11,7 @@ import com.example.demo.model.room.SubRoom;
 import com.example.demo.model.room.SubRoomType;
 
 public interface SubRoomRepository extends JpaRepository<SubRoom, Long> {
+
     @Query("SELECT sr.type FROM SubRoom sr WHERE sr.room =:room")
     List<SubRoomType> findSubRoomTypesByRoom(@Param("room") Room room);
 }

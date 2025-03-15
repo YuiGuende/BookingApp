@@ -3,7 +3,7 @@ import './LoginStyles.css'; // Import file CSS
 import axios from 'axios'; // Cần cài đặt axios bằng npm install axios
 import { useNavigate } from "react-router-dom"
 import Header from '../../components/header/Header';
-const Login = () => {
+const LoginStaff = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,7 +15,7 @@ const Login = () => {
     const accountRequest = {
       username: username,
       password: password,
-      userType: 'CUSTOMER'
+      userType: 'STAFF'
     };
 
     try {
@@ -24,8 +24,8 @@ const Login = () => {
     });
 
       if (response.data.status === 'success') {
-        localStorage.removeItem("customerInfor")
-        localStorage.setItem("customerInfor",JSON.stringify(response.data.data))
+        localStorage.removeItem("staffInfor")
+        localStorage.setItem("staffInfor",JSON.stringify(response.data.data))
         alert('Log in successfully!');
         navigate("/") 
         // Có thể chuyển hướng trang sau khi đăng nhập thành công
@@ -72,4 +72,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginStaff;

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.demo.model.hotel.Hotel;
 import com.example.demo.model.room.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
@@ -114,5 +115,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             @Param("checkOutDate") LocalDate checkOutDate
     );
 
-
+    List<Room> findByHotelAndOccupied(Hotel hotel,boolean occupied);
 }

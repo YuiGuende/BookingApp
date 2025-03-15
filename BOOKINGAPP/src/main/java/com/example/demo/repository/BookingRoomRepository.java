@@ -15,4 +15,5 @@ public interface BookingRoomRepository extends JpaRepository<BookingRoom, Long> 
      @Query("SELECT br.room FROM BookingRoom br WHERE br.booking = :booking")
     List<Room> findRoomByBooking(@Param("booking") Booking booking);
     List<BookingRoom> findByBooking(Booking booking);
+    
 }

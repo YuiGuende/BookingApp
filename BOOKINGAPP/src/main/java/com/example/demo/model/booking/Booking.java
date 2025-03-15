@@ -14,39 +14,40 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 
-    @Entity
-    public class Booking {
+@Entity
+public class Booking {
 
-        @Id
-        @SequenceGenerator(
-                name = "booking_sequence",
-                sequenceName = "booking_sequence",
-                allocationSize = 1
-        )
-        @GeneratedValue(
-                strategy = GenerationType.SEQUENCE,
-                generator = "booking_sequence"
-        )
-        private Long id;
+    @Id
+    @SequenceGenerator(
+            name = "booking_sequence",
+            sequenceName = "booking_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "booking_sequence"
+    )
+    private Long id;
 
-        @ManyToOne
-        @JoinColumn(name = "customer_id", nullable = true)
-        private Customer customer;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = true)
+    private Customer customer;
 
-        private String name; // Tên khách hàng
-        private String email; // Email khách hàng
-        private String phone; // Số điện thoại khách hàng
+    private String name; // Tên khách hàng
+    private String email; // Email khách hàng
+    private String phone; // Số điện thoại khách hàng
 
-        private LocalDate checkInDate; // Ngày nhận phòng
-        private LocalDate checkOutDate; // Ngày trả phòng
-        private double totalPrice; // Tổng tiền cho kỳ nghỉ
-        private boolean paid;
+    private LocalDate checkInDate; // Ngày nhận phòng
+    private LocalDate checkOutDate; // Ngày trả phòng
+    private double totalPrice; // Tổng tiền cho kỳ nghỉ
+    private boolean paid;
+    private boolean checked;//hỗ trợ cho tiếp tân
 
-        //không lưu BookingRoom để tránh bị lặp
-        // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-        // private List<BookingRoom> bookingRooms = new ArrayList<>();
-        @Enumerated(EnumType.STRING)
-        private BookingStatus status; // Trạng thái đặt phòng (PENDING, CONFIRMED,  CANCELED)
+    //không lưu BookingRoom để tránh bị lặp
+    // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<BookingRoom> bookingRooms = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status; // Trạng thái đặt phòng (PENDING, CONFIRMED,  CANCELED)
 
     public Booking() {
         // this.bookingRooms = new ArrayList<>();
@@ -66,6 +67,24 @@ import jakarta.persistence.SequenceGenerator;
         this.totalPrice = totalPrice;
         // this.bookingRooms = bookingRooms;
         this.status = status;
+    }
+
+    public Booking(Customer customer, String name, String email, String phone, LocalDate checkInDate,
+            LocalDate checkOutDate, double totalPrice,
+            // List<BookingRoom> bookingRooms, 
+            BookingStatus status,
+            boolean isChecked) {
+// this.bookingRooms = new ArrayList<>();
+        this.customer = customer;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.totalPrice = totalPrice;
+// this.bookingRooms = bookingRooms;
+        this.status = status;
+        this.checked = isChecked;
     }
 
     public String getName() {
@@ -155,11 +174,18 @@ import jakarta.persistence.SequenceGenerator;
                 + totalPrice + ", paid=" + paid + ", status=" + status + "]";
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean isChecked) {
+        this.checked = isChecked;
+    }
+
     // public List<BookingRoom> getBookingRooms() {
     //     return bookingRooms;
     // }
     // public void setBookingRooms(List<BookingRoom> bookingRooms) {
     //     this.bookingRooms = bookingRooms;
     // }
-    
 }

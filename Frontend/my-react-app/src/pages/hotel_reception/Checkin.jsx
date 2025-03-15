@@ -15,8 +15,8 @@ export default function Checkin() {
     phone: "",
     email: "",
     roomIds: "",
-      checkInDate: dayjs(), // Sử dụng dayjs thay vì Date()
-      checkOutDate: dayjs().add(1, 'day'), // Cộng thêm 1 ngày
+    checkInDate: dayjs(), // Sử dụng dayjs thay vì Date()
+    checkOutDate: dayjs().add(1, 'day'), // Cộng thêm 1 ngày
   });
   // Validate booking
   const validateBooking = () => {
@@ -131,6 +131,45 @@ export default function Checkin() {
             setLoading(false);
           });
       };
+      // Form check-in
+  const [checkinData, setCheckinData] = useState({
+    bookingId: "",
+    identity: "",
+  });
+
+  const handleCheckinChange = (e) => {
+    setCheckinData({
+      ...checkinData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const confirmCheckin = () => {
+    if (!checkinData.bookingId || !checkinData.identity) {
+      alert("Vui lòng nhập đầy đủ Booking ID và Identity!");
+      return;
+    }
+
+    setLoading(true);
+    axios.post(`http://localhost:8080/api/staff/checkin/${checkinData.bookingId}`, {
+      identity: checkinData.identity,
+    })
+    .then((res) => {
+      if (res.data && res.data.status === "success") {
+        alert("Check-in thành công!");
+        setCheckinData({ bookingId: "", identity: "" });
+      } else {
+        alert(res.data.message || "Có lỗi xảy ra khi check-in.");
+      }
+    })
+    .catch((err) => {
+      console.error("Error during check-in:", err);
+      alert(err.response?.data?.message || "Không thể check-in. Vui lòng thử lại!");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+  };
     return (
         <>
             <div className="mini-tab">
@@ -246,8 +285,46 @@ export default function Checkin() {
             </div>
             )}
             {activeTab === "checkin" && (
-              <label></label>
-            )}
+        <div className="reception-content">
+          <div className="reception-content-header">
+            <h2>Check-in</h2>
+            <p>Xác nhận nhận phòng cho khách hàng</p>
+          </div>
+          <div className="reception-checkin-form">
+            <div className="reception-form-group">
+              <label>Booking ID <span className="reception-required">*</span></label>
+              <input 
+                type="text" 
+                name="bookingId"
+                value={checkinData.bookingId}
+                onChange={handleCheckinChange}
+                placeholder="Nhập Booking ID"
+                className="reception-input-line"
+              />
+            </div>
+
+            <div className="reception-form-group">
+              <label>Identity (CCCD/Passport) <span className="reception-required">*</span></label>
+              <input 
+                type="text" 
+                name="identity"
+                value={checkinData.identity}
+                onChange={handleCheckinChange}
+                placeholder="Nhập số CMND hoặc Passport"
+                className="reception-input-line"
+              />
+            </div>
+
+            <button 
+              className="reception-confirm-button" 
+              onClick={confirmCheckin}
+              disabled={loading}
+            >
+              Xác nhận Check-in
+            </button>
+          </div>
+        </div>
+      )}
         </>
     );
 }

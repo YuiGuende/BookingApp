@@ -3,11 +3,10 @@ package com.example.demo.model.payment;
 import java.time.LocalDate;
 
 import com.example.demo.model.booking.Booking;
-import com.example.demo.model.booking.BookingStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +18,6 @@ import jakarta.persistence.SequenceGenerator;
 
 @Entity
 public class Payment {
-
     @Id
     @SequenceGenerator(
             name = "payment_sequence",
@@ -35,18 +33,17 @@ public class Payment {
     private String paymentMethod; // Phương thức thanh toán (Card, Cash, Online)
     private LocalDate paymentDate; // Ngày thanh toán
     private double amount; // Số tiền thanh toán
-
+    private double serviceAmount;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
     private Booking booking; // Đơn đặt phòng liên kết với thanh toán
 
     private String vnp;//mã giao dịch của VNpay
-     @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
     public Payment() {
     }
-
 
     // public Host getHost(){//kiểm tra lại
     //     return getBooking().getBookingRooms().get(0).getRoom().getHotel().getHost();
@@ -58,7 +55,6 @@ public class Payment {
         this.booking = booking;
         this.vnp = vnp;
     }
-    
 
     public Payment(String paymentMethod, LocalDate paymentDate, double amount, Booking booking, String vnp,
             PaymentStatus paymentStatus) {
@@ -70,6 +66,16 @@ public class Payment {
         this.paymentStatus = paymentStatus;
     }
 
+    public Payment(String paymentMethod, LocalDate paymentDate, double amount, Booking booking, String vnp,
+            PaymentStatus paymentStatus,double serviceAmount) {
+        this.paymentMethod = paymentMethod;
+        this.paymentDate = paymentDate;
+        this.amount = amount;
+        this.booking = booking;
+        this.vnp = vnp;
+        this.paymentStatus = paymentStatus;
+        this.serviceAmount=serviceAmount;
+    }
 
     public Long getId() {
         return id;
@@ -119,14 +125,19 @@ public class Payment {
         this.vnp = vnp;
     }
 
-
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
-
 
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
+    public double getServiceAmount() {
+        return serviceAmount;
+    }
+
+    public void setServiceAmount(double serviceAmount) {
+        this.serviceAmount = serviceAmount;
+    }
 }

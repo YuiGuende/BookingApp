@@ -93,7 +93,7 @@
 //           </div>
 //         </div>
 //       </div>
-      
+
 //     </>
 //   );
 // }
@@ -123,24 +123,7 @@ export default function HotelResult() {
 
   const [amenities, setAmenities] = useState([]);
   const [selectedCodes, setSelectedCodes] = useState([]);
-  const AmenityDetails = ({ options, selectedOptions, onFilterChange }) => {
-    return (
-      <div className="amenity-container">
-        {options.length > 0 ? (
-          <ul className="amenity-list">
-            {options.map((amenity, index) => (
-              <li key={index} className="amenity-item">
-                {amenity}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No amenities found.</p>
-        )}
-      </div>
-    );
-  };
-  
+
   useEffect(() => {
     fetch("http://localhost:8080/api/customer/amenity")
       .then(response => response.json())
@@ -157,10 +140,29 @@ export default function HotelResult() {
     setSelectedCodes(selectedOptions);
   };
 
-  const filteredHotels = hotels.filter(hotel =>
-    selectedCodes.length === 0 || hotel.amenities.some(a => selectedCodes.includes(a.code))
-  );
+  const groupedAmenities = amenities.reduce((acc, amenity) => {
+    if (!acc[amenity.type]) {
+      acc[amenity.type] = [];
+    }
+    acc[amenity.type].push(amenity);
+    return acc;
+  }, {});
 
+  const filteredHotels = hotels.filter(hotel =>
+    selectedCodes.length === 0 || 
+    (hotel.hotelWithRoomsDTO.amenities && hotel.hotelWithRoomsDTO.amenities.some(a => selectedCodes.includes(a.code)))
+  );
+  useEffect(() => {
+    console.log("Hotels data:", hotels);
+    console.log("Selected codes:", selectedCodes);
+    
+    // Log chi tiết về việc lọc
+    hotels.forEach(hotel => {
+      console.log("Hotel:", hotel.hotelName);
+      console.log("Hotel amenities:", hotel.amenities);
+      console.log("Matches:", hotel.amenities?.some(a => selectedCodes.includes(a.code)));
+    });
+  }, [hotels, selectedCodes]);
   return (
     <>
       <div className="header-container">
@@ -170,11 +172,11 @@ export default function HotelResult() {
         <SearchBar onSearch={handleSearch} initialParams={searchParams} />
       </div>
       <div className="result">
-      <AmenityDetails 
-  options={amenities.map(a => a.name)} 
-  selectedOptions={selectedCodes} 
-  onFilterChange={handleFilterChange} 
-/>
+        <AmenityDetails
+          groupedAmenities={groupedAmenities}
+          selectedOptions={selectedCodes}
+          onFilterChange={handleFilterChange}
+        />
         <div className="hotel-container">
           <div className="hotel-list">
             {loading && <p className="loading-msg">Loading...</p>}

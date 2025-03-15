@@ -60,6 +60,10 @@ public class Hotel {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Room> rooms; // Danh sách các phòng thuộc khách sạn
 
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<HotelService> hotelServices;
+
     public Hotel() {
     }
 
@@ -82,6 +86,19 @@ public class Hotel {
         this.images = images;
         this.stars = stars;
         this.rooms = rooms;
+    }
+
+    public Hotel(String name, Host host, Address address, String description, Rate rate, List<String> images,
+            String city, int stars, List<Room> rooms, List<HotelService> hotelServices) {
+        this.name = name;
+        this.host = host;
+        this.address = address;
+        this.description = description;
+        this.rate = rate;
+        this.images = images;
+        this.stars = stars;
+        this.rooms = rooms;
+        this.hotelServices = hotelServices;
     }
 
     public boolean isRequireTT() {
@@ -176,6 +193,14 @@ public class Hotel {
     @Override
     public String toString() {
         return "Hotel [id=" + id + ", name=" + name + "]";
+    }
+
+    public List<HotelService> getHotelServices() {
+        return hotelServices;
+    }
+
+    public void setHotelServices(List<HotelService> hotelServices) {
+        this.hotelServices = hotelServices;
     }
 
 }

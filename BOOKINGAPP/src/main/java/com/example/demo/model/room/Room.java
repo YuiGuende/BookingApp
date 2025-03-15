@@ -29,7 +29,6 @@ public class Room {
             generator = "room_sequence"
     )
     private Long id;
-
     private String name;
     private String type;
     private String description;
@@ -44,6 +43,8 @@ public class Room {
 
     @ElementCollection
     private List<String> images;
+
+    private boolean occupied;
 
     public Room() {
     }
@@ -60,7 +61,18 @@ public class Room {
         this.images = images;
     }
 
-    
+    public Room(String name, String type, String description, double price, Occupancy occupancy, boolean isAvailable,
+            Hotel hotel, List<String> images,  boolean isOccupied) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.price = price;
+        this.occupancy = occupancy;
+        this.isAvailable = isAvailable;
+        this.hotel = hotel;
+        this.images = images;
+        this.occupied = isOccupied;
+    }
 
     @Override
     public String toString() {
@@ -95,6 +107,19 @@ public class Room {
             return false;
         }
         return true;
+    }
+
+    public void setAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
+  
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean isOccupied) {
+        this.occupied = isOccupied;
     }
 
     public Occupancy getOccupancy() {

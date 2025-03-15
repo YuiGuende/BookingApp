@@ -87,77 +87,172 @@
 // };
 
 // export default AmenityDetails;
+// import React, { useState, useEffect } from 'react';
+// import "./HotelResult.css";
+// import SearchBar from "../../components/searchbar/SearchBar";
+// import { useNavigate } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { fetchHotels } from "../../store/hotelSlice";
+// import Header from "../../components/header/Header";
+
+// export default function AmenityDetails() {
+// const Filter = ({ options, selectedOptions, onFilterChange }) => {
+//   const handleChange = (option) => {
+//     let updatedOptions = [...selectedOptions];
+//     if (updatedOptions.includes(option)) {
+//       updatedOptions = updatedOptions.filter(item => item !== option);
+//     } else {
+//       updatedOptions.push(option);
+//     }
+//     onFilterChange(updatedOptions);
+//   };
+
+//   return (
+//     <div className="filter-category">
+//       <h3>Filter by Type</h3>
+//       <ul>
+//         {options.map(option => (
+//           <li key={option}>
+//             <label>
+//               <input
+//                 type="checkbox"
+//                 checked={selectedOptions.includes(option)}
+//                 onChange={() => handleChange(option)}
+//               />
+//               {option}
+//             </label>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// }
+// const AmennityDetails = () => {
+//   const [amenities, setAmenities] = useState([]);
+//   const [filteredAmenities, setFilteredAmenities] = useState([]);
+//   const [selectedTypes, setSelectedTypes] = useState([]);
+
+//   useEffect(() => {
+//     fetch("/amenity")
+//       .then(response => response.json())
+//       .then(data => {
+//         setAmenities(data);
+//         setFilteredAmenities(data);
+//       });
+//   }, []);
+
+//   useEffect(() => {
+//     if (selectedTypes.length === 0) {
+//       setFilteredAmenities(amenities);
+//     } else {
+//       setFilteredAmenities(amenities.filter(a => selectedTypes.includes(a.type)));
+//     }
+//   }, [selectedTypes, amenities]);
+
+//   const uniqueTypes = [...new Set(amenities.map(a => a.type))];
+
+//   return (
+//     <div className="filter-box">
+//       <Filter options={uniqueTypes} selectedOptions={selectedTypes} onFilterChange={setSelectedTypes} />
+//       <div className="amenity-list">
+//         {filteredAmenities.map(a => (
+//           <div key={a.id} className="amenity-item">
+//             {a.name} ({a.type})
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }; 
+
+// }
 import React, { useState, useEffect } from 'react';
 import "./HotelResult.css";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchHotels } from "../../store/hotelSlice";
 
-const Filter = ({ options, selectedOptions, onFilterChange }) => {
-  const handleChange = (option) => {
+const Filter = ({ type, options, selectedOptions, onFilterChange }) => {
+  const handleChange = (code) => {
     let updatedOptions = [...selectedOptions];
-    if (updatedOptions.includes(option)) {
-      updatedOptions = updatedOptions.filter(item => item !== option);
+    if (updatedOptions.includes(code)) {
+      updatedOptions = updatedOptions.filter(item => item !== code);
     } else {
-      updatedOptions.push(option);
+      updatedOptions.push(code);
     }
     onFilterChange(updatedOptions);
   };
 
   return (
     <div className="filter-category">
-      <h3>Filter by Type</h3>
-      <ul>
+      <h3>{type}</h3>
+      <div className="filter-options">
         {options.map(option => (
-          <li key={option}>
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedOptions.includes(option)}
-                onChange={() => handleChange(option)}
-              />
-              {option}
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-const AmenityList = () => {
-  const [amenities, setAmenities] = useState([]);
-  const [filteredAmenities, setFilteredAmenities] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);
-
-  useEffect(() => {
-    fetch("/amenity")
-      .then(response => response.json())
-      .then(data => {
-        setAmenities(data);
-        setFilteredAmenities(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (selectedTypes.length === 0) {
-      setFilteredAmenities(amenities);
-    } else {
-      setFilteredAmenities(amenities.filter(a => selectedTypes.includes(a.type)));
-    }
-  }, [selectedTypes, amenities]);
-
-  const uniqueTypes = [...new Set(amenities.map(a => a.type))];
-
-  return (
-    <div className="filter-box">
-      <Filter options={uniqueTypes} selectedOptions={selectedTypes} onFilterChange={setSelectedTypes} />
-      <div className="amenity-list">
-        {filteredAmenities.map(a => (
-          <div key={a.id} className="amenity-item">
-            {a.name} ({a.type})
-          </div>
+          <div key={option.code} className="filter-option">
+            <input
+              type="checkbox"
+              id={`amenity-${option.code}`}
+              checked={selectedOptions.includes(option.code)}
+              onChange={() => handleChange(option.code)}
+            />
+            <label htmlFor={`amenity-${option.code}`}>{option.name}</label>
+            </div>
         ))}
       </div>
     </div>
   );
 };
 
-export default AmenityList;
+// const AmenityDetails = () => {
+//   const [amenities, setAmenities] = useState([]);
+//   const [filteredAmenities, setFilteredAmenities] = useState([]);
+//   const [selectedTypes, setSelectedTypes] = useState([]);
+
+//   useEffect(() => {
+//     fetch("/amenity")
+//       .then(response => response.json())
+//       .then(data => {
+//         setAmenities(data);
+//         setFilteredAmenities(data);
+//       });
+//   }, []);
+
+//   useEffect(() => {
+//     if (selectedTypes.length === 0) {
+//       setFilteredAmenities(amenities);
+//     } else {
+//       setFilteredAmenities(amenities.filter(a => selectedTypes.includes(a.type)));
+//     }
+//   }, [selectedTypes, amenities]);
+
+//   const uniqueTypes = [...new Set(amenities.map(a => a.type))];
+const AmenityDetails = ({ groupedAmenities, selectedOptions, onFilterChange }) => {
+  return (
+    <div className="filter-box">
+{Object.entries(groupedAmenities).map(([type, amenities]) => (
+        <Filter 
+          key={type} 
+          type={type} 
+          options={amenities} 
+          selectedOptions={selectedOptions} 
+          onFilterChange={onFilterChange} 
+        />
+      ))}      {/* <div className="amenity-list">
+        {amenities.length > 0 ? (
+          amenities
+         .filter(a => selectedOptions.length === 0 || selectedOptions.includes(a.name))
+         .map(a => (
+            <div key={a.id} className="amenity-item">
+              <p>{a.name}</p>
+              <p>({a.type})</p>
+            </div>
+          ))
+        ) : (
+          <p>No amenities found</p>
+        )}
+      </div> */}
+    </div>
+  );
+};
+
+export default AmenityDetails;

@@ -1,9 +1,13 @@
 import { useState, useEffect} from "react";
 import axios from "axios";
 import { Calendar, Clock, CheckCircle, XCircle, User, Phone, Mail, CreditCard, Hotel, DoorOpen, CalendarIcon, Search, CheckSquare, BedDouble, AlertCircle } from 'lucide-react';
+import BookingDetailsModal from "../../components/BookingDetailsModel";
 
 export default function CheckedBooking(prop) {
-    const [checkedBookings, setCheckedBookings] = useState([]);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
     useEffect(() => {
         axios.get(`http://localhost:8080/api/staff/checkedBooking/${prop.staffId}`)
         .then((res) => {
@@ -89,6 +93,15 @@ export default function CheckedBooking(prop) {
               </div>
             )}
           </div>
+          {showModal && selectedBooking && (
+        <BookingDetailsModal
+          booking={selectedBooking}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedBooking(null);
+          }}
+        />
+      )}
         </>
     );
 }
