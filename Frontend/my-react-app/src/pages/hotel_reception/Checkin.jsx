@@ -149,26 +149,26 @@ export default function Checkin() {
       alert("Vui lòng nhập đầy đủ Booking ID và Identity!");
       return;
     }
-
+  
     setLoading(true);
-    axios.post(`http://localhost:8080/api/staff/checkin/${checkinData.bookingId}`, {
-      identity: checkinData.identity,
-    })
-    .then((res) => {
-      if (res.data && res.data.status === "success") {
-        alert("Check-in thành công!");
-        setCheckinData({ bookingId: "", identity: "" });
-      } else {
-        alert(res.data.message || "Có lỗi xảy ra khi check-in.");
-      }
-    })
-    .catch((err) => {
-      console.error("Error during check-in:", err);
-      alert(err.response?.data?.message || "Không thể check-in. Vui lòng thử lại!");
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+    
+    // Sử dụng query parameter thay vì request body
+    axios.post(`http://localhost:8080/api/staff/checkin/${checkinData.bookingId}?identity=${checkinData.identity}`)
+      .then((res) => {
+        if (res.data && res.data.status === "success") {
+          alert("Check-in thành công!");
+          setCheckinData({ bookingId: "", identity: "" });
+        } else {
+          alert(res.data.message || "Có lỗi xảy ra khi check-in.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error during check-in:", err);
+        alert(err.response?.data?.message || "Không thể check-in. Vui lòng thử lại!");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
     return (
         <>

@@ -160,7 +160,7 @@ export default function HotelResult() {
     hotels.forEach(hotel => {
       console.log("Hotel:", hotel.hotelName);
       console.log("Hotel amenities:", hotel.amenities);
-      console.log("Matches:", hotel.amenities?.some(a => selectedCodes.includes(a.code)));
+      console.log("Matches:", hotel.amenities?.every(a => selectedCodes.includes(a.code)));
     });
   }, [hotels, selectedCodes]);
   return (

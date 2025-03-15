@@ -2,10 +2,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./ReceptionStyles.css";
-import CustomerDatePicker from "../../utils/CustomerDatePicker";
 import Header from "../../components/header/Header";
-import { Calendar, Clock, CheckCircle, XCircle, User, Phone, Mail, CreditCard, Hotel, DoorOpen, CalendarIcon, Search, CheckSquare, BedDouble, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, XCircle, User, Phone, Mail, CreditCard, Hotel, DoorOpen, CalendarIcon, Search, CheckSquare, BedDouble, AlertCircle, KeyRound } from 'lucide-react';
 import Checkin from "./Checkin";
+import { LocalizationProvider } from "@mui/x-date-pickers-pro/LocalizationProvider"
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker"
+import dayjs from "dayjs"
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs"
 
 export default function Hotel_Reception() {
   const [activeTab, setActiveTab] = useState("unchecked-bookings");
@@ -22,7 +25,7 @@ export default function Hotel_Reception() {
   const [selectedServices, setSelectedServices] = useState({});
   const [paymentMethod, setPaymentMethod] = useState("");
   const [bookingDetails, setBookingDetails] = useState(null);
-
+  const [searchResults, setSearchResults] = useState([])
 
   // Check-in form state
   const [checkinForm, setCheckinForm] = useState({
@@ -50,7 +53,7 @@ export default function Hotel_Reception() {
 
   // Lấy staffId từ localStorage
   useEffect(() => {
-    const userData = localStorage.getItem("customerInfor");
+    const userData = localStorage.getItem("staffInfor");
     if (userData) {
       const parsed = JSON.parse(userData);
       setStaffId(parsed.id);
@@ -127,6 +130,9 @@ export default function Hotel_Reception() {
           console.error("Error fetching available rooms:", err)
           setAvailableRooms([])
         })
+        .finally(() => {
+          setLoading(false);
+        });
 
       // Fetch occupied rooms
       axios
@@ -142,6 +148,9 @@ export default function Hotel_Reception() {
           console.error("Error fetching occupied rooms:", err)
           setOccupiedRooms([])
         })
+        .finally(() => {
+          setLoading(false);
+        });
 
       // Placeholder for upcoming check-ins
       setUpcomingCheckins([
@@ -222,7 +231,15 @@ export default function Hotel_Reception() {
         : value
     }));
   };
+  const handleDateChange = (dates) => {
+    if (!dates || dates.length !== 2) return;
 
+    setRoomSearch(prev => ({
+      ...prev,
+      checkInDate: dates[0],  // Lấy ngày check-in từ phần tử đầu tiên của mảng
+      checkOutDate: dates[1]   // Lấy ngày check-out từ phần tử thứ hai của mảng
+    }));
+  };
   // Handle date change for room search
   const handleRoomSearchDateChange = (dates) => {
     setRoomSearch(prev => ({
@@ -235,38 +252,41 @@ export default function Hotel_Reception() {
   // Search available rooms
   const searchAvailableRooms = () => {
     if (!hotelId) {
-      alert("Vui lòng nhập ID khách sạn!");
-      return;
+      alert("Vui lòng nhập ID khách sạn!")
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
     const params = {
       roomQuantity: roomSearch.roomQuantity,
       adultQuantity: roomSearch.adultQuantity,
       childrenQuantity: roomSearch.childrenQuantity,
-      checkInDate: roomSearch.checkInDate.toISOString().split('T')[0],
-      checkOutDate: roomSearch.checkOutDate.toISOString().split('T')[0]
-    };
+      checkInDate: roomSearch.checkInDate.toISOString().split("T")[0],
+      checkOutDate: roomSearch.checkOutDate.toISOString().split("T")[0],
+    }
 
-    axios.get(`http://localhost:8080/api/customer/getHotel/${hotelId}`, { params })
+    axios
+      .get(`http://localhost:8080/api/customer/getHotel/${hotelId}`, { params })
       .then((res) => {
         if (res.data && res.data.status === "success") {
-          setAvailableRooms(res.data.data.rooms || []);
+          setSearchResults(res.data.data.rooms || [])
+          console.log("ressss",res.data.data.rooms )
         } else {
-          setAvailableRooms([]);
-          alert(res.data.message || "Không tìm thấy phòng phù hợp.");
+          setSearchResults([])
+          alert(res.data.message || "Không tìm thấy phòng phù hợp.")
         }
       })
       .catch((err) => {
-        console.error("Error searching rooms:", err);
-        setAvailableRooms([]);
-        alert(err.response?.data?.message || "Không thể tìm kiếm phòng. Vui lòng thử lại!");
+        console.error("Error searching rooms:", err)
+        setSearchResults([])
+        alert(err.response?.data?.message || "Không thể tìm kiếm phòng. Vui lòng thử lại!")
       })
       .finally(() => {
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+      })
+  }
+
 
   // Format date
   const formatDate = (dateString) => {
@@ -321,7 +341,7 @@ export default function Hotel_Reception() {
         setError("Lỗi khi lấy danh sách dịch vụ");
       }
     };
-    fetchServices();
+    if (hotelId) fetchServices();
   }, [hotelId]);
   const handleServiceQuantityChange = (code, quantity) => {
     setSelectedServices((prev) => ({
@@ -329,6 +349,35 @@ export default function Hotel_Reception() {
       [code]: quantity,
     }));
   };
+  // const handleCheckout = async () => {
+  //   if (!bookingId) {
+  //     setError("Vui lòng nhập Booking ID");
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await fetch(`http://localhost:8080/api/staff/checkout/${bookingId}`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         services: Object.fromEntries(
+  //           Object.entries(selectedServices).filter(([_, quantity]) => quantity > 0)
+  //         ),
+  //         payment: { paymentMethod },
+  //       }),
+  //     });
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       setOrder(data.data);
+  //     } else {
+  //       setError(data.message || "Lỗi không xác định");
+  //     }
+  //   } catch (error) {
+  //     setError("Lỗi hệ thống");
+  //   }
+  //   setLoading(false);
+  // };
   const handleCheckout = async () => {
     if (!bookingId) {
       setError("Vui lòng nhập Booking ID");
@@ -336,36 +385,65 @@ export default function Hotel_Reception() {
     }
     setLoading(true);
     setError(null);
+  
+    // Tạo danh sách dịch vụ đúng format `{ serviceId: quantity }`
+    const serviceData = Object.fromEntries(
+      Object.entries(selectedServices)
+        .filter(([_, quantity]) => quantity > 0)
+        .map(([code, quantity]) => {
+          const service = services.find((s) => s.code === code);
+          return [service.id, quantity]; // Đúng format API
+        })
+    );
+  
+    // Tính tổng tiền dịch vụ
+    const serviceAmount = Object.entries(serviceData).reduce((sum, [id, quantity]) => {
+      const service = services.find((s) => s.id === Number(id));
+      return sum + (service ? service.price * quantity : 0);
+    }, 0);
+  
+    // Tổng tiền thanh toán = tiền phòng + tiền dịch vụ
+    const totalAmount = (bookingDetails?.totalPrice || 0) + serviceAmount;
+  
     try {
       const response = await fetch(`http://localhost:8080/api/staff/checkout/${bookingId}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          services,
+          services: serviceData,
           payment: {
-            paymentMethod: "", // Lấy từ API
-            paymentDate: "", // Lấy từ API
-            amount: 0, // Lấy từ API
-            serviceAmount: 0, // Lấy từ API
-            vnp: "", // Lấy từ API
-            paymentStatus: "" // Lấy từ API
+            paymentMethod,
+            paymentDate: new Date().toISOString().split("T")[0], // Ngày hiện tại
+            amount: totalAmount,
+            serviceAmount,
           },
         }),
       });
+  
       const data = await response.json();
-      if (response.ok) {
-        setOrder(data.data);
-      } else {
-        setError(data.message || "Lỗi không xác định");
+      if (!response.ok) throw new Error(data.message || "Lỗi không xác định");
+  
+      setOrder(data.data);
+      if (data.data) {
+        alert("Check-out thành công!");
       }
     } catch (error) {
-      setError("Lỗi hệ thống");
+      setError(error.message || "Lỗi hệ thống");
     }
+  
     setLoading(false);
   };
-
+  
+  const calculateTotalAmount = () => {
+    const serviceTotal = Object.entries(selectedServices).reduce(
+      (sum, [code, quantity]) => {
+        const service = services.find((s) => s.code === code);
+        return sum + (service ? service.price * quantity : 0);
+      },
+      0
+    );
+    return (bookingDetails?.totalPrice || 0) + serviceTotal;
+  };
   // Modal chi tiết booking
   const BookingDetailsModal = ({ booking, onClose }) => {
     if (!booking) return null;
@@ -674,9 +752,19 @@ export default function Hotel_Reception() {
               onChange={(e) => setBookingId(e.target.value)}
               placeholder="Nhập Booking ID"
             />
-            <button className="search-button" onClick={fetchBookingDetails}>Tìm kiếm</button>
-            {bookingDetails && <BookingDetailsModal booking={bookingDetails} onClose={() => setBookingDetails(null)} />}
-            <div className="service-container">
+            <button className="checkout-button" onClick={fetchBookingDetails}>Tìm kiếm</button>
+            {bookingDetails && (
+        <div className="booking-details">
+          <h3>Thông tin đặt phòng</h3>
+          <p><strong>Booking ID:</strong> {bookingDetails.id}</p>
+          <p><strong>Tên khách hàng:</strong> {bookingDetails.name}</p>
+          <p><strong>Email:</strong> {bookingDetails.email}</p>
+          <p><strong>Điện thoại:</strong> {bookingDetails.phone}</p>
+          <p><strong>Ngày nhận phòng:</strong> {bookingDetails.checkInDate}</p>
+          <p><strong>Ngày trả phòng:</strong> {bookingDetails.checkOutDate}</p>
+          <p><strong>Tổng tiền phòng:</strong> {bookingDetails.totalPrice} VND</p>
+        </div>
+      )}            <div className="service-container">
               <div className="service-selected">
                 <h3>Dịch vụ đã chọn</h3>
                 {Object.entries(selectedServices).map(([code, quantity]) => (
@@ -697,12 +785,20 @@ export default function Hotel_Reception() {
               <div className="service-list">
                 <h3>Chọn dịch vụ</h3>
                 <div className="service-grid">
-                  {services.map((service) => (
-                    <div key={service.code} className="service-item" onClick={() => handleServiceQuantityChange(service.code, (selectedServices[service.code] || 0) + 1)}>
-                      <p className="service-name">{service.name}</p>
-                      <p className="service-price">{service.price} VND</p>
-                    </div>
-                  ))}
+                {services.length > 0 ? (
+            services.map((service) => (
+              <div
+                key={service.code}
+                className="service-item"
+                onClick={() => handleServiceQuantityChange(service.code, (selectedServices[service.code] || 0) + 1)}
+              >
+                <p className="service-name">{service.name}</p>
+                <p className="service-price">{service.price} VND</p>
+              </div>
+            ))
+          ) : (
+            <p>Không có dịch vụ nào khả dụng</p>
+          )}
                 </div>
               </div>
             </div>
@@ -715,40 +811,23 @@ export default function Hotel_Reception() {
                 <option value="Online">Trực tuyến</option>
               </select>
             </div>
+            <p><strong>Tổng tiền phải thanh toán:</strong> {calculateTotalAmount()} VND</p>
             {error && <p className="error-message">{error}</p>}
-            {order ? (
-              <div className="order-details">
-                <h3>Chi tiết đơn hàng</h3>
-                <pre>{JSON.stringify(order, null, 2)}</pre>
-              </div>
-            ) : (
               <button className="checkout-button" onClick={handleCheckout} disabled={loading}>
                 {loading ? "Đang xử lý..." : "Xác nhận trả phòng"}
               </button>
-            )}
           </div>
         )}
 
         {activeTab === "rooms" && (
           <div className="reception-tab-content">
             <h2 className="reception-section-title">Tình trạng phòng</h2>
-            <div className="reception-form">
-              <div className="form-group">
-                <label htmlFor="hotelId">Hotel ID:</label>
-                <input type="text" id="hotelId" value={hotelId} onChange={(e) => setHotelId(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="staffId">Staff ID:</label>
-                <input type="text" id="staffId" value={staffId} onChange={(e) => setStaffId(e.target.value)} />
-              </div>
-            </div>
-
             {/* Room Search Form */}
             <div className="reception-search-form">
               <h3 className="reception-section-title">
                 <Search size={18} /> Tìm kiếm phòng
               </h3>
-              <div className="form-group">
+              <div className="reception-form-group">
                 <label htmlFor="roomQuantity">Số lượng phòng:</label>
                 <input
                   type="number"
@@ -756,9 +835,10 @@ export default function Hotel_Reception() {
                   name="roomQuantity"
                   value={roomSearch.roomQuantity}
                   onChange={handleRoomSearchChange}
+                  className="reception-input-line"
                 />
               </div>
-              <div className="form-group">
+              <div className="reception-form-group">
                 <label htmlFor="adultQuantity">Số lượng người lớn:</label>
                 <input
                   type="number"
@@ -766,9 +846,10 @@ export default function Hotel_Reception() {
                   name="adultQuantity"
                   value={roomSearch.adultQuantity}
                   onChange={handleRoomSearchChange}
+                  className="reception-input-line"
                 />
               </div>
-              <div className="form-group">
+              <div className="reception-form-group">
                 <label htmlFor="childrenQuantity">Số lượng trẻ em:</label>
                 <input
                   type="number"
@@ -776,10 +857,21 @@ export default function Hotel_Reception() {
                   name="childrenQuantity"
                   value={roomSearch.childrenQuantity}
                   onChange={handleRoomSearchChange}
+                  className="reception-input-line"
                 />
               </div>
-              <div className="form-group">
-                <label>Ngày nhận phòng:</label>
+              <div className="reception-form-group">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateRangePicker
+                    localeText={{ start: "Check-in", end: "Check-out" }}
+                    value={[
+                      roomSearch.checkInDate ? dayjs(roomSearch.checkInDate) : null,
+                      roomSearch.checkOutDate ? dayjs(roomSearch.checkOutDate) : null,
+                    ]}
+                    onChange={handleDateChange}
+                  />
+                </LocalizationProvider>
+                {/* <label>Ngày nhận phòng:</label>
                 <DatePicker
                   selected={roomSearch.checkInDate}
                   onChange={(date) => handleDateChange(date, "checkInDate")}
@@ -788,11 +880,12 @@ export default function Hotel_Reception() {
               </div>
               <div className="form-group">
                 <label>Ngày trả phòng:</label>
+                
                 <DatePicker
                   selected={roomSearch.checkOutDate}
                   onChange={(date) => handleDateChange(date, "checkOutDate")}
                   dateFormat="dd/MM/yyyy"
-                />
+                /> */}
               </div>
               <button className="search-button" onClick={searchAvailableRooms} disabled={loading}>
                 {loading ? "Đang tìm kiếm..." : "Tìm kiếm"}
@@ -806,11 +899,11 @@ export default function Hotel_Reception() {
                 </h3>
                 <div className="reception-room-status-grid">
                   {searchResults.map((room) => (
-                    <div key={room.id} className="reception-room-status-card reception-search-result">
-                      <div className="reception-room-number">Phòng {room.id}</div>
-                      <div className="reception-room-type">{room.type}</div>
+                    <div key={room.room.id} className="reception-room-status-card reception-search-result">
+                      <div className="reception-room-number">Phòng {room.room.id}</div>
+                      <div className="reception-room-type">{room.room.type}</div>
                       <div className="reception-room-status">Có thể đặt</div>
-                      <div className="reception-room-price">{room.price?.toLocaleString("vi-VN")} VND/đêm</div>
+                      <div className="reception-room-price">{room.room.price?.toLocaleString("vi-VN")} VND/đêm</div>
                     </div>
                   ))}
                 </div>

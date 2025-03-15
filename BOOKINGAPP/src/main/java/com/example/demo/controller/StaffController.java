@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.BookingRequiredmentDTO;
 import com.example.demo.dto.CheckOutRequest;
 import com.example.demo.dto.OrderDTO;
+import com.example.demo.dto.RoomDTO;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.hotel.HotelService;
 import com.example.demo.model.payment.Payment;
 import com.example.demo.model.room.Room;
 import com.example.demo.model.user.staff.Staff;
 import com.example.demo.service.BookingServiceInterface;
+import com.example.demo.service.HotelServiceInterface;
 import com.example.demo.service.OrderServiceInterface;
 import com.example.demo.service.StaffServiceInterface;
 import com.example.demo.utils.ApiResponse;
@@ -37,13 +39,15 @@ public class StaffController {
     private final StaffServiceInterface staffService;
     private final BookingServiceInterface bookingService;
     private final OrderServiceInterface orderService;
+    private final HotelServiceInterface hotelService;
 
     @Autowired
     public StaffController(StaffServiceInterface staffService, BookingServiceInterface bookingService,
-            OrderServiceInterface orderService) {
+            OrderServiceInterface orderService, HotelServiceInterface hotelService) {
         this.staffService = staffService;
         this.bookingService = bookingService;
         this.orderService = orderService;
+        this.hotelService = hotelService;
     }
 
     @GetMapping(path = "/getRooms")
@@ -82,7 +86,7 @@ public class StaffController {
                     .body(new ApiResponse<>("error", e.getMessage(), null));
         }
     }
-  
+
     @GetMapping("/checkedBooking/{id}")
     public ResponseEntity<ApiResponse<List<BookingRequiredmentDTO>>> getCheckedBookings(@PathVariable Long id) {
         try {
@@ -101,6 +105,7 @@ public class StaffController {
                     .body(new ApiResponse<>("error", e.getMessage(), null));
         }
     }
+
     @PostMapping(path = "/markBookingAsChecked/{id}")
     public ResponseEntity<ApiResponse<Void>> markBookingAsChecked(@PathVariable Long id, @RequestBody List<Long> bookingIds) {
         try {
@@ -151,7 +156,7 @@ public class StaffController {
     @PostMapping("/checkout/{bookingId}")
     public ResponseEntity<?> checkOut(@PathVariable Long bookingId, @RequestBody CheckOutRequest request) {
         try {
-            OrderDTO orderDTO = orderService.checkOut(bookingId, request.services(), request.payment());
+            OrderDTO orderDTO = orderService.checkOut(bookingId, request.getServices(), request.getPayment());
             return ResponseEntity.ok(new ApiResponse<>("success", "Check-out thành công!", orderDTO));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("error", e.getMessage(), null));
@@ -161,13 +166,47 @@ public class StaffController {
     }
 
     @GetMapping("/serviceList/{hotelId}")
-    public List<HotelService> getHotelServices(@PathVariable Long hotelId){
+    public List<HotelService> getHotelServices(@PathVariable Long hotelId) {
         return orderService.getHotelServiceList(hotelId);
     }
 
     @GetMapping(path = "/bookingDetails/{bookingId}")
-    public Booking getBookingDetails(@PathVariable Long bookingId){
+    public Booking getBookingDetails(@PathVariable Long bookingId) {
         return bookingService.findBookingById(bookingId);
+    }
+
+    @GetMapping(path = "/getOccupiedRoom/{staffId}")
+    public ResponseEntity<ApiResponse<List<RoomDTO>>> getOccupiedRoom(@PathVariable Long staffId) {
+        try {
+            Staff staff = staffService.getStaffByID(staffId);
+            if (staff == null) {
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(new ApiResponse<>("error", "User not authenticated", null));
+            }
+            ApiResponse<List<RoomDTO>> response = new ApiResponse<>("success", "Rooms list", hotelService.getRoomByHotelIdAndOccupied(staff.getHotelId(), true));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            ApiResponse<List<RoomDTO>> eResponse = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(eResponse);
+        }
+    }
+
+    @GetMapping(path = "/getAvailableRoom/{staffId}")
+    public ResponseEntity<ApiResponse<List<RoomDTO>>> getAvailableRoom(@PathVariable Long staffId) {
+        try {
+            Staff staff = staffService.getStaffByID(staffId);
+            if (staff == null) {
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(new ApiResponse<>("error", "User not authenticated", null));
+            }
+            ApiResponse<List<RoomDTO>> response = new ApiResponse<>("success", "Rooms list", hotelService.getRoomByHotelIdAndOccupied(staff.getHotelId(), false));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            ApiResponse<List<RoomDTO>> eResponse = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(eResponse);
+        }
     }
 
 }

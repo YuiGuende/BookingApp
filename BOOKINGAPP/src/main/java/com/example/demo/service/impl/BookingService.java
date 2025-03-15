@@ -110,8 +110,9 @@ public class BookingService implements BookingServiceInterface {
 
     public boolean isRoomAvailable(Room room, LocalDate checkInDate, LocalDate checkOutDate) {
         for (BookingRoom bookingroom : bookingRoomRepository.findBookingRoomByRoom(room)) {
-            if (checkInDate.isBefore(bookingroom.getBooking().getCheckInDate())
-                    || checkOutDate.isAfter(bookingroom.getBooking().getCheckOutDate())) {
+            if (!(checkInDate.isAfter(bookingroom.getBooking().getCheckOutDate())
+                    || checkOutDate.isBefore(bookingroom.getBooking().getCheckInDate()))) {
+                System.out.println("1111111111111111111111111111111111111111111111 " + bookingroom.getBooking().getId());
                 return false;
             }
         }

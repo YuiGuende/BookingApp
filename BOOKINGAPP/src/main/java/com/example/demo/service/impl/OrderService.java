@@ -88,6 +88,9 @@ public class OrderService implements OrderServiceInterface {
         if (order1 == null) {
             throw new RuntimeException("Khách chưa check-in trước đó!");
         }
+        if(order1.getCheckOutTime()!=null){
+            throw new RuntimeException("Khách đã check-out trước đó!");
+        }
 
         order1.setIndentity(null);
         if (!bookingOptional.isPaid()) {
