@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.BookingRequiredmentDTO;
-import com.example.demo.dto.CheckOutRequest;
-import com.example.demo.dto.OrderDTO;
-import com.example.demo.dto.RoomDTO;
+import com.example.demo.dto.booking.BookingRequiredmentDTO;
+import com.example.demo.dto.hotel.RoomDTO;
+import com.example.demo.dto.order.CheckOutRequest;
+import com.example.demo.dto.order.OrderDTO;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.hotel.HotelService;
 import com.example.demo.model.payment.Payment;

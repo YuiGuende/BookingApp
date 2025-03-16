@@ -1,0 +1,120 @@
+.review-carousel {
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .review-container {
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .review-card {
+    flex: 1;
+    min-width: calc(33.333% - 14px);
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .reviewer-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .reviewer-avatar-placeholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #003580;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  .reviewer-details {
+    flex: 1;
+  }
+  
+  .reviewer-name {
+    font-weight: 500;
+    color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .country-flag {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .review-content {
+    color: #333;
+  }
+  
+  .review-text {
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  
+  .learn-more-button {
+    color: #006ce4;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .learn-more-button:hover {
+    color: #003580;
+  }
+  
+  .carousel-button {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+  }
+  
+  .carousel-button:hover {
+    background: #f5f5f5;
+    color: #333;
+  }
+  
+  .carousel-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  

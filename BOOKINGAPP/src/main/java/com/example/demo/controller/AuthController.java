@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.AccountDTO;
-import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.account.AccountDTO;
+import com.example.demo.dto.account.UserDTO;
 import com.example.demo.model.user.customer.Customer;
 import com.example.demo.model.user.host.Host;
 import com.example.demo.model.user.staff.Staff;

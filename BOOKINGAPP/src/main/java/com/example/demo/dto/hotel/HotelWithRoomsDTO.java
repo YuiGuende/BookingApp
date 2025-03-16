@@ -1,10 +1,11 @@
-package com.example.demo.dto;
+package com.example.demo.dto.hotel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.demo.dto.review.HotelReviewDTO;
 import com.example.demo.model.hotel.Rate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,24 +23,14 @@ public class HotelWithRoomsDTO {
     private double price;
     private int stars;
     private boolean requireTT;
+    private List<HotelReviewDTO> hotelReviewDTOs;
 
     public HotelWithRoomsDTO() {
         this.rate = new Rate();
         this.roomsMap = new HashMap<>();
+        this.hotelReviewDTOs = new ArrayList<>();
     }
 
-    // public HotelWithRoomsDTO(Map<RoomDTO, Integer> roomsMap, String hotelName, List<String> images, AddressDTO address,
-    //         String description, Rate rate, double price, int stars) {
-    //     this.roomsMap = roomsMap;
-    //     this.hotelName = hotelName;
-    //     this.images = images;
-    //     this.address = address;
-    //     this.description = description;
-    //     this.rate = rate;
-    //     this.price = price;
-    //     this.stars = stars;
-    //     this.roomsMap = new HashMap<>();
-    // }
     public HotelWithRoomsDTO(Map<RoomDTO, Integer> roomsMap, String hotelName, List<String> images, AddressDTO address,
             String description, Rate rate, double price, int stars, boolean requireTT) {
         this.roomsMap = roomsMap;
@@ -162,6 +153,14 @@ public class HotelWithRoomsDTO {
 
     public void setRequireTT(boolean requireTT) {
         this.requireTT = requireTT;
+    }
+
+    public List<HotelReviewDTO> getHotelReviewDTOs() {
+        return hotelReviewDTOs;
+    }
+
+    public void setHotelReviewDTOs(List<HotelReviewDTO> hotelReviewDTOs) {
+        this.hotelReviewDTOs = hotelReviewDTOs;
     }
 
 }

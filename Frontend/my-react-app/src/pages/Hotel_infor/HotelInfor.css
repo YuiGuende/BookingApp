@@ -235,3 +235,16 @@
 .booking{
     margin: 10%;
 }
+.hotel-reviews-section {
+    margin: 40px 0;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+  }
+  

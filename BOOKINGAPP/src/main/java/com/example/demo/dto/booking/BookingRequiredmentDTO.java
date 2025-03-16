@@ -1,8 +1,9 @@
-package com.example.demo.dto;
+package com.example.demo.dto.booking;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.dto.hotel.RoomDTO;
 import com.example.demo.model.booking.Booking;
 
 public class BookingRequiredmentDTO {

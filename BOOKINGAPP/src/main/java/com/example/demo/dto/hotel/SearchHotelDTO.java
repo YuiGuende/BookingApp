@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.hotel;
 
 import java.util.HashSet;
 import java.util.List;

@@ -1,5 +1,5 @@
 header{
-  height: 10%;
+  height: 5%;
   display: flex;
   justify-content: space-between;
   padding: 2%;
@@ -13,6 +13,12 @@ header{
   font-weight: bold;
   cursor: pointer;
   margin-left: 1.8rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  transition: color 0.3s ease-in-out;
+}
+.scrolled .return-home{
+  color:#003580 !important;
 }
 .startBtn{
   display: flex;
@@ -30,10 +36,19 @@ header{
   font-size: 1.1rem;
   border-radius: 30px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s ease-in-out, border 0.2s ease-in-out;
 }
 #loginBtn:hover, #signupBtn:hover{
   background-color: rgba(255, 255, 255, 0.2);
+}
+.scrolled #loginBtn, .scrolled #signupBtn {
+  color: #003580 !important; 
+  border: 2px solid #003580 !important;
+}
+
+.scrolled #loginBtn:hover, .scrolled #signupBtn:hover {
+  background-color: #003580; /* Khi hover có nền xanh nhạt */
+  color: white !important;
 }
 /* Existing styles */
 
@@ -100,24 +115,44 @@ header{
   font-size: 16px;
 }
 .user-dropdown-container {
-  position: relative;
+  position: flex;
+  margin-right: 3%;
 }
 
 .user-avatar-button {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Khoảng cách giữa avatar và tên */
+  padding: 8px 12px;
   background: none;
   border: none;
-  padding: 0;
   cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s ease-in-out;
 }
-
+.user-avatar-button:hover{
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.user-name-dropdown{
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  transition: color 0.2s ease-in-out;
+}
+.scrolled .user-name-dropdown{
+  color:#003580 !important;
+}
+.scrolled .user-avatar-button:hover{
+  background-color: rgba(100, 100, 100, 0.144);
+}
 .dropdown-menu {
   position: absolute;
-  top: 50px;
-  right: 0;
-  width: 250px;
+  top: 95px;
+  right: 80px;
+  width: 200px;
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.15);
   z-index: 1000;
   overflow: hidden;
 }

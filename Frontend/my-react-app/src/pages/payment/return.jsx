@@ -78,23 +78,23 @@ export default function PaymentReturn() {
   }
 
   return (
-    <div className="container mx-auto py-12 px-4">
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
+    <div className="return-container">
+      <div className="payment-box">
         {status === "loading" && (
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-lg">Đang xác minh thanh toán...</p>
+            <div className="loading-spinner"></div>
+            <p className="loading-spinner">Đang xác minh thanh toán...</p>
           </div>
         )}
 
         {status === "success" && (
           <div className="text-center">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
-            <h2 className="mt-4 text-2xl font-bold text-green-500">Thanh toán thành công!</h2>
-            <p className="mt-2 text-gray-600">{message}</p>
+            <CheckCircle className="payment-status-icon" />
+            <h2 className="status-success">Thanh toán thành công!</h2>
+            <p className="status-checked">{message}</p>
             <button
               onClick={handleContinue}
-              className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors"
+              className="payment-button"
             >
               Xem lịch sử đặt phòng
             </button>
@@ -103,12 +103,12 @@ export default function PaymentReturn() {
 
         {status === "failed" && (
           <div className="text-center">
-            <XCircle className="h-16 w-16 text-red-500 mx-auto" />
-            <h2 className="mt-4 text-2xl font-bold text-red-500">Thanh toán thất bại</h2>
-            <p className="mt-2 text-gray-600">{message}</p>
+            <XCircle className="payment-status-icon" />
+            <h2 className="status-failed">Thanh toán thất bại</h2>
+            <p className="status-checked">{message}</p>
             <button
               onClick={handleContinue}
-              className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors"
+              className="payment-button"
             >
               Quay lại trang chủ
             </button>
@@ -116,12 +116,12 @@ export default function PaymentReturn() {
         )}
         {status === "checked" && (
           <div className="text-center">
-            <XCircle className="h-16 w-16 text-gray-500 mx-auto" />
-            <h2 className="mt-4 text-2xl font-bold text-red-500">Thanh toán không xác định</h2>
-            <p className="mt-2 text-gray-600">{message}</p>
+            <XCircle className="payment-status-icon" />
+            <h2 className="status-failed">Thanh toán không xác định</h2>
+            <p className="payment-message">{message}</p>
             <button
               onClick={handleContinue}
-              className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors"
+              className="button-back"
             >
               Quay lại trang chủ
             </button>

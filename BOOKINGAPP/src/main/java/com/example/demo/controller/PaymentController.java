@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.PaymentDTO;
+import com.example.demo.dto.order.PaymentDTO;
 import com.example.demo.service.VNPayServiceInteface;
 import com.example.demo.utils.ApiResponse;
 

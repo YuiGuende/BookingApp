@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import com.example.demo.dto.HotelSearchInforDTO;
+import com.example.demo.dto.hotel.HotelSearchInforDTO;
 
 public class Validation {
     public static  void validateHotelSearchInforDTO(HotelSearchInforDTO hotelSearchInforDTO) {

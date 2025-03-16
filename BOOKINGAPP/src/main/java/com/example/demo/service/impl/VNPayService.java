@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.config.VNpayConfig;
-import com.example.demo.dto.PaymentDTO;
+import com.example.demo.dto.order.PaymentDTO;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.booking.BookingStatus;
 import com.example.demo.model.payment.Payment;

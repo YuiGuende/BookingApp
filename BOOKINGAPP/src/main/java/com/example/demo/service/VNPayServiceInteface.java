@@ -3,7 +3,7 @@ package com.example.demo.service;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import com.example.demo.dto.PaymentDTO;
+import com.example.demo.dto.order.PaymentDTO;
 import com.example.demo.utils.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;

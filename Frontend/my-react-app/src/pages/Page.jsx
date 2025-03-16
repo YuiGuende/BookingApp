@@ -10,6 +10,7 @@ import BookingHistory from "./bookingHistory/BookingHistory";
 import PaymentReturn from "./payment/return";
 import Hotel_Reception from "./hotel_reception/Hotel_Reception";
 import LoginStaff from "./login/LoginStaff";
+import Review from "./review/Review";
 
 export default function Page() {
   return (
@@ -25,6 +26,7 @@ export default function Page() {
       <Route path="/payment/return" element={<PaymentReturn></PaymentReturn>}></Route>
       <Route path="/reception" element={<Hotel_Reception></Hotel_Reception>}></Route>
       <Route path="/loginstaff" element={<LoginStaff></LoginStaff>}/>
+      <Route path="/review" element={<Review/>}/>
     </Routes>
   );
 }

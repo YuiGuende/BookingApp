@@ -3,9 +3,9 @@ package com.example.demo.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.example.demo.dto.HotelDistanceDTO;
-import com.example.demo.dto.HotelWithRoomsDTO;
-import com.example.demo.dto.RoomDTO;
+import com.example.demo.dto.hotel.HotelDistanceDTO;
+import com.example.demo.dto.hotel.HotelWithRoomsDTO;
+import com.example.demo.dto.hotel.RoomDTO;
 import com.example.demo.model.hotel.Hotel;
 import com.example.demo.model.room.Amenity;
 

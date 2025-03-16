@@ -3,8 +3,10 @@
 import "./HeaderStyles.css"
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
+import { FaHistory } from "react-icons/fa"; // Icon lịch sử đặt phòng
+import { FiLogOut } from "react-icons/fi"; // Icon đăng xuất
 
-function Header() {
+function Header({ className }) {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -39,15 +41,15 @@ function Header() {
   }
 
   return (
-    <header>
+    <header className={`header-content ${className}`}>
       <a className="return-home" href="/">
         Booking
       </a>
-      <div className="startBtn">
         {user ? (
           <div className="user-dropdown-container" ref={dropdownRef}>
             <button className="user-avatar-button" onClick={() => setShowDropdown(!showDropdown)}>
               <div className="user-avatar">{user.name ? user.name.charAt(0).toUpperCase() : "U"}</div>
+              <span className="user-name-dropdown">{user.name}</span>
             </button>
 
             {showDropdown && (
@@ -65,33 +67,42 @@ function Header() {
                     setShowDropdown(false)
                   }}
                 >
-                  <span className="dropdown-icon">📋</span>
-                  <span>Những nơi đã book</span>
+                <FaHistory size={18} className="dropdown-icon"/>
+                <span>Booking History</span>
                 </button>
-
+                <button
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate("/review")
+                    setShowDropdown(false)
+                  }}
+                >
+                <FaHistory size={18} className="dropdown-icon"/>
+                <span>Review History</span>
+                </button>
                 <div className="dropdown-divider"></div>
 
                 <button className="dropdown-item" onClick={handleSignOut}>
-                  <span className="dropdown-icon">🚪</span>
-                  <span>Đăng xuất</span>
+                <FiLogOut size={18} className="dropdown-icon"/>
+                <span>Log Out</span>
                 </button>
               </div>
             )}
           </div>
         ) : (
           <>
+          <div className="startBtn">
             <button id="loginBtn" onClick={() => navigate("/Login")}>
               Log In
             </button>
             <button id="signupBtn" onClick={() => navigate("/Signup")}>
               Sign Up
             </button>
+          </div>
           </>
         )}
-      </div>
     </header>
   )
 }
 
 export default Header
-

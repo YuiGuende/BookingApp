@@ -166,17 +166,99 @@
 // }; 
 
 // }
+// import React, { useState, useEffect } from 'react';
+// import "./HotelResult.css";
+
+// const Filter = ({ type, options, selectedOptions, onFilterChange }) => {
+//   const handleChange = (code) => {
+//     let updatedOptions = [...selectedOptions];
+//     if (updatedOptions.includes(code)) {
+//       updatedOptions = updatedOptions.filter(item => item !== code);
+//     } else {
+//       updatedOptions.push(code);
+//     }
+//     onFilterChange(updatedOptions);
+//   };
+
+//   return (
+//     <div className="filter-category">
+//       <h3>{type}</h3>
+//       <div className="filter-options">
+//         {options.map(option => (
+//           <div key={option.code} className="filter-option">
+//             <input
+//               type="checkbox"
+//               id={`amenity-${option.code}`}
+//               checked={selectedOptions.includes(option.code)}
+//               onChange={() => handleChange(option.code)}
+//             />
+//             <label htmlFor={`amenity-${option.code}`}>{option.name}</label>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// const AmenityDetails = ({ groupedAmenities }) => {
+//   const [selectedOptions, setSelectedOptions] = useState([]); // ✅ Khai báo state bên trong component
+//   const [filteredAmenities, setFilteredAmenities] = useState([]);
+
+//   const handleFilterChange = (updatedOptions) => {
+//     setSelectedOptions(updatedOptions);
+//   };
+
+//   useEffect(() => {
+//     if (selectedOptions.length === 0) {
+//       setFilteredAmenities(Object.values(groupedAmenities).flat());
+//     } else {
+//       setFilteredAmenities(
+//         Object.values(groupedAmenities)
+//           .flat()
+//           .filter(a => 
+//             Array.isArray(a.amenities) && // ✅ Kiểm tra a.amenities có phải là mảng không
+//             selectedOptions.every(option => a.amenities.includes(option)))
+//       );
+//     }
+//   }, [selectedOptions, groupedAmenities]); // ✅ Đưa `selectedOptions` vào dependencies
+
+//   return (
+//     <div className="filter-box">
+//       {Object.entries(groupedAmenities).map(([type, amenities]) => (
+//         <Filter 
+//           key={type} 
+//           type={type} 
+//           options={amenities} 
+//           selectedOptions={selectedOptions} 
+//           onFilterChange={handleFilterChange} 
+//         />
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default AmenityDetails;
 import React, { useState, useEffect } from 'react';
 import "./HotelResult.css";
 
 const Filter = ({ type, options, selectedOptions, onFilterChange }) => {
+  // const handleChange = (code) => {
+  //   let updatedOptions = [...selectedOptions];
+  //   if (updatedOptions.includes(code)) {
+  //     updatedOptions = updatedOptions.filter(item => item !== code);
+  //   } else {
+  //     updatedOptions.push(code);
+  //   }
+  //   onFilterChange(updatedOptions);
+  // };
   const handleChange = (code) => {
-    let updatedOptions = [...selectedOptions];
+    let updatedOptions = selectedOptions ? [...selectedOptions] : [];
     if (updatedOptions.includes(code)) {
       updatedOptions = updatedOptions.filter(item => item !== code);
     } else {
       updatedOptions.push(code);
     }
+    console.log("Updated selectedOptions:", updatedOptions); // ✅ Kiểm tra giá trị mới
     onFilterChange(updatedOptions);
   };
 
@@ -189,7 +271,7 @@ const Filter = ({ type, options, selectedOptions, onFilterChange }) => {
             <input
               type="checkbox"
               id={`amenity-${option.code}`}
-              checked={selectedOptions.includes(option.code)}
+              checked={Array.isArray(selectedOptions) && selectedOptions.includes(option.code)}
               onChange={() => handleChange(option.code)}
             />
             <label htmlFor={`amenity-${option.code}`}>{option.name}</label>
@@ -200,26 +282,57 @@ const Filter = ({ type, options, selectedOptions, onFilterChange }) => {
   );
 };
 
-const AmenityDetails = ({ groupedAmenities }) => {
-  const [selectedOptions, setSelectedOptions] = useState([]); // ✅ Khai báo state bên trong component
-  const [filteredAmenities, setFilteredAmenities] = useState([]);
+// const AmenityDetails = ({ groupedAmenities }) => {
+//   const [selectedOptions, setSelectedOptions] = useState([]);
+//   const [filteredAmenities, setFilteredAmenities] = useState([]);
 
-  const handleFilterChange = (updatedOptions) => {
-    setSelectedOptions(updatedOptions);
-  };
+//   const handleFilterChange = (updatedOptions) => {
+//     setSelectedOptions(updatedOptions);
+//   };
 
-  useEffect(() => {
-    if (selectedOptions.length === 0) {
-      setFilteredAmenities(Object.values(groupedAmenities).flat());
-    } else {
-      setFilteredAmenities(
-        Object.values(groupedAmenities)
-          .flat()
-          .filter(a => selectedOptions.every(option => a.amenities.includes(option))) // ✅ Lọc đúng điều kiện
-      );
-    }
-  }, [selectedOptions, groupedAmenities]); // ✅ Đưa `selectedOptions` vào dependencies
+//   useEffect(() => {
+//     if (selectedOptions.length === 0) {
+//       setFilteredAmenities(Object.values(groupedAmenities).flat());
+//     } else {
+//       setFilteredAmenities(
+//         Object.values(groupedAmenities)
+//           .flat()
+//           .filter(a => 
+//             Array.isArray(a.amenities) &&
+//             selectedOptions.every(option => a.amenities.includes(option))
+//           )
+//       );
+//     }
+//   }, [selectedOptions, groupedAmenities]);
 
+//   return (
+//     <div className="filter-box">
+//       {Object.entries(groupedAmenities).map(([type, amenities]) => (
+//         <Filter 
+//           key={type} 
+//           type={type} 
+//           options={amenities} 
+//           selectedOptions={selectedOptions} 
+//           onFilterChange={handleFilterChange} 
+//         />
+//       ))}
+      
+//       {/* Hiển thị kết quả đã lọc */}
+//       <div className="filtered-amenities">
+//         {filteredAmenities.length > 0 ? (
+//           filteredAmenities.map(a => (
+//             <div key={a.code} className="filtered-amenity">
+//               <p>{a.name}</p>
+//             </div>
+//           ))
+//         ) : (
+//           <p>No matching amenities</p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+const AmenityDetails = ({ groupedAmenities, selectedOptions, onFilterChange }) => {
   return (
     <div className="filter-box">
       {Object.entries(groupedAmenities).map(([type, amenities]) => (
@@ -228,7 +341,7 @@ const AmenityDetails = ({ groupedAmenities }) => {
           type={type} 
           options={amenities} 
           selectedOptions={selectedOptions} 
-          onFilterChange={handleFilterChange} 
+          onFilterChange={onFilterChange} 
         />
       ))}
     </div>

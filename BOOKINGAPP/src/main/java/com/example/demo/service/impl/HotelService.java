@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.AddressDTO;
-import com.example.demo.dto.HotelDistanceDTO;
-import com.example.demo.dto.HotelWithRoomsDTO;
-import com.example.demo.dto.RoomDTO;
-import com.example.demo.dto.SearchHotelDTO;
+import com.example.demo.dto.hotel.AddressDTO;
+import com.example.demo.dto.hotel.HotelDistanceDTO;
+import com.example.demo.dto.hotel.HotelWithRoomsDTO;
+import com.example.demo.dto.hotel.RoomDTO;
+import com.example.demo.dto.hotel.SearchHotelDTO;
 import com.example.demo.exception.AddressExistedException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.address.Address;
@@ -36,6 +36,7 @@ import com.example.demo.repository.RoomAmentityRepository;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.repository.SubRoomRepository;
 import com.example.demo.service.HotelServiceInterface;
+import com.example.demo.service.ReviewServiceInterface;
 import com.example.demo.utils.GeoUtils;
 
 import jakarta.transaction.Transactional;
@@ -52,6 +53,7 @@ public class HotelService implements HotelServiceInterface {
     private static final Logger logger = LoggerFactory.getLogger(GeoUtils.class);
     private final SubRoomRepository subRoomRepository;
     private final AmenityRepository amenityRepository;
+    private final ReviewServiceInterface reviewService;
 
     @Autowired
     public HotelService(
@@ -61,7 +63,8 @@ public class HotelService implements HotelServiceInterface {
             GeoUtils geoUtils,
             RoomAmentityRepository roomAmentityRepository,
             SubRoomRepository subRoomRepository,
-            AmenityRepository amenityRepository) {
+            AmenityRepository amenityRepository,
+            ReviewServiceInterface reviewService) {
         this.hotelRepository = hotelRepository;
         this.addressRepository = addressRepository;
         this.roomRepository = roomRepository;
@@ -69,6 +72,7 @@ public class HotelService implements HotelServiceInterface {
         this.roomAmentityRepository = roomAmentityRepository;
         this.subRoomRepository = subRoomRepository;
         this.amenityRepository = amenityRepository;
+        this.reviewService=reviewService;
     }
 
     @Override
@@ -320,6 +324,7 @@ public class HotelService implements HotelServiceInterface {
         for (Room room : roomRepository.findAvailableRoomsByHotelId(id, adultQuantity, childrenQuantity, checkinDate, checkoutDate)) {
             dto.addOrUpdateRoom(mapToRoomDTO(room), 1);
         }
+        dto.setHotelReviewDTOs(reviewService.findReviewsByHotelId(id));
         dto.setAddress(addressDTO);
         dto.setStars(hotel.getStars());
         dto.setRate(hotel.getRate());

@@ -8,7 +8,7 @@ import "./HotelInfor.css";
 import RoomQuantity from "../../components/roomquantity/RoomQuantity";
 import Header from "../../components/header/Header";
 import SearchBar from "../../components/searchbar/SearchBar";
-
+import ReviewCarousel from "../../components/ReviewCarousel/ReviewCarousel";
 const HotelInfor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -230,6 +230,14 @@ const HotelInfor = () => {
             </div>
           </div>
         )}
+        {
+          hotel && hotel.hotelReviewDTOs && hotel.hotelReviewDTOs.length > 0 && (
+            <div className="hotel-reviews-section">
+              <h2 className="section-title">Đánh giá từ khách hàng</h2>
+              <ReviewCarousel reviews={hotel.hotelReviewDTOs} />
+            </div>
+          )
+        }
       </div>
     </>
   );

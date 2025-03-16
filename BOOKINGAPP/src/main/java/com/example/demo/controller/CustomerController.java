@@ -16,17 +16,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.BookingDetaislDTO;
-import com.example.demo.dto.BookingRequiredmentDTO;
-import com.example.demo.dto.HotelDistanceDTO;
-import com.example.demo.dto.HotelSearchInforDTO;
-import com.example.demo.dto.HotelWithRoomsDTO;
-import com.example.demo.dto.RoomDTO;
-import com.example.demo.dto.SignUpDTO;
+import com.example.demo.dto.account.SignUpDTO;
+import com.example.demo.dto.booking.BookingDetaislDTO;
+import com.example.demo.dto.booking.BookingRequiredmentDTO;
+import com.example.demo.dto.hotel.HotelDistanceDTO;
+import com.example.demo.dto.hotel.HotelSearchInforDTO;
+import com.example.demo.dto.hotel.HotelWithRoomsDTO;
+import com.example.demo.dto.hotel.RoomDTO;
+import com.example.demo.dto.review.CustomerReviewDTO;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.room.Amenity;
 import com.example.demo.service.BookingServiceInterface;
 import com.example.demo.service.HotelServiceInterface;
+import com.example.demo.service.ReviewServiceInterface;
 import com.example.demo.service.RoomServiceInterface;
 import com.example.demo.utils.ApiResponse;
 
@@ -35,18 +37,18 @@ import com.example.demo.utils.ApiResponse;
 @RequestMapping(path = "/api/customer")
 public class CustomerController {
 
+    private final ReviewServiceInterface reviewService;
     private final HotelServiceInterface hotelService;
     private final BookingServiceInterface bookingService;
     private final RoomServiceInterface roomService;
 
     @Autowired
-    public CustomerController(
-            HotelServiceInterface hotelService,
-            RoomServiceInterface roomService,
-            BookingServiceInterface bookingService) {
+    public CustomerController(ReviewServiceInterface reviewService, HotelServiceInterface hotelService,
+            BookingServiceInterface bookingService, RoomServiceInterface roomService) {
+        this.reviewService = reviewService;
         this.hotelService = hotelService;
-        this.roomService = roomService;
         this.bookingService = bookingService;
+        this.roomService = roomService;
     }
 
     @PostMapping(path = "/hotel/search")
@@ -70,8 +72,8 @@ public class CustomerController {
         }
     }
 
-    @GetMapping(path="/amenity")
-    public List<Amenity> getAmenites(){
+    @GetMapping(path = "/amenity")
+    public List<Amenity> getAmenites() {
         return hotelService.getAllAmenities();
     }
 
@@ -158,6 +160,46 @@ public class CustomerController {
         try {
             bookingService.saveBooking(booking);
             ApiResponse<Void> response = new ApiResponse<>("success", "This room has been booked!", null);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        } catch (Exception e) {
+            ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @GetMapping(path = "/reviewed/{customerId}")
+    public ResponseEntity<ApiResponse<List<CustomerReviewDTO>>> getCustomerReviewed(@PathVariable Long customerId) {
+        try {
+            ApiResponse<List<CustomerReviewDTO>> response = new ApiResponse<>(
+                    "success",
+                    "Reviewed list",
+                    reviewService.findReviewedByCustomerId(customerId));
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<List<CustomerReviewDTO>> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @GetMapping(path = "/unreviewed/{customerId}")
+    public ResponseEntity<ApiResponse<List<CustomerReviewDTO>>> getCustomerUnreviewed(@PathVariable Long customerId) {
+        try {
+            ApiResponse<List<CustomerReviewDTO>> response = new ApiResponse<>(
+                    "success",
+                    "Reviewed list",
+                    reviewService.findUnreviewedByCustomerId(customerId));
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<List<CustomerReviewDTO>> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping(path = "/review/add/{customerId}")
+    public ResponseEntity<ApiResponse<Void>> addReview(@RequestBody CustomerReviewDTO customerReviewDTO, @PathVariable Long customerId) {
+        try {
+            reviewService.saveReviewDTO(customerReviewDTO, customerId);
+            ApiResponse<Void> response = new ApiResponse<>("success", "This review has been saved!", null);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         } catch (Exception e) {
             ApiResponse<Void> response = new ApiResponse<>("error", e.getMessage(), null);

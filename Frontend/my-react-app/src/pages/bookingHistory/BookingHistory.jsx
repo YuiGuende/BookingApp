@@ -3,6 +3,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import './BookingHistory.css';
+import Header from '../../components/header/Header';
 
 const BookingHistory = () => {
   const [bookings, setBookings] = useState([]);
@@ -64,12 +65,14 @@ const BookingHistory = () => {
   if (bookings.length === 0) return <div className="empty">Bạn chưa có đặt phòng nào</div>;
 
   return (
+    <>
+    <div className='header'><Header/></div>
     <div className="booking-history">
       <h1>Lịch sử đặt phòng</h1>
       <div className="booking-list">
         {bookings.map((booking) => (
           <div key={`booking-${booking.id}`} className="booking-card">
-            <div className="booking-image">
+            <div className="booking-history-image">
               <img 
                 src={booking.image || "/placeholder.svg"} 
                 alt={booking.hotelName} 
@@ -78,7 +81,7 @@ const BookingHistory = () => {
                 }}
               />
             </div>
-            <div className="booking-details">
+            <div className="bookinghistory-details">
               <div className="booking-header">
                 <h3>{booking.hotelName}</h3>
                 <div className="booking-menu">
@@ -113,6 +116,7 @@ const BookingHistory = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

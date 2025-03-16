@@ -2,7 +2,8 @@ package com.example.demo.model.review;
 
 import java.time.LocalDate;
 
-import com.example.demo.model.room.Room;
+import com.example.demo.model.booking.Booking;
+import com.example.demo.model.user.customer.Customer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import jakarta.persistence.SequenceGenerator;
 
 @Entity
 public class Review {
+
     @Id
     @SequenceGenerator(
             name = "review_sequence",
@@ -26,21 +28,26 @@ public class Review {
     )
     private Long id;
 
-    private String customerName; // Tên khách hàng
-    private int rating; // Số sao (1-5)
+    @ManyToOne
+    private Customer customer;
+
+    private double rating; // Số sao (1-5)
     private String comment; // Nhận xét của khách hàng
 
     @ManyToOne
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private Room room; // Phòng được đánh giá
+    @JoinColumn(name = "fk_booking_id", referencedColumnName = "id")
+    private Booking booking;
 
     private LocalDate reviewDate; // Ngày đánh giá
 
-    public Review(String customerName, int rating, String comment, Room room, LocalDate reviewDate) {
-        this.customerName = customerName;
+    public Review() {
+    }
+
+    public Review(Customer customer, double rating, String comment, Booking booking, LocalDate reviewDate) {
+        this.customer = customer;
         this.rating = rating;
         this.comment = comment;
-        this.room = room;
+        this.booking = booking;
         this.reviewDate = reviewDate;
     }
 
@@ -52,19 +59,11 @@ public class Review {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -76,14 +75,6 @@ public class Review {
         this.comment = comment;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public LocalDate getReviewDate() {
         return reviewDate;
     }
@@ -92,6 +83,20 @@ public class Review {
         this.reviewDate = reviewDate;
     }
 
-    
-}
+    public Customer getCustomer() {
+        return customer;
+    }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Booking getBooking() {
+        return booking;
+    }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
+    }
+
+}

@@ -137,6 +137,7 @@ export default function HotelResult() {
   };
 
   const handleFilterChange = (selectedOptions) => {
+    console.log("🔹 Updated selected codes:", selectedOptions);
     setSelectedCodes(selectedOptions);
   };
 
@@ -148,9 +149,15 @@ export default function HotelResult() {
     return acc;
   }, {});
 
+  // const filteredHotels = hotels.filter(hotel =>
+  //   selectedCodes.length === 0 || 
+  //   (hotel.hotelWithRoomsDTO.amenities && hotel.hotelWithRoomsDTO.amenities.some(a => selectedCodes.includes(a.code)))
+  // );
   const filteredHotels = hotels.filter(hotel =>
     selectedCodes.length === 0 || 
-    (hotel.hotelWithRoomsDTO.amenities && hotel.hotelWithRoomsDTO.amenities.some(a => selectedCodes.includes(a.code)))
+    (hotel.hotelWithRoomsDTO.amenities && 
+     selectedCodes.every(code => hotel.hotelWithRoomsDTO.amenities.some(a => a.code === code))
+    )
   );
   useEffect(() => {
     console.log("Hotels data:", hotels);

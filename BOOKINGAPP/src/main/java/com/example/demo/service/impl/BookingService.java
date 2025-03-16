@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.BookingDetaislDTO;
-import com.example.demo.dto.BookingRequiredmentDTO;
-import com.example.demo.dto.RoomDTO;
+import com.example.demo.dto.booking.BookingDetaislDTO;
+import com.example.demo.dto.booking.BookingRequiredmentDTO;
+import com.example.demo.dto.hotel.RoomDTO;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.booking.BookingRoom;

@@ -47,7 +47,7 @@
 // }
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { fetchHotels } from "../store/hotelSlice";
@@ -68,6 +68,18 @@ export default function Home() {
     maxChildren: 0,
     rooms: 1,
   });
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   // Thêm state cho carousel
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -166,8 +178,13 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
-      <Header />
+    <div className="home-body">
+      <div className="container">
+      <div className="header-wrapper">
+      <div className={`home-header ${scrolled ? "scrolled" : ""}`}>
+        <Header />
+      </div>
+      </div>
       <div className="welcome-sentence">
         <h1>Find your next place to stay</h1>
         <h3>Find hotel deals, home stays and more...</h3>
@@ -175,7 +192,7 @@ export default function Home() {
       <div className="searchbar">
         <SearchBar onSearch={handleSearch} initialParams={searchParams} />
       </div>
-
+      </div>
       {/* Điểm đến đang thịnh hành */}
       <div className="trending-section">
         <h2>Điểm đến đang thịnh hành</h2>

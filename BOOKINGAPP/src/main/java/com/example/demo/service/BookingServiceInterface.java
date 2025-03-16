@@ -2,8 +2,8 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import com.example.demo.dto.BookingDetaislDTO;
-import com.example.demo.dto.BookingRequiredmentDTO;
+import com.example.demo.dto.booking.BookingDetaislDTO;
+import com.example.demo.dto.booking.BookingRequiredmentDTO;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.booking.BookingStatus;
 

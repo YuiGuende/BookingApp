@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.model.hotel.HotelService;
 import com.example.demo.model.payment.Payment;
-import com.example.demo.dto.OrderDTO;
+import com.example.demo.dto.order.OrderDTO;
 import com.example.demo.model.booking.Booking;
 import com.example.demo.model.booking.BookingRoom;
 import com.example.demo.model.reception.Order;
 import com.example.demo.model.reception.OrderServiceMM;
+import com.example.demo.model.review.Review;
 import com.example.demo.model.room.Room;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.BookingRoomRepository;
@@ -22,6 +23,7 @@ import com.example.demo.repository.HotelServiceRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.OrderServiceRepository;
 import com.example.demo.repository.PaymentRepository;
+import com.example.demo.repository.ReviewRepository;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.repository.ServiceRepository;
 import com.example.demo.service.OrderServiceInterface;
@@ -40,13 +42,15 @@ public class OrderService implements OrderServiceInterface {
     private final OrderServiceRepository orderServiceRepository;
     private final HotelServiceRepository hotelServiceRepository;
     private final HotelRepository hotelRepository;
+    private final ReviewRepository reviewRepository;
 
    
     @Autowired
     public OrderService(BookingRepository bookingRepository, OrderRepository orderRepository,
             ServiceRepository serviceRepository, RoomRepository roomRepository, PaymentRepository paymentRepository,
             BookingRoomRepository bookingRoomRepository, OrderServiceRepository orderServiceRepository,
-            HotelServiceRepository hotelServiceRepository, HotelRepository hotelRepository) {
+            HotelServiceRepository hotelServiceRepository, HotelRepository hotelRepository,
+            ReviewRepository reviewRepository) {
         this.bookingRepository = bookingRepository;
         this.orderRepository = orderRepository;
         this.serviceRepository = serviceRepository;
@@ -56,6 +60,7 @@ public class OrderService implements OrderServiceInterface {
         this.orderServiceRepository = orderServiceRepository;
         this.hotelServiceRepository = hotelServiceRepository;
         this.hotelRepository = hotelRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
@@ -108,7 +113,8 @@ public class OrderService implements OrderServiceInterface {
         order1.setCheckOutTime(LocalDateTime.now());
         paymentRepository.save(payment);
         Order orderResult = orderRepository.save(order1);
-
+        reviewRepository.save(new Review(bookingOptional.getCustomer(), 0, null, bookingOptional, null));
+//public Review(Customer customer, double rating, String comment, Booking booking, LocalDate reviewDate) {
         return new OrderDTO(bookingId, orderResult.getCheckInTime(), orderResult.getCheckOutTime(), services, payment.getAmount(), payment.getServiceAmount());
     }
 
